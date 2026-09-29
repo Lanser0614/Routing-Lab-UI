@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<script src="./support.js"></script>
+<script src="./yandex-map.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;height:100%;background:#F2F2EE;color:#16181A;font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#2F6FDF;text-decoration:none}a:hover{color:#1D4FA8;text-decoration:underline}
+input,select,button{font-family:inherit;font-size:13px;color:#16181A}
+input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
+</style>
+</helmet>
+<div style="height:100vh;min-height:720px;display:grid;grid-template-rows:auto auto minmax(0,1fr);min-width:1180px">
+
+  <header style="display:flex;align-items:center;gap:20px;padding:10px 16px;background:#FFFFFF;border-bottom:1px solid #E2E2DC">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#16181A;color:#FFFFFF;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600">RL</div>
+      <div style="display:flex;flex-direction:column;line-height:1.2">
+        <span style="font-size:11px;color:#6B6E70">Routing Algorithm Lab</span>
+        <span style="font-weight:600;font-size:14px">Amir Temur · Ташкент</span>
+      </div>
+    </div>
+    <div style="width:1px;height:28px;background:#E2E2DC"></div>
+    <div style="display:flex;gap:18px;align-items:center">
+      <div style="display:flex;flex-direction:column;line-height:1.3"><span style="font-size:11px;color:#6B6E70">Филиал</span><span style="font-weight:500">Bellissimo Amir Temur</span></div>
+      <div style="display:flex;flex-direction:column;line-height:1.3"><span style="font-size:11px;color:#6B6E70">Время планирования</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:500">29.09.2026 18:00 · Asia/Tashkent</span></div>
+      <div style="display:flex;flex-direction:column;line-height:1.3"><span style="font-size:11px;color:#6B6E70">Версия сценария</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:500">v{{ version }}</span></div>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#6B6E70">
+      <span>Старт: филиал</span><span>·</span><span>Late solo: {{ lateLabel }}</span><span>·</span><span>Exact: 8 / 3 / 3 с</span>
+    </div>
+    <button onClick="{{ runAll }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 16px;border:none;border-radius:6px;background:#16181A;color:#FFFFFF;font-weight:600;cursor:pointer" style-hover="background:#33373A">
+      <span style="font-size:10px">▶</span> Запустить все
+    </button>
+  </header>
+
+  <div style="display:flex;align-items:center;gap:12px;padding:7px 16px;border-bottom:1px solid #E2E2DC;background:{{ bannerBg }};color:{{ bannerFg }};font-size:12px">
+    <span style="width:7px;height:7px;border-radius:50%;background:{{ bannerFg }}"></span>
+    <span style="font-weight:600">{{ bannerTitle }}</span>
+    <span>{{ bannerText }}</span>
+    <div style="flex:1"></div>
+    <span style="font-family:'IBM Plex Mono',monospace">{{ runInfo }}</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:340px minmax(0,1fr) 440px;min-height:0">
+
+    <aside style="display:flex;flex-direction:column;min-height:0;background:#FFFFFF;border-right:1px solid #E2E2DC">
+      <div style="display:flex;gap:2px;padding:8px 8px 0;border-bottom:1px solid #E2E2DC">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+          <button onClick="{{ t.onClick }}" style="flex:1;height:34px;border:none;background:transparent;border-bottom:2px solid {{ t.border }};color:{{ t.color }};font-weight:600;cursor:pointer">{{ t.label }}<span style="margin-left:5px;font-weight:400;color:#8A8D8F">{{ t.count }}</span></button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ isOrders }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-bottom:1px solid #EEEEE8">
+          <div style="display:flex;gap:8px">
+            <input value="{{ orderQuery }}" onChange="{{ onOrderQuery }}" placeholder="Поиск по ID, адресу" style="flex:1;height:32px;padding:0 10px;border:1px solid #DADAD3;border-radius:6px;background:#FAFAF8">
+            <button onClick="{{ newOrder }}" style="height:32px;padding:0 12px;border:1px solid #16181A;border-radius:6px;background:#16181A;color:#FFFFFF;font-weight:600;cursor:pointer">+ Заказ</button>
+          </div>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#6B6E70;cursor:pointer"><input type="checkbox" checked="{{ showTerminal }}" onChange="{{ toggleTerminal }}" style="margin:0">Показать доставленные и отменённые</label>
+        </div>
+        <div style="flex:1;overflow:auto">
+          <sc-for list="{{ orderRows }}" as="o" hint-placeholder-count="5">
+            <div onClick="{{ o.open }}" style="display:flex;flex-direction:column;gap:6px;padding:10px 12px;border-bottom:1px solid #EEEEE8;cursor:pointer;background:{{ o.bg }};box-shadow:inset 3px 0 0 {{ o.edge }}" style-hover="background:#F7F7F3">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-family:'IBM Plex Mono',monospace;font-weight:600">{{ o.id }}</span>
+                <span style="padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600;background:{{ o.sBg }};color:{{ o.sFg }}">{{ o.statusLabel }}</span>
+                <div style="flex:1"></div>
+                <span style="font-family:'IBM Plex Mono',monospace">{{ o.sumText }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:7px;color:#6B6E70;font-size:12px;white-space:nowrap;overflow:hidden">
+                <span style="overflow:hidden;text-overflow:ellipsis">{{ o.address }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A8D8F">{{ o.coords }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:12px">
+                <span style="color:#6B6E70">готов <span style="font-family:'IBM Plex Mono',monospace;color:#16181A">{{ o.ready }}</span></span>
+                <span style="color:#6B6E70">до <span style="font-family:'IBM Plex Mono',monospace;color:#16181A;font-weight:600">{{ o.deadline }}</span></span>
+                <span style="padding:1px 6px;border-radius:4px;font-size:11px;font-weight:600;border:1px solid {{ o.zoneColor }};color:{{ o.zoneColor }}">{{ o.zoneText }}</span>
+                <div style="flex:1"></div>
+                <span style="font-size:11px;font-weight:600;color:{{ o.assignColor }}">{{ o.assign }}</span>
+              </div>
+              <sc-if value="{{ o.hasActions }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;gap:6px">
+                  <sc-if value="{{ o.hasNext }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ o.advance }}" style="height:24px;padding:0 8px;border:1px solid #DADAD3;border-radius:5px;background:#FFFFFF;font-size:11px;cursor:pointer" style-hover="border-color:#16181A">→ {{ o.nextLabel }}</button>
+                  </sc-if>
+                  <sc-if value="{{ o.hasBack }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ o.unassign }}" style="height:24px;padding:0 8px;border:1px solid #DADAD3;border-radius:5px;background:#FFFFFF;font-size:11px;cursor:pointer" style-hover="border-color:#16181A">↩ Снять назначение</button>
+                  </sc-if>
+                  <sc-if value="{{ o.canCancel }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ o.cancel }}" style="height:24px;padding:0 8px;border:1px solid transparent;border-radius:5px;background:transparent;font-size:11px;color:#B42323;cursor:pointer" style-hover="border-color:#F1C4C4">Отменить</button>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{ noOrders }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:24px 16px;color:#6B6E70;font-size:12px;text-align:center">Нет заказов. Кликните по карте, чтобы создать заказ в этой точке.</div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCouriers }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:8px;padding:10px 12px;border-bottom:1px solid #EEEEE8">
+          <div style="flex:1;font-size:12px;color:#6B6E70;align-self:center">FIFO по free_since</div>
+          <button onClick="{{ newCourier }}" style="height:32px;padding:0 12px;border:1px solid #16181A;border-radius:6px;background:#16181A;color:#FFFFFF;font-weight:600;cursor:pointer">+ Курьер</button>
+        </div>
+        <div style="flex:1;overflow:auto">
+          <sc-for list="{{ courierRows }}" as="c" hint-placeholder-count="3">
+            <div onClick="{{ c.open }}" style="display:flex;flex-direction:column;gap:6px;padding:10px 12px;border-bottom:1px solid #EEEEE8;cursor:pointer;background:{{ c.bg }}" style-hover="background:#F7F7F3">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="width:9px;height:9px;border-radius:50%;background:{{ c.sFg }}"></span>
+                <span style="font-weight:600">{{ c.name }}</span>
+                <span style="padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600;background:{{ c.sBg }};color:{{ c.sFg }}">{{ c.statusLabel }}</span>
+                <div style="flex:1"></div>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B6E70">{{ c.mode }}</span>
+              </div>
+              <div style="display:flex;gap:12px;font-size:12px;color:#6B6E70">
+                <span>до <span style="color:#16181A;font-family:'IBM Plex Mono',monospace">{{ c.cap }}</span></span>
+                <span>зоны <span style="color:#16181A;font-weight:600">{{ c.zonesText }}</span></span>
+                <span>{{ c.since }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                <span style="font-size:11px;font-weight:600;color:{{ c.bucketColor }}">{{ c.bucket }}</span>
+                <div style="flex:1"></div>
+                <sc-for list="{{ c.actions }}" as="a" hint-placeholder-count="1">
+                  <button onClick="{{ a.onClick }}" style="height:24px;padding:0 8px;border:1px solid #DADAD3;border-radius:5px;background:#FFFFFF;font-size:11px;cursor:pointer" style-hover="border-color:#16181A">{{ a.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isZones }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;overflow:auto">
+          <sc-for list="{{ zoneRows }}" as="z" hint-placeholder-count="2">
+            <div style="display:flex;flex-direction:column;gap:6px;padding:12px;border-bottom:1px solid #EEEEE8">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="width:14px;height:14px;border-radius:3px;background:{{ z.fill }};border:2px solid {{ z.color }}"></span>
+                <span style="font-weight:600">{{ z.name }}</span>
+                <div style="flex:1"></div>
+                <span style="padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600;background:#E6F4EA;color:#1E7A45">Активна</span>
+              </div>
+              <div style="display:flex;gap:12px;font-size:12px;color:#6B6E70">
+                <span>заказов <span style="color:#16181A;font-weight:600">{{ z.orders }}</span></span>
+                <span>курьеров <span style="color:#16181A;font-weight:600">{{ z.couriers }}</span></span>
+                <span>{{ z.modes }}</span>
+              </div>
+              <div style="font-size:12px;color:#1E7A45">Геометрия валидна · 5 вершин</div>
+            </div>
+          </sc-for>
+          <div style="margin:12px;padding:10px;border:1px dashed {{ uncoveredBorder }};border-radius:6px;font-size:12px;color:{{ uncoveredColor }}">{{ uncoveredText }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;overflow:auto;display:flex;flex-direction:column">
+          <div onClick="{{ toggleLate }}" style="display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid #EEEEE8;cursor:pointer" style-hover="background:#F7F7F3">
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-weight:500">Late solo</span><span style="font-size:12px;color:#6B6E70">Просроченный заказ — отдельный bucket с пометкой late</span></div>
+            <span style="width:34px;height:20px;border-radius:10px;background:{{ lateTrack }};position:relative"><span style="position:absolute;top:2px;left:{{ lateKnob }};width:16px;height:16px;border-radius:50%;background:#FFFFFF"></span></span>
+          </div>
+          <sc-for list="{{ settingRows }}" as="s" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid #EEEEE8">
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-weight:500">{{ s.label }}</span><span style="font-size:12px;color:#6B6E70">{{ s.hint }}</span></div>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;padding:4px 8px;border:1px solid #DADAD3;border-radius:5px;background:#FAFAF8;white-space:nowrap">{{ s.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </aside>
+
+    <main style="position:relative;min-height:0;overflow:hidden;background:#E9EAE4">
+      <div ref="{{ ymapRef }}" style="position:absolute;inset:0;width:100%;height:100%;background:#E9EAE4"></div>
+      <svg ref="{{ svgRef }}" onClick="{{ onMapClick }}" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;opacity:{{ svgOpacity }};pointer-events:{{ svgPointerEvents }};transition:opacity .18s ease">
+        <rect x="0" y="0" width="800" height="600" fill="#ECEDE7"></rect>
+        <path d="M0 330 C 200 300, 420 360, 800 320" stroke="#CFE0EA" stroke-width="22" fill="none"></path>
+        <g stroke="#FFFFFF" stroke-width="9" fill="none" stroke-linecap="round">
+          <path d="M-20 120 L820 90"></path><path d="M-20 250 L820 230"></path><path d="M-20 430 L820 460"></path><path d="M-20 540 L820 560"></path>
+          <path d="M110 -20 L150 620"></path><path d="M290 -20 L270 620"></path><path d="M480 -20 L500 620"></path><path d="M660 -20 L690 620"></path>
+        </g>
+        <g stroke="#FFFFFF" stroke-width="4" fill="none">
+          <path d="M-20 180 L820 160"></path><path d="M-20 380 L820 400"></path><path d="M200 -20 L210 620"></path><path d="M390 -20 L380 620"></path><path d="M580 -20 L600 620"></path><path d="M40 600 L360 0"></path>
+        </g>
+        <polygon points="618.4,69.9 548.7,87.7 538.8,90.4 528.4,93.2 516.2,96.7 506.8,99 496.9,101.6 484.5,105 470.2,109 458.2,118.6 447.1,127.3 430.8,129.9 422.9,128.7 411.1,126.7 396.3,126.3 393.5,151.4 368,151.2 328.2,144.5 303.4,139.6 289.5,134.3 275.3,123.3 252.1,104.2 229.6,87.7 216,78.1 114.7,186.3 95.9,218.1 96.5,252.4 92.4,280.8 139.2,311.3 164.4,321.1 197.2,342.2 203.1,346.1 224,362.3 253.7,387.7 264.6,392.8 247.1,466.2 340.1,475.9 385.9,482.7 408.5,487.4 423.8,494.9 437.1,505.9 453.6,528.3 458.8,524.8 503.5,502.4 526.2,490.4 547.7,482.7 552.1,482.9 561.6,435.4 567.9,407.7 573.5,383.4 576,369.1 568.1,365.4 548.9,334.1 617.6,320.8 632.3,319.3 618.4,265.2 600.3,237.8 583.5,215.6 610.6,204.3 636.5,189.7 652.8,180.1 672.4,168.7 691.8,159.2 726.4,145.6 667.9,104.4 618.4,69.9" fill="rgba(38,150,127,0.10)" stroke="#26967F" stroke-width="2" stroke-dasharray="6 4"></polygon>
+        <text x="112" y="205" fill="#1D7462" font-size="13" font-weight="600" font-family="IBM Plex Sans">Amir Temur · зона доставки</text>
+        <g transform="translate(367.3,350.4)">
+          <rect x="-13" y="-13" width="26" height="26" rx="5" fill="#16181A"></rect>
+          <text x="0" y="4" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700" font-family="IBM Plex Mono">Ф</text>
+        </g>
+      </svg>
+
+      <sc-if value="{{ showFallbackMarkers }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+          <sc-for list="{{ markers }}" as="m" hint-placeholder-count="0">
+            <button onClick="{{ m.onClick }}" title="{{ m.title }}" style="position:absolute;left:{{ m.left }};top:{{ m.top }};transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;border:3px solid #FFFFFF;background:{{ m.color }};color:#FFFFFF;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;box-shadow:0 2px 7px rgba(0,0,0,.24);cursor:pointer;pointer-events:auto;padding:0">{{ m.n }}</button>
+            <div style="position:absolute;left:{{ m.labelLeft }};top:{{ m.labelTop }};font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#16181A;text-shadow:0 1px 2px #FFFFFF;pointer-events:none">{{ m.id }}</div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <div style="position:absolute;top:12px;left:{{ hintLeft }};display:flex;align-items:center;gap:8px;padding:7px 12px;background:#FFFFFF;border:1px solid #DADAD3;border-radius:7px;font-size:12px;box-shadow:0 1px 2px rgba(0,0,0,0.06);pointer-events:none">
+        <span style="width:8px;height:8px;border-radius:50%;background:#2F6FDF"></span>
+        <span>{{ mapHint }}</span>
+      </div>
+      <div style="position:absolute;left:{{ hintLeft }};bottom:12px;display:flex;flex-direction:column;gap:6px;padding:10px 12px;background:#FFFFFF;border:1px solid #DADAD3;border-radius:7px;font-size:12px">
+        <span style="font-weight:600">{{ algoName }}</span>
+        <sc-for list="{{ routes }}" as="r" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:4px;border-radius:2px;background:{{ r.color }}"></span><span>{{ r.legend }}</span></div>
+        </sc-for>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:#9A9C98"></span><span>Не в результате run</span><span style="width:10px;height:10px;border-radius:50%;background:#D23B3B;margin-left:6px"></span><span>Вне зоны</span></div>
+      </div>
+      <div style="position:absolute;right:12px;bottom:12px;font-size:11px;color:#8A8D8F;background:rgba(255,255,255,0.8);padding:3px 7px;border-radius:4px;pointer-events:none">{{ mapProviderLabel }}</div>
+
+      <sc-if value="{{ orderDrawer }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:380px;display:flex;flex-direction:column;background:#FFFFFF;border-right:1px solid #DADAD3;box-shadow:8px 0 24px rgba(0,0,0,0.08)">
+          <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #E2E2DC">
+            <span style="font-weight:600;font-size:15px">{{ drawerTitle }}</span>
+            <div style="flex:1"></div>
+            <button onClick="{{ closeDrawer }}" style="width:28px;height:28px;border:none;border-radius:5px;background:#F2F2EE;cursor:pointer">✕</button>
+          </div>
+          <div style="flex:1;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:16px">
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:12px;color:#6B6E70">Адрес</span>
+              <div style="display:flex;gap:6px">
+                <input value="{{ d.address }}" onChange="{{ onAddress }}" placeholder="Улица, дом" style="flex:1;height:34px;padding:0 10px;border:1px solid #DADAD3;border-radius:6px">
+                <button onClick="{{ onSearch }}" style="height:34px;padding:0 12px;border:1px solid #DADAD3;border-radius:6px;background:#FFFFFF;cursor:pointer" style-hover="border-color:#16181A">Найти</button>
+              </div>
+              <sc-if value="{{ hasCandidates }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;border:1px solid #E2E2DC;border-radius:6px;overflow:hidden">
+                  <sc-for list="{{ candidates }}" as="g" hint-placeholder-count="3">
+                    <div onClick="{{ g.pick }}" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #EEEEE8;font-size:12px;cursor:pointer;background:{{ g.bg }}" style-hover="background:#F1F5FE">
+                      <span style="width:14px;height:14px;border-radius:50%;border:2px solid {{ g.ring }};background:{{ g.dot }}"></span>
+                      <span style="flex:1">{{ g.text }}</span>
+                      <span style="font-size:11px;font-weight:600;color:{{ g.zoneColor }}">{{ g.zone }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;background:#FAFAF8;font-size:12px">
+                <span style="color:#6B6E70">Точка</span>
+                <span style="font-family:'IBM Plex Mono',monospace">{{ d.coords }}</span>
+                <div style="flex:1"></div>
+                <span style="padding:1px 6px;border-radius:4px;font-weight:600;border:1px solid {{ d.zoneColor }};color:{{ d.zoneColor }}">{{ d.zoneText }}</span>
+              </div>
+              <span style="font-size:11px;color:#8A8D8F">Кликните по карте, чтобы перенести точку</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Статус</span>
+                <select value="{{ d.status }}" onChange="{{ onStatus }}" style="height:34px;padding:0 8px;border:1px solid #DADAD3;border-radius:6px;background:#FFFFFF">
+                  <sc-for list="{{ statusOptions }}" as="s" hint-placeholder-count="3"><option value="{{ s.v }}">{{ s.l }}</option></sc-for>
+                </select>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Сумма, UZS</span><input type="text" inputmode="numeric" value="{{ d.sum }}" onChange="{{ onSum }}" style="height:34px;padding:0 10px;border:1px solid {{ sumBorder }};border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Создан</span><input type="text" inputmode="numeric" placeholder="HH:MM" value="{{ d.created }}" onChange="{{ onCreated }}" style="height:34px;padding:0 10px;border:1px solid #DADAD3;border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Готов (ready_at)</span><input type="text" inputmode="numeric" placeholder="HH:MM" value="{{ d.ready }}" onChange="{{ onReady }}" style="height:34px;padding:0 10px;border:1px solid {{ timeBorder }};border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Deadline</span><input type="text" inputmode="numeric" placeholder="HH:MM" value="{{ d.deadline }}" onChange="{{ onDeadline }}" style="height:34px;padding:0 10px;border:1px solid {{ timeBorder }};border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Обслуживание, сек</span><input type="text" inputmode="numeric" value="{{ d.service }}" onChange="{{ onService }}" style="height:34px;padding:0 10px;border:1px solid #DADAD3;border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
+            </div>
+            <sc-for list="{{ drawerErrors }}" as="err" hint-placeholder-count="0">
+              <div style="font-size:12px;color:{{ err.color }}">{{ err.text }}</div>
+            </sc-for>
+            <sc-if value="{{ hasHistory }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;border-top:1px solid #E2E2DC;padding-top:12px;gap:8px">
+                <span style="font-weight:600">История статусов</span>
+                <sc-for list="{{ history }}" as="h" hint-placeholder-count="2">
+                  <div style="display:flex;gap:10px;font-size:12px"><span style="font-family:'IBM Plex Mono',monospace;color:#6B6E70">v{{ h.v }}</span><span>{{ h.text }}</span></div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ confirmDelete }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid #F1C4C4;background:#FDF1F1;font-size:12px;color:#B42323">
+              <span style="flex:1">Удалить {{ d.id }}? Старые runs не изменятся.</span>
+              <button onClick="{{ cancelDelete }}" style="height:28px;padding:0 10px;border:1px solid #DADAD3;border-radius:5px;background:#FFFFFF;cursor:pointer">Нет</button>
+              <button onClick="{{ doDelete }}" style="height:28px;padding:0 10px;border:none;border-radius:5px;background:#B42323;color:#FFFFFF;font-weight:600;cursor:pointer">Удалить</button>
+            </div>
+          </sc-if>
+          <div style="display:flex;gap:8px;padding:12px 16px;border-top:1px solid #E2E2DC">
+            <sc-if value="{{ canDelete }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ askDelete }}" style="height:34px;padding:0 12px;border:1px solid transparent;border-radius:6px;background:transparent;color:#B42323;cursor:pointer" style-hover="border-color:#F1C4C4">Удалить</button>
+            </sc-if>
+            <div style="flex:1"></div>
+            <button onClick="{{ closeDrawer }}" style="height:34px;padding:0 14px;border:1px solid #DADAD3;border-radius:6px;background:#FFFFFF;cursor:pointer">Отмена</button>
+            <button onClick="{{ saveOrder }}" style="height:34px;padding:0 16px;border:none;border-radius:6px;background:{{ saveBg }};color:#FFFFFF;font-weight:600;cursor:{{ saveCursor }}">{{ saveLabel }}</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ courierDrawer }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:380px;display:flex;flex-direction:column;background:#FFFFFF;border-right:1px solid #DADAD3;box-shadow:8px 0 24px rgba(0,0,0,0.08)">
+          <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #E2E2DC">
+            <span style="font-weight:600;font-size:15px">{{ cTitle }}</span>
+            <div style="flex:1"></div>
+            <button onClick="{{ closeDrawer }}" style="width:28px;height:28px;border:none;border-radius:5px;background:#F2F2EE;cursor:pointer">✕</button>
+          </div>
+          <div style="flex:1;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:16px">
+            <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Имя</span><input value="{{ cd.name }}" onChange="{{ onCName }}" style="height:34px;padding:0 10px;border:1px solid #DADAD3;border-radius:6px"></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Статус</span>
+                <select value="{{ cd.status }}" onChange="{{ onCStatus }}" style="height:34px;padding:0 8px;border:1px solid #DADAD3;border-radius:6px;background:#FFFFFF">
+                  <sc-for list="{{ cStatusOptions }}" as="s" hint-placeholder-count="2"><option value="{{ s.v }}">{{ s.l }}</option></sc-for>
+                </select>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Транспорт</span>
+                <select value="{{ cd.mode }}" onChange="{{ onCMode }}" style="height:34px;padding:0 8px;border:1px solid #DADAD3;border-radius:6px;background:#FFFFFF">
+                  <option value="DRIVING">DRIVING</option><option value="SCOOTER">SCOOTER</option><option value="BICYCLING">BICYCLING</option><option value="WALKING">WALKING</option>
+                </select>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">max_orders</span><input type="text" inputmode="numeric" value="{{ cd.maxOrders }}" onChange="{{ onCMax }}" style="height:34px;padding:0 10px;border:1px solid #DADAD3;border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">max_full_sum, UZS</span><input type="text" inputmode="numeric" value="{{ cd.maxSum }}" onChange="{{ onCSum }}" style="height:34px;padding:0 10px;border:1px solid #DADAD3;border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:12px;color:#6B6E70">Зоны обслуживания</span>
+              <sc-for list="{{ cZoneOptions }}" as="z" hint-placeholder-count="2">
+                <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #E2E2DC;border-radius:6px;cursor:pointer"><input type="checkbox" checked="{{ z.checked }}" onChange="{{ z.toggle }}" style="margin:0"><span style="width:10px;height:10px;border-radius:2px;background:{{ z.color }}"></span><span>{{ z.name }}</span><div style="flex:1"></div><span style="font-size:11px;color:#8A8D8F">{{ z.modes }}</span></label>
+              </sc-for>
+            </div>
+            <sc-for list="{{ cErrors }}" as="err" hint-placeholder-count="0">
+              <div style="font-size:12px;color:{{ err.color }}">{{ err.text }}</div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:8px;padding:12px 16px;border-top:1px solid #E2E2DC">
+            <div style="flex:1"></div>
+            <button onClick="{{ closeDrawer }}" style="height:34px;padding:0 14px;border:1px solid #DADAD3;border-radius:6px;background:#FFFFFF;cursor:pointer">Отмена</button>
+            <button onClick="{{ saveCourier }}" style="height:34px;padding:0 16px;border:none;border-radius:6px;background:{{ cSaveBg }};color:#FFFFFF;font-weight:600;cursor:pointer">Сохранить</button>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+
+    <aside style="display:flex;flex-direction:column;min-height:0;overflow:auto;background:#FFFFFF;border-left:1px solid #E2E2DC">
+      <div style="padding:12px 14px 8px;display:flex;align-items:center;gap:8px">
+        <span style="font-weight:600;font-size:14px">Сравнение алгоритмов</span>
+        <div style="flex:1"></div>
+        <span style="font-size:12px;color:#6B6E70">Клик по колонке — показать на карте</span>
+      </div>
+      <div style="padding:0 8px 12px">
+        <div style="display:grid;grid-template-columns:118px repeat(5,minmax(0,1fr));font-size:12px">
+          <div style="padding:6px"></div>
+          <sc-for list="{{ algoHeads }}" as="a" hint-placeholder-count="5">
+            <button onClick="{{ a.onClick }}" style="display:flex;flex-direction:column;align-items:flex-end;gap:1px;padding:7px 6px;border:none;border-top:3px solid {{ a.border }};background:{{ a.bg }};cursor:pointer;text-align:right" style-hover="background:#F1F5FE">
+              <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px">{{ a.code }}</span>
+              <span style="font-size:10px;color:#6B6E70;line-height:1.2">{{ a.short }}</span>
+            </button>
+          </sc-for>
+          <sc-for list="{{ metricRows }}" as="row" hint-placeholder-count="10">
+            <div style="padding:6px;border-top:1px solid #EEEEE8;color:#55585A">{{ row.label }}</div>
+            <sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="5">
+              <div onClick="{{ c.onClick }}" style="padding:6px;border-top:1px solid #EEEEE8;text-align:right;font-family:'IBM Plex Mono',monospace;background:{{ c.bg }};font-weight:{{ c.weight }};color:{{ c.color }};cursor:pointer">{{ c.v }}</div>
+            </sc-for>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:12px 14px 6px;border-top:1px solid #E2E2DC;display:flex;align-items:baseline;gap:8px">
+        <span style="font-weight:600;font-size:14px">Buckets</span>
+        <span style="color:#6B6E70;font-size:12px">{{ algoName }}</span>
+      </div>
+      <sc-if value="{{ skipped }}" hint-placeholder-val="{{ false }}">
+        <div style="margin:4px 14px 10px;padding:10px 12px;border:1px solid #F0D6A8;border-radius:8px;background:#FFF6E5;color:#8A5300;font-size:12px">SKIPPED_LIMIT · {{ skipText }}</div>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:4px 14px 10px">
+        <sc-for list="{{ routes }}" as="r" hint-placeholder-count="2">
+          <div style="border:1px solid #E2E2DC;border-radius:8px;overflow:hidden">
+            <div style="display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-left:4px solid {{ r.color }};background:#FAFAF8">
+              <div style="display:flex;align-items:center;gap:8px"><span style="font-weight:600">Bucket {{ r.b }} · {{ r.courier }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B6E70">{{ r.mode }}</span><div style="flex:1"></div><span style="font-size:11px;font-weight:600;color:{{ r.statusColor }}">{{ r.statusText }}</span></div>
+              <div style="font-size:12px;color:#55585A">{{ r.capText }}</div>
+              <div style="font-size:12px;color:#55585A">{{ r.travelText }}</div>
+            </div>
+            <div style="display:grid;grid-template-columns:22px 1fr auto auto 40px;column-gap:12px;padding:6px 12px 8px;font-size:12px;font-family:'IBM Plex Mono',monospace">
+              <sc-for list="{{ r.stops }}" as="s" hint-placeholder-count="3">
+                <span style="padding:4px 0;color:#8A8D8F">{{ s.n }}.</span>
+                <span onClick="{{ s.open }}" style="padding:4px 0;font-weight:600;cursor:pointer" style-hover="color:#2F6FDF">{{ s.id }}</span>
+                <span style="padding:4px 0">ETA {{ s.eta }}</span>
+                <span style="padding:4px 0;color:#6B6E70">до {{ s.deadline }}</span>
+                <span style="padding:4px 0;text-align:right;font-weight:600;color:{{ s.slackColor }}">{{ s.slack }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+        <sc-if value="{{ hasUnassigned }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px dashed #DADAD3;border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px">
+            <span style="font-weight:600;font-size:12px">Не назначены</span>
+            <sc-for list="{{ unassigned }}" as="u" hint-placeholder-count="1">
+              <div style="display:flex;gap:10px;font-size:12px"><span onClick="{{ u.open }}" style="font-family:'IBM Plex Mono',monospace;font-weight:600;cursor:pointer">{{ u.id }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#B42323">{{ u.code }}</span><span style="color:#6B6E70">{{ u.text }}</span></div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ showTrace }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:12px 14px 6px;border-top:1px solid #E2E2DC;display:flex;align-items:baseline;gap:8px">
+          <span style="font-weight:600;font-size:14px">Decision trace</span>
+          <span style="color:#6B6E70;font-size:12px">{{ traceCount }}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;padding:0 14px 18px">
+          <sc-for list="{{ trace }}" as="e" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:22px 74px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid #F0F0EA;font-size:12px;align-items:baseline">
+              <span style="font-family:'IBM Plex Mono',monospace;color:#8A8D8F">{{ e.seq }}</span>
+              <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.03em;color:{{ e.color }}">{{ e.type }}</span>
+              <span style="line-height:1.4;text-wrap:pretty">{{ e.text }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;stale&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние&quot;},&quot;showTrace&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Состояние&quot;}}">
+const ST = {
+  DRAFT:['Черновик','#EDEDEA','#55585A'], COOKING_STARTED:['Готовится','#FFF1DC','#9A5B00'],
+  COOKING_COMPLETED:['Приготовлен','#E6F4EA','#1E7A45'], WAITING:['Ожидает','#E7EEFF','#2A56B8'],
+  ASSIGNED:['Назначен','#EFE7FF','#6A3FC0'], ON_WAY:['В пути','#E3F5F6','#11747C'],
+  DELIVERED:['Доставлен','#EDEDEA','#55585A'], CANCELLED:['Отменён','#FDE8E8','#B42323']
+};
+const NEXT = {DRAFT:'COOKING_STARTED',COOKING_STARTED:'COOKING_COMPLETED',COOKING_COMPLETED:'WAITING',WAITING:'ASSIGNED',ASSIGNED:'ON_WAY',ON_WAY:'DELIVERED'};
+const TRANS = {DRAFT:['COOKING_STARTED','CANCELLED'],COOKING_STARTED:['COOKING_COMPLETED','CANCELLED'],COOKING_COMPLETED:['WAITING','CANCELLED'],WAITING:['ASSIGNED','CANCELLED'],ASSIGNED:['WAITING','ON_WAY','CANCELLED'],ON_WAY:['DELIVERED'],DELIVERED:[],CANCELLED:[]};
+const ELIGIBLE = ['COOKING_STARTED','COOKING_COMPLETED','WAITING'];
+const CST = {OFFLINE:['Офлайн','#EDEDEA','#8A8D8F'],FREE:['Свободен','#E6F4EA','#1E7A45'],RESERVED:['Резерв','#FFF1DC','#9A5B00'],DELIVERING:['Доставляет','#E7EEFF','#2A56B8'],RETURNING:['Возвращается','#E3F5F6','#11747C']};
+const CTRANS = {OFFLINE:['FREE'],FREE:['RESERVED','OFFLINE'],RESERVED:['FREE','DELIVERING','OFFLINE'],DELIVERING:['RETURNING','FREE'],RETURNING:['FREE','OFFLINE']};
+const CACT = {FREE:'Освободить сейчас',OFFLINE:'В офлайн',RESERVED:'Резерв',DELIVERING:'Доставляет',RETURNING:'Возвращается'};
+const ZONES = [
+  {id:'Z1',name:'Amir Temur · зона доставки',color:'#26967F',fill:'rgba(38,150,127,0.15)',pts:[[618.4,69.9],[548.7,87.7],[538.8,90.4],[528.4,93.2],[516.2,96.7],[506.8,99],[496.9,101.6],[484.5,105],[470.2,109],[458.2,118.6],[447.1,127.3],[430.8,129.9],[422.9,128.7],[411.1,126.7],[396.3,126.3],[393.5,151.4],[368,151.2],[328.2,144.5],[303.4,139.6],[289.5,134.3],[275.3,123.3],[252.1,104.2],[229.6,87.7],[216,78.1],[114.7,186.3],[95.9,218.1],[96.5,252.4],[92.4,280.8],[139.2,311.3],[164.4,321.1],[197.2,342.2],[203.1,346.1],[224,362.3],[253.7,387.7],[264.6,392.8],[247.1,466.2],[340.1,475.9],[385.9,482.7],[408.5,487.4],[423.8,494.9],[437.1,505.9],[453.6,528.3],[458.8,524.8],[503.5,502.4],[526.2,490.4],[547.7,482.7],[552.1,482.9],[561.6,435.4],[567.9,407.7],[573.5,383.4],[576,369.1],[568.1,365.4],[548.9,334.1],[617.6,320.8],[632.3,319.3],[618.4,265.2],[600.3,237.8],[583.5,215.6],[610.6,204.3],[636.5,189.7],[652.8,180.1],[672.4,168.7],[691.8,159.2],[726.4,145.6],[667.9,104.4],[618.4,69.9]],modes:null}
+];
+const ZC = {Z1:'#26967F'};
+const BCOL = ['#2F6FDF','#E0652B','#1E9E6A','#B0359B','#8C6D1F'];
+const BR = [367.3,350.4];
+const PLAN = 18*60;
+const STREETS = ['ул. Бунёдкор','ул. Катартал','ул. Мукими','ул. Гавхар','ул. Лутфий','ул. Арнасай','ул. Кичик Халка йули','ул. Чупон ота','ул. Дийдор','ул. Кумарык'];
+const REASON = {OUTSIDE_ZONE:'точка вне активных зон',NO_COURIER:'нет свободных курьеров',NO_ZONE_COMPATIBLE_COURIER:'ни один курьер не обслуживает зону',MAX_ORDERS:'у всех подходящих курьеров исчерпан max_orders',MAX_FULL_SUM:'превышен max_full_sum',SLA:'не успевает к deadline',ALGORITHM_CHOICE:'вариант был, но эвристика его закрыла'};
+const ALGOS = [['A1','Urgency append','A1 · Urgency-seeded append'],['A2','Nearest neighbor','A2 · Nearest Neighbor'],['A3','Cheapest insert','A3 · Cheapest Feasible Insertion'],['A4','Regret-2','A4 · Regret-2 Insertion'],['Exact','Полный перебор','A5 · Exact Exhaustive Search']];
+const TC = {start:'#6B6E70',seed:'#2F6FDF',check:'#6B6E70',accept:'#1E7A45',reject:'#B42323',close:'#9A5B00',done:'#16181A',regret:'#6A3FC0',best:'#2F6FDF',prune:'#9A5B00',late:'#B42323',limit:'#B42323'};
+const TL = {start:'start',seed:'seed',check:'checked',accept:'accepted',reject:'rejected',close:'closed',done:'completed',regret:'regret',best:'best',prune:'pruned',late:'late solo',limit:'limit'};
+
+const toMin = s => { const [h,m] = (s||'0:0').split(':').map(Number); return h*60+m; };
+const hm = m => { m = Math.round(m); return String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); };
+const fmt = n => Number(n||0).toLocaleString('ru-RU').replace(/\u00a0|,/g,' ');
+const mins = v => (Math.round(v*10)/10).toString().replace('.',',');
+const signed = v => { const r = Math.round(v); return r>0 ? '+'+r : r<0 ? '−'+(-r) : '0'; };
+const pip = (p, poly) => { let ins=false; for (let i=0,j=poly.length-1;i<poly.length;j=i++){ const [xi,yi]=poly[i],[xj,yj]=poly[j]; if(((yi>p[1])!==(yj>p[1])) && (p[0] < (xj-xi)*(p[1]-yi)/(yj-yi)+xi)) ins=!ins; } return ins; };
+const zonesOf = (x,y) => ZONES.filter(z => pip([x,y], z.pts)).map(z => z.id);
+const coordsText = (x,y) => `${(41.359 - (y-35)/530*(41.359-41.314)).toFixed(6)}, ${(69.252 + (x-40)/720*(69.324-69.252)).toFixed(6)}`;
+const revGeo = (x,y) => `${STREETS[Math.floor(x/7+y/11) % STREETS.length]}, ${(Math.floor(x+y) % 90)+1}`;
+
+const INIT_ORDERS = [];
+const INIT_COURIERS = [
+  {id:'C1',name:'Азиз',status:'FREE',mode:'SCOOTER',maxOrders:3,maxSum:300000,zones:['Z1'],freeSince:'17:52'},
+  {id:'C2',name:'Бекзод',status:'FREE',mode:'DRIVING',maxOrders:3,maxSum:300000,zones:['Z1'],freeSince:'17:54'},
+  {id:'C3',name:'Дилшод',status:'OFFLINE',mode:'BICYCLING',maxOrders:2,maxSum:200000,zones:['Z1'],freeSince:null}
+];
+
+function buildInput(orders, couriers, settings) {
+  const pos = {BR};
+  const outside = [];
+  const os = [];
+  orders.filter(o => ELIGIBLE.includes(o.status)).forEach(o => {
+    const zones = zonesOf(o.x,o.y);
+    pos[o.id] = [o.x,o.y];
+    const n = {id:o.id,zones,ready:toMin(o.ready),deadline:toMin(o.deadline),created:toMin(o.created),service:(Number(o.service)||0)/60,sum:Number(o.sum)||0};
+    if (zones.length===0) outside.push(n); else os.push(n);
+  });
+  const cs = couriers.filter(c => c.status==='FREE' && c.zones.length>0)
+    .sort((a,b) => toMin(a.freeSince)-toMin(b.freeSince) || (a.id<b.id?-1:1)).map(c => ({...c}));
+  const byId = {}; os.forEach(o => byId[o.id]=o);
+  const legCache = {};
+  const leg = (a,b) => { const k=a+'>'+b; if (legCache[k]!=null) return legCache[k];
+    const [x1,y1]=pos[a],[x2,y2]=pos[b]; return legCache[k] = Math.max(0.5, Math.round(Math.hypot(x2-x1,y2-y1)/20*2)/2); };
+  return {orders:os, outside, couriers:cs, byId, leg, pos, allowLate:settings.allowLate};
+}
+const urg = (a,b) => a.deadline-b.deadline || a.created-b.created || (a.id<b.id?-1:1);
+function canServe(c,o){ return o.zones.some(z => c.zones.includes(z) && (!ZONES.find(zz=>zz.id===z).modes || ZONES.find(zz=>zz.id===z).modes.includes(c.mode))); }
+function evalRoute(c, ids, inp) {
+  const os = ids.map(id => inp.byId[id]);
+  const v = [];
+  if (new Set(ids).size!==ids.length) return {feasible:false,violations:['DUPLICATE']};
+  if (os.some(o => !canServe(c,o))) v.push('ZONE');
+  if (ids.length > c.maxOrders) v.push('MAX_ORDERS');
+  const sum = os.reduce((s,o)=>s+o.sum,0);
+  if (sum > c.maxSum) v.push('MAX_FULL_SUM');
+  if (v.length) return {feasible:false,violations:v,sum};
+  const dep = Math.max(PLAN, ...os.map(o=>o.ready));
+  let t = dep, prev='BR', travel=0, minSlack=Infinity; const stops=[];
+  os.forEach((o,i) => { const l = inp.leg(prev,o.id); t+=l; travel+=l; const ss=Math.max(t,o.ready); const slack=o.deadline-ss;
+    if (slack<0) v.push('SLA'); minSlack=Math.min(minSlack,slack); stops.push({id:o.id,eta:ss,deadline:o.deadline,slack}); t=ss+o.service; prev=o.id; });
+  return {feasible:v.length===0,violations:v,dep,finish:t,travel,stops,minSlack,sum};
+}
+function why(v){ if (v.violations.includes('ZONE')) return 'зона не обслуживается'; if (v.violations.includes('MAX_ORDERS')) return 'лимит max_orders'; if (v.violations.includes('MAX_FULL_SUM')) return 'лимит max_full_sum';
+  const s = v.stops.find(s=>s.slack<0); return `${s.id} опоздает на ${mins(-s.slack)} мин`; }
+const insertAt = (a,i,x) => [...a.slice(0,i),x,...a.slice(i)];
+
+function algoAppend(inp, nearest) {
+  const rem=[...inp.orders].sort(urg), routes=[], tr=[];
+  tr.push(['start', nearest ? 'Старт: текущая точка каждого курьера — филиал' : `Старт: ${rem.length} заказов, FIFO ${inp.couriers.map(c=>c.name).join(' → ')||'—'}`]);
+  for (const c of inp.couriers) {
+    let ids=[];
+    if (!nearest) {
+      const seed = rem.find(o => canServe(c,o) && evalRoute(c,[o.id],inp).feasible);
+      if (!seed) { tr.push(['check',`${c.name}: нет допустимого seed`]); continue; }
+      ids=[seed.id]; rem.splice(rem.indexOf(seed),1);
+      tr.push(['seed',`Seed ${seed.id} для ${c.name}: самый срочный, deadline ${hm(seed.deadline)}`]);
+    }
+    while (rem.length) {
+      const last = ids.length ? ids[ids.length-1] : 'BR';
+      const cands = rem.filter(o=>canServe(c,o)).sort((a,b)=>inp.leg(last,a.id)-inp.leg(last,b.id)||urg(a,b));
+      let acc=null;
+      for (const o of cands) { const v=evalRoute(c,[...ids,o.id],inp);
+        if (v.feasible) { acc=o; const s=v.stops[v.stops.length-1]; tr.push(['accept',`${o.id} → ${c.name}${nearest?`, ближайший (${mins(inp.leg(last,o.id))} мин)`:' в конец'}: ETA ${hm(s.eta)}, запас ${signed(s.slack)} мин`]); break; }
+        tr.push(['reject',`${o.id} для ${c.name} отклонён: ${why(v)}`]); }
+      if (!acc) break;
+      ids.push(acc.id); rem.splice(rem.indexOf(acc),1);
+    }
+    if (ids.length) { routes.push({c,ids}); tr.push(['close',`Маршрут ${c.name} закрыт: ${ids.length} заказ.`]); }
+  }
+  return {routes, rem, tr};
+}
+function allInsertions(o, routes, inp) {
+  const out=[];
+  routes.forEach((r,ri) => { if (!canServe(r.c,o)) return; const before = r.ids.length ? evalRoute(r.c,r.ids,inp).travel : 0;
+    for (let p=0;p<=r.ids.length;p++){ const ids=insertAt(r.ids,p,o.id); const v=evalRoute(r.c,ids,inp); if (v.feasible) out.push({o,ri,p,ids,delta:v.travel-before}); } });
+  return out;
+}
+const cmpIns = (a,b) => a.delta-b.delta || urg(a.o,b.o) || a.ri-b.ri || a.p-b.p;
+function algoCheapest(inp) {
+  const routes=inp.couriers.map(c=>({c,ids:[]})), rem=[...inp.orders].sort(urg), tr=[['start','Старт: пустые маршруты у всех свободных курьеров']];
+  while (rem.length) { let best=null, n=0;
+    for (const o of rem) { const cs=allInsertions(o,routes,inp); n+=cs.length; for (const c of cs) if (!best||cmpIns(c,best)<0) best=c; }
+    if (!best) break;
+    routes[best.ri].ids=best.ids; rem.splice(rem.indexOf(best.o),1);
+    tr.push(['accept',`${best.o.id} → ${routes[best.ri].c.name}, позиция ${best.p}: +${mins(best.delta)} мин (минимум из ${n} вариантов)`]); }
+  return {routes:routes.filter(r=>r.ids.length), rem, tr};
+}
+function algoRegret(inp) {
+  const routes=inp.couriers.map(c=>({c,ids:[]})), rem=[...inp.orders].sort(urg), tr=[['start','Старт: regret = второй лучший − лучший']];
+  while (rem.length) { const ch=[];
+    for (const o of rem) { const cs=allInsertions(o,routes,inp).sort(cmpIns); if (!cs.length) continue; ch.push({o,best:cs[0],regret:cs[1]?cs[1].delta-cs[0].delta:Infinity}); }
+    if (!ch.length) break;
+    ch.sort((a,b)=> (b.regret-a.regret) || urg(a.o,b.o) || a.best.delta-b.best.delta);
+    if (ch[0].regret===Infinity && ch[1] && ch[1].regret===Infinity) ch.sort((a,b)=> (a.regret===Infinity&&b.regret===Infinity) ? urg(a.o,b.o) : 0);
+    const x=ch[0]; tr.push(['regret',`Regret ${x.o.id} = ${x.regret===Infinity?'INF':mins(x.regret)+' мин'}`]);
+    routes[x.best.ri].ids=x.best.ids; rem.splice(rem.indexOf(x.o),1);
+    tr.push(['accept',`${x.o.id} → ${routes[x.best.ri].c.name}, позиция ${x.best.p}: +${mins(x.best.delta)} мин`]); }
+  return {routes:routes.filter(r=>r.ids.length), rem, tr};
+}
+function algoExact(inp) {
+  const os=[...inp.orders].sort(urg), cs=inp.couriers, tr=[['start','Лимиты: 8 заказов, 3 курьера, 3000 мс, 2 000 000 состояний']];
+  if (os.length>8 || cs.length>3) return {skipped:`${os.length} заказов × ${cs.length} курьеров превышает лимит 8 × 3`, tr:[...tr,['limit','algorithm.limit_exceeded до начала перебора']]};
+  const t0=performance.now(); let states=0, pruned=0, best=null; const routes=cs.map(()=>[]);
+  const score = () => { let a=0,u=0,tt=0,mx=0; routes.forEach((r,i)=>{ if(!r.length) return; a+=r.length; u++; const v=evalRoute(cs[i],r,inp); tt+=v.travel; mx=Math.max(mx,v.travel); }); return {a,u,tt,mx}; };
+  const better = (s,b) => !b || s.a>b.a || (s.a===b.a && (s.u<b.u || (s.u===b.u && (s.tt<b.tt-1e-9 || (Math.abs(s.tt-b.tt)<1e-9 && s.mx<b.mx)))));
+  const rec = i => { states++; if ((states & 255)===0 && (performance.now()-t0>3000 || states>2e6)) throw 'LIMIT';
+    if (i===os.length) { const s=score(); if (better(s,best)) { best={...s,routes:routes.map(r=>[...r])}; tr.push(['best',`Новый лучший: ${s.a} вовремя, ${s.u} курьера, ${mins(s.tt)} мин`]); } return; }
+    const assigned=routes.reduce((s,r)=>s+r.length,0); if (best && assigned+(os.length-i)<best.a) { pruned++; return; }
+    const o=os[i];
+    cs.forEach((c,k) => { if (!canServe(c,o)) return; const old=routes[k];
+      for (let p=0;p<=old.length;p++){ const ids=insertAt(old,p,o.id); if (!evalRoute(c,ids,inp).feasible){ pruned++; continue; } routes[k]=ids; rec(i+1); routes[k]=old; } });
+    rec(i+1); };
+  try { rec(0); } catch(e) { return {skipped:`превышен лимит: ${fmt(states)} состояний`, tr:[...tr,['limit','algorithm.limit_exceeded']]}; }
+  tr.push(['prune',`Отсечено веток: ${fmt(pruned)}`]);
+  const rs = best ? best.routes.map((ids,k)=>({c:cs[k],ids})).filter(r=>r.ids.length) : [];
+  const used=new Set(rs.flatMap(r=>r.ids));
+  return {routes:rs, rem:os.filter(o=>!used.has(o.id)), tr, states};
+}
+function finish(code, res, inp, ms) {
+  if (res.skipped) return {code, skipped:res.skipped, routes:[], unassigned:[], trace:res.tr, ms};
+  const tr=res.tr, routes=res.routes.map(r=>({...r,late:false})), rem=[...res.rem].sort(urg);
+  if (inp.allowLate) { const used=new Set(routes.map(r=>r.c.id));
+    for (const o of [...rem]) { const c = inp.couriers.find(c => !used.has(c.id) && canServe(c,o) && evalRoute(c,[o.id],inp).violations.every(x=>x==='SLA'));
+      if (c) { used.add(c.id); routes.push({c,ids:[o.id],late:true}); rem.splice(rem.indexOf(o),1); tr.push(['late',`${o.id}: late solo у ${c.name}, опоздание ${mins(-evalRoute(c,[o.id],inp).minSlack)} мин`]); } } }
+  const unassigned = inp.outside.map(o=>({id:o.id,code:'OUTSIDE_ZONE'}));
+  rem.forEach(o => { let code;
+    const comp = inp.couriers.filter(c=>canServe(c,o));
+    if (!inp.couriers.length) code='NO_COURIER'; else if (!comp.length) code='NO_ZONE_COMPATIBLE_COURIER';
+    else { const vs=[]; comp.forEach(c=>{ const r=routes.find(r=>r.c.id===c.id); const base=r?r.ids:[]; for(let p=0;p<=base.length;p++) vs.push(evalRoute(c,insertAt(base,p,o.id),inp)); });
+      if (vs.some(v=>v.feasible)) code='ALGORITHM_CHOICE'; else if (vs.every(v=>v.violations.includes('MAX_ORDERS'))) code='MAX_ORDERS';
+      else if (vs.every(v=>v.violations.includes('MAX_ORDERS')||v.violations.includes('MAX_FULL_SUM'))) code='MAX_FULL_SUM'; else code='SLA'; }
+    unassigned.push({id:o.id,code}); tr.push(['reject',`${o.id} не назначен: ${code}`]); });
+  const evals = routes.map(r=>evalRoute(r.c,r.ids,inp));
+  const ok = routes.map((r,i)=>({...r,ev:evals[i]}));
+  const onTime = ok.filter(r=>!r.late).reduce((s,r)=>s+r.ids.length,0);
+  const travel = evals.reduce((s,v)=>s+v.travel,0);
+  const slacks = ok.filter(r=>!r.late).map(r=>r.ev.minSlack);
+  tr.push(['done',`Готово: ${onTime} вовремя, ${mins(travel)} мин дороги, ${ms.toFixed(2).replace('.',',')} мс`]);
+  return {code, routes:ok, unassigned, trace:tr, ms, onTime, late:ok.filter(r=>r.late).length, travel,
+    maxRoute: evals.reduce((m,v)=>Math.max(m,v.travel),0), minSlack: slacks.length?Math.min(...slacks):null, buckets:ok.length};
+}
+function runAlgorithms(orders, couriers, settings) {
+  const inp = buildInput(orders, couriers, settings);
+  const fns = [()=>algoAppend(inp,false),()=>algoAppend(inp,true),()=>algoCheapest(inp),()=>algoRegret(inp),()=>algoExact(inp)];
+  const results = fns.map((f,i) => { const t=performance.now(); const r=f(); return finish(ALGOS[i][0], r, inp, performance.now()-t); });
+  const snap = {}; orders.forEach(o => snap[o.id] = [o.x,o.y]);
+  return {results, pos:snap, matrix:(inp.orders.length+1)**2, eligible:inp.orders.length+inp.outside.length, couriers:inp.couriers.length};
+}
+
+function emptyRun(version) {
+  return {
+    number:'—', version, pos:{}, matrix:0, eligible:0, couriers:0,
+    results:ALGOS.map(([code])=>({code,routes:[],unassigned:[],trace:[['start','Создайте заказы и нажмите «Запустить все»']],ms:0,onTime:0,late:0,travel:0,maxRoute:0,minSlack:null,buckets:0}))
+  };
+}
+
+async function api(path, options={}) {
+  const response = await fetch('/api/v1'+path, {
+    ...options,
+    headers: {'Content-Type':'application/json', ...(options.headers||{})}
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(()=>({detail:`HTTP ${response.status}`}));
+    const error = new Error(body.detail || body.title || 'Ошибка API');
+    error.problem = body;
+    throw error;
+  }
+  return response.status===204 ? null : response.json();
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const settings = {allowLate:true};
+    this.svgRef = React.createRef();
+    this.ymapRef = React.createRef();
+    this.yandexMap = null;
+    this.yandexMapLoading = null;
+    this.mapConfig = null;
+    this.state = { tab:'orders', algo:0, orders:INIT_ORDERS.map(o=>({...o})), couriers:INIT_COURIERS.map(c=>({...c})), settings,
+      version:11, run:emptyRun(11), branch:null, mapProvider:'LOADING',
+      drawer:null, draft:null, candidates:[], confirmDelete:false, cdraft:null, showTerminal:false, orderQuery:'', nextId:6, nextCId:4, history:{}, apiError:null, busy:false };
+  }
+  componentDidMount() { this.loadBootstrap(); }
+  componentDidUpdate() { this.ensureYandexMap(); this.syncYandexMap(); }
+  componentWillUnmount() { if (this.yandexMap) this.yandexMap.destroy(); }
+  applyBootstrap(data, extra={}) {
+    this.setState({
+      orders:data.orders, couriers:data.couriers, settings:data.settings, version:data.version,
+      run:data.run || emptyRun(data.version), branch:data.branch, nextId:data.nextId, nextCId:data.nextCId,
+      apiError:null, busy:false, ...extra
+    },()=>this.ensureYandexMap());
+  }
+  async ensureYandexMap() {
+    if (this.yandexMap || this.yandexMapLoading || this.state.mapProvider!=='LOADING' || !this.ymapRef.current || !this.state.branch) return;
+    this.yandexMapLoading = (async()=>{
+      try {
+        const config=this.mapConfig;
+        if (!config?.yandexMapsJsApiKey) { this.setState({mapProvider:'NO_KEY'}); return; }
+        this.yandexMap=await window.RoutingLabYandexMap.create({
+          container:this.ymapRef.current,key:config.yandexMapsJsApiKey,language:config.yandexMapsLanguage,
+          branch:this.state.branch,onMapClick:([x,y])=>this.beginOrderAt(Math.round(x),Math.round(y))
+        });
+        this.setState({mapProvider:'YANDEX'},()=>this.syncYandexMap());
+      } catch(error) { this.setState({mapProvider:'FAILED',apiError:error.message}); }
+      finally { this.yandexMapLoading=null; }
+    })();
+    await this.yandexMapLoading;
+  }
+  syncYandexMap() {
+    if (!this.yandexMap || !this.state.run) return;
+    const st=this.state,res=st.run.results[st.algo],where={};
+    (res.routes||[]).forEach((r,bi)=>r.ids.forEach((id,i)=>where[id]={n:i+1,color:BCOL[bi%BCOL.length]}));
+    const routes=(res.routes||[]).map((r,bi)=>({
+      color:BCOL[bi%BCOL.length],dash:r.late?'8 6':'none',opacity:0.9,
+      points:[BR,...r.ids.map(id=>st.run.pos[id]).filter(Boolean)]
+    }));
+    const markerMeta={}; st.orders.forEach(o=>{const w=where[o.id],out=zonesOf(o.x,o.y).length===0;markerMeta[o.id]={n:w?w.n:'·',color:w?w.color:out?'#D23B3B':'#9A9C98'};});
+    this.yandexMap.update({orders:st.orders,routes,markerMeta,onOrderClick:id=>this.openOrder(id)});
+  }
+  async loadBootstrap() {
+    this.setState({busy:true});
+    try {
+      const [data,config]=await Promise.all([api('/bootstrap'),api('/config')]);
+      this.mapConfig=config;
+      this.applyBootstrap(data,{mapProvider:config.yandexMapsJsApiKey?'LOADING':'NO_KEY'});
+    }
+    catch(error) { this.setState({apiError:error.message,busy:false}); }
+  }
+  async mutate(path, options, extra={}) {
+    this.setState({busy:true,apiError:null});
+    try { this.applyBootstrap(await api(path,options),extra); return true; }
+    catch(error) { this.setState({apiError:error.message,busy:false}); return false; }
+  }
+  bump(patch, histFor, text) {
+    this.setState(s => { const h={...s.history}; if (histFor) h[histFor]=[...(h[histFor]||[]),{v:s.version+1,text}]; return {...(typeof patch==='function'?patch(s):patch), version:s.version+1, history:h}; });
+  }
+  async setOrderStatus(id, to) {
+    await this.mutate(`/orders/${id}/status`,{method:'POST',body:JSON.stringify({status:to,reason:'Быстрое действие из UI'})});
+  }
+  async setCourierStatus(id, to) {
+    await this.mutate(`/couriers/${id}/status`,{method:'POST',body:JSON.stringify({status:to,reason:'Быстрое действие из UI'})});
+  }
+  onMapClick = e => {
+    const svg=this.svgRef.current; if (!svg) return;
+    const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY;
+    const p=pt.matrixTransform(svg.getScreenCTM().inverse()); const x=Math.round(p.x), y=Math.round(p.y);
+    this.beginOrderAt(x,y);
+  };
+  beginOrderAt(x,y) {
+    if (this.state.drawer==='order' && this.state.draft) { this.setState(s=>({draft:{...s.draft,x,y,address:revGeo(x,y)},candidates:[]})); return; }
+    const id='O'+this.state.nextId;
+    this.setState({drawer:'order', confirmDelete:false, candidates:[], tab:'orders',
+      draft:{id,isNew:true,address:revGeo(x,y),status:'COOKING_STARTED',sum:'100000',created:'18:00',ready:'18:10',deadline:'18:35',service:'60',x,y}});
+  }
+  openOrder(id) { const o=this.state.orders.find(o=>o.id===id); if (!o) return;
+    this.setState({drawer:'order', confirmDelete:false, candidates:[], tab:'orders', draft:{...o,isNew:false,orig:o.status,sum:String(o.sum),service:String(o.service)}});
+    api(`/orders/${id}/history`).then(events=>this.setState(s=>({history:{...s.history,[id]:events.map(e=>({v:e.id,text:`${e.from_status||'—'} → ${e.to_status} · ${e.reason||''}`}))}}))).catch(()=>{});
+  }
+  newOrderAtCenter() { const x=330,y=190; const id='O'+this.state.nextId;
+    this.setState({drawer:'order',confirmDelete:false,candidates:[],draft:{id,isNew:true,address:'',status:'COOKING_STARTED',sum:'100000',created:'18:00',ready:'18:10',deadline:'18:35',service:'60',x:null,y:null}}); }
+  setD(k) { return e => { const v=e.target.value; this.setState(s=>({draft:{...s.draft,[k]:v}})); }; }
+  setC(k, num) { return e => { const v=e.target.value; this.setState(s=>({cdraft:{...s.cdraft,[k]:num?Number(v):v}})); }; }
+  draftErrors(d) {
+    const e=[];
+    if (d.x==null) e.push({block:true,text:'Выберите адрес из результатов поиска или кликните по карте'});
+    if (!(Number(d.sum)>0)) e.push({block:true,text:'Сумма должна быть больше 0'});
+    if (!(toMin(d.created)<=toMin(d.ready) && toMin(d.ready)<=toMin(d.deadline))) e.push({block:true,text:'Нужно: создан ≤ готов ≤ deadline'});
+    if (!(Number(d.service)>=0)) e.push({block:true,text:'Время обслуживания не может быть отрицательным'});
+    if (d.x!=null && zonesOf(d.x,d.y).length===0) e.push({block:false,text:'Точка вне активных зон — в run заказ получит OUTSIDE_ZONE'});
+    return e;
+  }
+  saveOrder = async () => {
+    const d=this.state.draft; if (this.draftErrors(d).some(e=>e.block)) return;
+    const o={id:d.id,address:d.address||revGeo(d.x,d.y),status:d.status,sum:Number(d.sum),created:d.created,ready:d.ready,deadline:d.deadline,service:Number(d.service),x:d.x,y:d.y};
+    await this.mutate(d.isNew?'/orders':`/orders/${d.id}`,{method:d.isNew?'POST':'PATCH',body:JSON.stringify(o)},{drawer:null,draft:null,candidates:[]});
+  };
+  saveCourier = async () => {
+    const c=this.state.cdraft; if (!c.name.trim() || !(c.maxOrders>=1) || !(c.maxSum>0)) return;
+    const prev=this.state.couriers.find(x=>x.id===c.id);
+    const nc={...c, freeSince: c.status==='FREE' ? (prev && prev.status==='FREE' ? prev.freeSince : '18:00') : null};
+    delete nc.isNew;
+    await this.mutate(c.isNew?'/couriers':`/couriers/${c.id}`,{method:c.isNew?'POST':'PATCH',body:JSON.stringify(nc)},{drawer:null,cdraft:null});
+  };
+  runAll = async () => {
+    this.setState({busy:true,apiError:null});
+    try { const run=await api('/runs',{method:'POST',body:'{}'}); this.setState({run,busy:false}); }
+    catch(error) { this.setState({apiError:error.message,busy:false}); }
+  };
+  toggleLate = async () => {
+    await this.mutate('/settings',{method:'PATCH',body:JSON.stringify({allowLate:!this.state.settings.allowLate})});
+  };
+
+  renderVals() {
+    const st=this.state, run=st.run;
+    const noRun = run.number==='—';
+    const stale = run.version!==st.version || (this.props.stale ?? false);
+    const res = run.results[st.algo];
+    const where = {};
+    (res.routes||[]).forEach((r,bi) => r.ids.forEach((id,i) => where[id]={b:String.fromCharCode(65+bi),n:i+1,color:BCOL[bi%BCOL.length],courier:r.c.name,eta:r.ev.stops[i].eta,late:r.late}));
+    const unIdx = {}; (res.unassigned||[]).forEach(u=>unIdx[u.id]=u.code);
+    const open = id => e => { if (e && e.stopPropagation) e.stopPropagation(); this.openOrder(id); };
+
+    const q = st.orderQuery.trim().toLowerCase();
+    const visible = st.orders.filter(o => (st.showTerminal || !['DELIVERED','CANCELLED'].includes(o.status)) && (!q || o.id.toLowerCase().includes(q) || o.address.toLowerCase().includes(q)))
+      .sort((a,b)=>toMin(a.deadline)-toMin(b.deadline));
+    const orderRows = visible.map(o => { const s=ST[o.status], z=zonesOf(o.x,o.y), w=where[o.id], nx=NEXT[o.status];
+      const nxt = nx && nx!=='ASSIGNED' || (nx==='ASSIGNED');
+      return {...o, sumText:fmt(o.sum), coords:coordsText(o.x,o.y), statusLabel:s[0], sBg:s[1], sFg:s[2],
+        zoneText: z.length ? z.join(', ') : 'вне зоны', zoneColor: z.length ? ZC[z[0]] : '#D23B3B',
+        assign: w ? `${res.code} · ${w.b}${w.n} · ${w.courier}` : unIdx[o.id] ? `${res.code} · ${unIdx[o.id]}` : (run.pos[o.id] ? '—' : 'нет в run'),
+        assignColor: w ? w.color : unIdx[o.id] ? '#B42323' : '#8A8D8F',
+        bg: st.draft && st.draft.id===o.id ? '#F1F5FE' : '#FFFFFF', edge: w ? w.color : 'transparent',
+        hasNext: !!nxt && !!nx, nextLabel: nx ? ST[nx][0] : '', hasBack: o.status==='ASSIGNED',
+        canCancel: TRANS[o.status].includes('CANCELLED'), hasActions: TRANS[o.status].length>0,
+        advance: e => { e.stopPropagation(); this.setOrderStatus(o.id,nx); },
+        unassign: e => { e.stopPropagation(); this.setOrderStatus(o.id,'WAITING'); },
+        cancel: e => { e.stopPropagation(); this.setOrderStatus(o.id,'CANCELLED'); },
+        open: () => this.openOrder(o.id) }; });
+
+    const bucketOfCourier = {}; (res.routes||[]).forEach((r,bi)=>bucketOfCourier[r.c.id]={b:String.fromCharCode(65+bi),color:BCOL[bi%BCOL.length],n:r.ids.length});
+    const courierRows = st.couriers.map(c => { const s=CST[c.status], bk=bucketOfCourier[c.id];
+      return {...c, statusLabel:s[0], sBg:s[1], sFg:s[2], cap:`${c.maxOrders} · ${fmt(c.maxSum)}`, zonesText:c.zones.join(', ')||'—',
+        since: c.status==='FREE' ? `свободен с ${c.freeSince}` : 'не участвует в planning',
+        bucket: bk ? `${res.code} · Bucket ${bk.b} · ${bk.n} заказ.` : '—', bucketColor: bk ? bk.color : '#8A8D8F',
+        bg: st.cdraft && st.cdraft.id===c.id ? '#F1F5FE' : '#FFFFFF',
+        actions: CTRANS[c.status].map(to => ({label:CACT[to], onClick: e => { e.stopPropagation(); this.setCourierStatus(c.id,to); }})),
+        open: () => this.setState({drawer:'courier', cdraft:{...c, zones:[...c.zones]}}) }; });
+
+    const zoneRows = ZONES.map(z => ({...z, orders: st.orders.filter(o=>ELIGIBLE.includes(o.status) && zonesOf(o.x,o.y).includes(z.id)).length,
+      couriers: st.couriers.filter(c=>c.zones.includes(z.id)).length, modes: z.modes ? z.modes.join(', ') : 'все виды транспорта'}));
+    const uncovered = st.orders.filter(o=>ELIGIBLE.includes(o.status) && zonesOf(o.x,o.y).length===0).map(o=>o.id);
+
+    const routes = (res.routes||[]).map((r,bi) => { const b=String.fromCharCode(65+bi), color=BCOL[bi%BCOL.length];
+      return { b, color, courier:r.c.name, mode:r.c.mode,
+        points: [BR, ...r.ids.map(id=>run.pos[id])].map(p=>p.join(',')).join(' '),
+        dash: r.late ? '8 6' : 'none', opacity: stale ? 0.45 : 0.9,
+        legend: `Bucket ${b} · ${r.c.name} · ${r.ids.length} заказ.${r.late?' · late':''}`,
+        statusText: r.late ? 'late solo' : 'feasible', statusColor: r.late ? '#B42323' : '#1E7A45',
+        capText: `${r.ids.length} / ${r.c.maxOrders} заказов · ${fmt(r.ev.sum)} / ${fmt(r.c.maxSum)} UZS`,
+        travelText: `Дорога ${mins(r.ev.travel)} мин · выезд ${hm(r.ev.dep)} · минимальный запас ${signed(r.ev.minSlack)} мин`,
+        stops: r.ev.stops.map((s,i)=>({n:i+1,id:s.id,eta:hm(s.eta),deadline:hm(s.deadline),slack:signed(s.slack),slackColor: s.slack<0?'#B42323':s.slack<2?'#9A5B00':'#1E7A45',open:open(s.id)})) }; });
+
+    const markers = st.orders.filter(o => st.showTerminal || !['DELIVERED','CANCELLED'].includes(o.status)).map(o => {
+      const w=where[o.id], out=zonesOf(o.x,o.y).length===0, sel = st.draft && st.draft.id===o.id;
+      return {id:o.id, n: w ? w.n : '·', sub: w ? `ETA ${hm(w.eta)}` : out ? 'вне зоны' : ST[o.status][0].toLowerCase(),
+        color: w ? w.color : out ? '#D23B3B' : '#9A9C98', ring: sel ? 20 : 0,
+        transform:`translate(${o.x},${o.y})`, left:`${o.x/8}%`, top:`${o.y/6}%`, labelLeft:`calc(${o.x/8}% + 17px)`, labelTop:`calc(${o.y/6}% - 13px)`,
+        title:`${o.id} · ${coordsText(o.x,o.y)}`, onClick: open(o.id)}; });
+
+    const ex = run.results[4];
+    const val = (r,k) => r.skipped ? null : r[k];
+    const METRICS = [
+      ['Вовремя', r=>val(r,'onTime'), 'max', v=>String(v)],
+      ['Late solo', r=>val(r,'late'), 'min', v=>String(v)],
+      ['Не назначено', r=>r.skipped?null:r.unassigned.length, 'min', v=>String(v)],
+      ['Buckets', r=>val(r,'buckets'), null, v=>String(v)],
+      ['Общая дорога', r=>val(r,'travel'), 'min', v=>mins(v)+' мин'],
+      ['Макс. маршрут', r=>val(r,'maxRoute'), 'min', v=>mins(v)+' мин'],
+      ['Мин. запас SLA', r=>val(r,'minSlack'), 'max', v=>signed(v)+' мин'],
+      ['Matrix', r=>run.matrix, null, v=>String(v)],
+      ['Расчёт', r=>r.ms, 'min', v=>v.toFixed(2).replace('.',',')+' мс'],
+    ];
+    const metricRows = METRICS.map(([label,get,dir,f]) => { const vs=run.results.map(get); const nums=vs.filter(v=>v!=null);
+      const bestV = dir==='max' ? Math.max(...nums) : dir==='min' ? Math.min(...nums) : null;
+      const allSame = nums.every(v=>v===nums[0]);
+      return {label, cells: vs.map((v,i)=>({v: v==null ? '—' : f(v), bg: i===st.algo ? '#F1F5FE' : 'transparent',
+        weight: dir && !allSame && v===bestV ? 600 : 400, color:'#16181A', onClick:()=>this.setState({algo:i})}))}; });
+    metricRows.push({label:'Gap к Exact', cells: run.results.map((r,i)=>{ let v='—', color='#16181A';
+      if (!ex.skipped && !r.skipped) { if (r.onTime<ex.onTime) { v=`−${ex.onTime-r.onTime} зак.`; color='#B42323'; }
+        else { const g = ex.travel ? Math.round((r.travel-ex.travel)/ex.travel*100) : 0; v = g>0 ? `+${g}%` : '0%'; if (g>0) color='#B42323'; } }
+      return {v, color, bg: i===st.algo ? '#F1F5FE' : 'transparent', weight:400, onClick:()=>this.setState({algo:i})}; })});
+
+    const algoHeads = ALGOS.map((a,i) => ({code:a[0], short:a[1], border: i===st.algo ? '#2F6FDF' : 'transparent', bg: i===st.algo ? '#F1F5FE' : 'transparent', onClick:()=>this.setState({algo:i})}));
+    const traceAll = res.trace.slice(0,60);
+    const trace = traceAll.map(([t,text],i) => ({seq:i+1, type:TL[t], color:TC[t], text}));
+
+    const d = st.draft;
+    let dv = {}, errs=[], statusOptions=[];
+    if (d) {
+      const z = d.x!=null ? zonesOf(d.x,d.y) : [];
+      dv = {...d, coords: d.x!=null ? coordsText(d.x,d.y) : 'не выбрана', zoneText: d.x==null ? '—' : z.length ? z.join(', ') : 'вне зоны', zoneColor: d.x==null ? '#8A8D8F' : z.length ? ZC[z[0]] : '#D23B3B'};
+      errs = this.draftErrors(d);
+      const opts = d.isNew ? ['DRAFT','COOKING_STARTED','COOKING_COMPLETED','WAITING'] : [d.orig, ...TRANS[d.orig]];
+      statusOptions = opts.map(v=>({v,l:ST[v][0]}));
+    }
+    const blocked = errs.some(e=>e.block);
+    const cd = st.cdraft;
+    const cErr = cd ? [!cd.name.trim() && 'Имя не может быть пустым', !(cd.maxOrders>=1) && 'max_orders ≥ 1', !(cd.maxSum>0) && 'max_full_sum > 0', cd.zones.length===0 && 'Нужна минимум одна зона — без неё курьер не участвует в planning'].filter(Boolean) : [];
+    const cOrig = cd && !cd.isNew ? st.couriers.find(c=>c.id===cd.id).status : null;
+    const cStatusOptions = cd ? (cd.isNew ? ['FREE','OFFLINE'] : [cOrig, ...CTRANS[cOrig]]).map(v=>({v,l:CST[v][0]})) : [];
+    const cZoneOptions = cd ? ZONES.map(z=>({name:z.name,color:z.color,modes:z.modes?z.modes.join(', '):'все',checked:cd.zones.includes(z.id),
+      toggle:()=>this.setState(s=>({cdraft:{...s.cdraft,zones: s.cdraft.zones.includes(z.id) ? s.cdraft.zones.filter(x=>x!==z.id) : [...s.cdraft.zones,z.id]}}))})) : [];
+
+    const drawerOpen = !!st.drawer;
+    return {
+      version: st.version, lateLabel: st.settings.allowLate ? 'вкл.' : 'выкл.',
+      runAll: this.runAll,
+      bannerBg: st.apiError ? '#FDF1F1' : stale ? '#FFF6E5' : '#EEF6F0', bannerFg: st.apiError ? '#B42323' : stale ? '#8A5300' : '#1E7A45',
+      bannerTitle: st.apiError ? 'Ошибка backend' : st.busy ? 'Выполняется…' : noRun ? 'Готов к новому сценарию' : stale ? 'Устарел: сценарий изменён' : 'Результат актуален',
+      bannerText: st.apiError ? st.apiError : st.busy ? 'Синхронизация с SQLite и planning engine.' : noRun ? 'Тестовые заказы удалены. Создайте свои заказы через UI, затем запустите алгоритмы.' : stale ? `Сценарий v${st.version}, run построен на v${run.version}. Старый run не пересчитывается — нажмите «Запустить все».` : 'Все пять алгоритмов получили один snapshot и одну Matrix на backend.',
+      runInfo: noRun ? 'Запусков пока нет' : `Run #${run.number} · snapshot v${run.version} · ${run.eligible} заказов × ${run.couriers} курьеров · Matrix ${run.matrix} элементов`,
+      tabs: [['orders','Заказы',st.orders.length],['couriers','Курьеры',st.couriers.length],['zones','Зоны',ZONES.length],['settings','Настройки','']].map(([k,l,c]) => ({label:l,count:c,
+        border: st.tab===k?'#16181A':'transparent', color: st.tab===k?'#16181A':'#6B6E70', onClick:()=>this.setState({tab:k})})),
+      isOrders: st.tab==='orders', isCouriers: st.tab==='couriers', isZones: st.tab==='zones', isSettings: st.tab==='settings',
+      orderQuery: st.orderQuery, onOrderQuery: e => this.setState({orderQuery:e.target.value}),
+      showTerminal: st.showTerminal, toggleTerminal: () => this.setState(s=>({showTerminal:!s.showTerminal})),
+      orderRows, noOrders: orderRows.length===0, courierRows, zoneRows,
+      uncoveredText: uncovered.length ? `Вне активных зон: ${uncovered.join(', ')}. Такие заказы видны на карте красным и получают OUTSIDE_ZONE.` : 'Непокрытых заказов нет. Заказы вне активных зон подсвечиваются на карте красным.',
+      uncoveredColor: uncovered.length ? '#B42323' : '#6B6E70', uncoveredBorder: uncovered.length ? '#E3A9A9' : '#DADAD3',
+      toggleLate: this.toggleLate,
+      lateTrack: st.settings.allowLate ? '#16181A' : '#C9CBC6', lateKnob: st.settings.allowLate ? '16px' : '2px',
+      settingRows: [['Филиал','iikoId · 9f5b02ea…','Amir Temur · #24'],['Рабочее время','open / close','11:00–23:00'],['Delivery SLA','deliveryDuration','35 мин'],['Буферы','выезд / передача клиенту','2 / 2 мин'],['Старт курьера','courier_start_policy','BRANCH_PICKUP'],['Eligible статусы','Готовится, Приготовлен, Ожидает','3 статуса'],['Назначаемые курьеры','RETURNING — экспериментальный флаг','FREE'],['Лимиты Exact','orders / couriers / время','8 / 3 / 3000 мс'],['Matrix','Схема: расстояние на карте / скорость','20 px ≈ 1 мин']].map(([label,hint,value])=>({label,hint,value})),
+      svgRef: this.svgRef, ymapRef:this.ymapRef, onMapClick: this.onMapClick,
+      svgOpacity: st.mapProvider==='YANDEX' ? 0 : 1, svgPointerEvents:st.mapProvider==='YANDEX'?'none':'auto',
+      showFallbackMarkers:st.mapProvider!=='YANDEX',
+      mapProviderLabel: st.mapProvider==='YANDEX' ? 'Yandex Maps JavaScript API v3' : st.mapProvider==='LOADING' ? 'Загрузка Yandex Maps…' : st.mapProvider==='FAILED' ? 'Yandex Maps недоступна · резервная схема' : 'Добавьте YANDEX_MAPS_JS_API_KEY · резервная схема',
+      routes, markers, hasPin: !!(d && d.x!=null), pinTransform: d && d.x!=null ? `translate(${d.x},${d.y})` : '',
+      mapHint: st.drawer==='order' ? 'Клик по карте переносит точку заказа' : 'Клик по карте — новый заказ в этой точке',
+      hintLeft: drawerOpen ? '392px' : '12px',
+      algoName: ALGOS[st.algo][2], algoHeads, metricRows, trace, traceCount: `${res.trace.length} событий`,
+      skipped: !!res.skipped, skipText: res.skipped||'', hasUnassigned: (res.unassigned||[]).length>0,
+      unassigned: (res.unassigned||[]).map(u=>({id:u.id,code:u.code,text:REASON[u.code],open:open(u.id)})),
+      showTrace: this.props.showTrace ?? true,
+      newOrder: () => this.newOrderAtCenter(),
+      newCourier: () => this.setState({drawer:'courier', cdraft:{id:'C'+st.nextCId,isNew:true,name:'',status:'FREE',mode:'SCOOTER',maxOrders:3,maxSum:300000,zones:['Z1']}}),
+      closeDrawer: () => this.setState({drawer:null,draft:null,cdraft:null,candidates:[],confirmDelete:false}),
+      orderDrawer: st.drawer==='order' && !!d, courierDrawer: st.drawer==='courier' && !!cd,
+      drawerTitle: d ? (d.isNew ? `Новый заказ ${d.id}` : `Заказ ${d.id}`) : '', d: dv,
+      onAddress: this.setD('address'), onSum: this.setD('sum'), onCreated: this.setD('created'), onReady: this.setD('ready'), onDeadline: this.setD('deadline'), onService: this.setD('service'), onStatus: this.setD('status'),
+      onSearch: () => { const qq=(d.address||'').trim()||'Катартал'; let h=0; for (const ch of qq) h=(h*31+ch.charCodeAt(0))%9973;
+        const pts=[[180+h%260,110+h%150],[200+(h*7)%240,120+(h*3)%140],[430+(h*5)%200,300+(h*11)%160]];
+        const names=[`${qq}, Чиланзарский р-н`,`${qq}А, Чиланзарский р-н`,`${qq}, Сергелийский р-н`];
+        this.setState({candidates: pts.map((p,i)=>({x:p[0],y:p[1],text:names[i]}))}); },
+      hasCandidates: st.candidates.length>0,
+      candidates: st.candidates.map(c => { const z=zonesOf(c.x,c.y); const sel = d && d.x===c.x && d.y===c.y;
+        return {text:c.text, zone: z.length ? z.join(', ') : 'вне зоны', zoneColor: z.length ? ZC[z[0]] : '#D23B3B', bg: sel?'#F1F5FE':'#FFFFFF', ring: sel?'#2F6FDF':'#C9CBC6', dot: sel?'#2F6FDF':'#FFFFFF',
+          pick: () => this.setState(s=>({draft:{...s.draft,x:c.x,y:c.y,address:c.text}}))}; }),
+      statusOptions, drawerErrors: errs.map(e=>({text:e.text,color:e.block?'#B42323':'#9A5B00'})),
+      sumBorder: d && !(Number(d.sum)>0) ? '#D23B3B' : '#DADAD3', timeBorder: d && !(toMin(d.created)<=toMin(d.ready) && toMin(d.ready)<=toMin(d.deadline)) ? '#D23B3B' : '#DADAD3',
+      hasHistory: !!(d && !d.isNew), history: d && !d.isNew ? [{v:'—',text:'Создан (импорт golden-сценария)'}, ...(st.history[d.id]||[])] : [],
+      saveOrder: this.saveOrder, saveBg: blocked ? '#A9ABA7' : '#16181A', saveCursor: blocked ? 'not-allowed' : 'pointer', saveLabel: d && d.isNew ? 'Создать заказ' : 'Сохранить',
+      canDelete: !!(d && !d.isNew), confirmDelete: st.confirmDelete,
+      askDelete: () => this.setState({confirmDelete:true}), cancelDelete: () => this.setState({confirmDelete:false}),
+      doDelete: async () => { const id=d.id; await this.mutate(`/orders/${id}`,{method:'DELETE'},{drawer:null,draft:null,confirmDelete:false}); },
+      cTitle: cd ? (cd.isNew ? 'Новый курьер' : `Курьер ${cd.name}`) : '', cd: cd || {},
+      onCName: this.setC('name'), onCStatus: this.setC('status'), onCMode: this.setC('mode'), onCMax: this.setC('maxOrders',true), onCSum: this.setC('maxSum',true),
+      cStatusOptions, cZoneOptions, cErrors: cErr.map(t=>({text:t,color:'#B42323'})),
+      saveCourier: this.saveCourier, cSaveBg: cErr.length ? '#A9ABA7' : '#16181A'
+    };
+  }
+}
+</script>
+</body>
+</html>
