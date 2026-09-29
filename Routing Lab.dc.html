@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:,">
 <script src="./support.js"></script>
-<script src="./yandex-map.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>.routing-lab-marker{background:none;border:none}</style>
+<script src="./leaflet-map.js"></script>
 </head>
 <body>
 <x-dc>
@@ -33,7 +36,7 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
     <div style="width:1px;height:28px;background:#E2E2DC"></div>
     <div style="display:flex;gap:18px;align-items:center">
       <div style="display:flex;flex-direction:column;line-height:1.3"><span style="font-size:11px;color:#6B6E70">Филиал</span><span style="font-weight:500">Bellissimo Amir Temur</span></div>
-      <div style="display:flex;flex-direction:column;line-height:1.3"><span style="font-size:11px;color:#6B6E70">Время планирования</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:500">29.09.2026 18:00 · Asia/Tashkent</span></div>
+      <div style="display:flex;flex-direction:column;line-height:1.3"><span style="font-size:11px;color:#6B6E70">Время планирования</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:500">{{ planningText }}</span></div>
       <div style="display:flex;flex-direction:column;line-height:1.3"><span style="font-size:11px;color:#6B6E70">Версия сценария</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:500">v{{ version }}</span></div>
     </div>
     <div style="flex:1"></div>
@@ -182,7 +185,7 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
     </aside>
 
     <main style="position:relative;min-height:0;overflow:hidden;background:#E9EAE4">
-      <div ref="{{ ymapRef }}" style="position:absolute;inset:0;width:100%;height:100%;background:#E9EAE4"></div>
+      <div ref="{{ ymapRef }}" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;isolation:isolate;background:#E9EAE4"></div>
       <svg ref="{{ svgRef }}" onClick="{{ onMapClick }}" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;opacity:{{ svgOpacity }};pointer-events:{{ svgPointerEvents }};transition:opacity .18s ease">
         <rect x="0" y="0" width="800" height="600" fill="#ECEDE7"></rect>
         <path d="M0 330 C 200 300, 420 360, 800 320" stroke="#CFE0EA" stroke-width="22" fill="none"></path>
@@ -221,7 +224,9 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
         </sc-for>
         <div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:#9A9C98"></span><span>Не в результате run</span><span style="width:10px;height:10px;border-radius:50%;background:#D23B3B;margin-left:6px"></span><span>Вне зоны</span></div>
       </div>
-      <div style="position:absolute;right:12px;bottom:12px;font-size:11px;color:#8A8D8F;background:rgba(255,255,255,0.8);padding:3px 7px;border-radius:4px;pointer-events:none">{{ mapProviderLabel }}</div>
+      <sc-if value="{{ showProviderLabel }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;right:12px;bottom:12px;font-size:11px;color:#8A8D8F;background:rgba(255,255,255,0.8);padding:3px 7px;border-radius:4px;pointer-events:none">{{ mapProviderLabel }}</div>
+      </sc-if>
 
       <sc-if value="{{ orderDrawer }}" hint-placeholder-val="{{ false }}">
         <div style="position:absolute;top:0;left:0;bottom:0;width:380px;display:flex;flex-direction:column;background:#FFFFFF;border-right:1px solid #DADAD3;box-shadow:8px 0 24px rgba(0,0,0,0.08)">
@@ -446,7 +451,12 @@ const TC = {start:'#6B6E70',seed:'#2F6FDF',check:'#6B6E70',accept:'#1E7A45',reje
 const TL = {start:'start',seed:'seed',check:'checked',accept:'accepted',reject:'rejected',close:'closed',done:'completed',regret:'regret',best:'best',prune:'pruned',late:'late solo',limit:'limit'};
 
 const toMin = s => { const [h,m] = (s||'0:0').split(':').map(Number); return h*60+m; };
-const hm = m => { m = Math.round(m); return String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); };
+const hm = m => { m = ((Math.round(m)%1440)+1440)%1440; return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); };
+const TZ = 'Asia/Tashkent';
+const TZ_FMT = new Intl.DateTimeFormat('en-GB',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+const tashkentNow = () => { const p=Object.fromEntries(TZ_FMT.formatToParts(new Date()).map(x=>[x.type,x.value])); return {date:`${p.day}.${p.month}.${p.year}`,hm:`${p.hour}:${p.minute}`,minutes:Number(p.hour)*60+Number(p.minute),timezone:TZ}; };
+const nearMin = (s, anchor) => { let m=toMin(s); if (m-anchor>720) m-=1440; else if (anchor-m>720) m+=1440; return m; };
+const defaultTimes = () => { const n=tashkentNow().minutes; return {created:hm(n),ready:hm(n+10),deadline:hm(n+35)}; };
 const fmt = n => Number(n||0).toLocaleString('ru-RU').replace(/\u00a0|,/g,' ');
 const mins = v => (Math.round(v*10)/10).toString().replace('.',',');
 const signed = v => { const r = Math.round(v); return r>0 ? '+'+r : r<0 ? '−'+(-r) : '0'; };
@@ -631,41 +641,39 @@ class Component extends DCLogic {
     const settings = {allowLate:true};
     this.svgRef = React.createRef();
     this.ymapRef = React.createRef();
-    this.yandexMap = null;
-    this.yandexMapLoading = null;
+    this.leafletMap = null;
+    this.mapLoading = null;
     this.mapConfig = null;
     this.state = { tab:'orders', algo:0, orders:INIT_ORDERS.map(o=>({...o})), couriers:INIT_COURIERS.map(c=>({...c})), settings,
-      version:11, run:emptyRun(11), branch:null, mapProvider:'LOADING',
+      version:11, run:emptyRun(11), branch:null, mapProvider:'LOADING', now:tashkentNow(),
       drawer:null, draft:null, candidates:[], confirmDelete:false, cdraft:null, showTerminal:false, orderQuery:'', nextId:6, nextCId:4, history:{}, apiError:null, busy:false };
   }
-  componentDidMount() { this.loadBootstrap(); }
-  componentDidUpdate() { this.ensureYandexMap(); this.syncYandexMap(); }
-  componentWillUnmount() { if (this.yandexMap) this.yandexMap.destroy(); }
+  componentDidMount() { this.loadBootstrap(); this.clockTimer=setInterval(()=>this.setState({now:tashkentNow()}),30000); }
+  componentDidUpdate() { this.ensureMap(); this.syncMap(); }
+  componentWillUnmount() { clearInterval(this.clockTimer); if (this.leafletMap) this.leafletMap.destroy(); }
   applyBootstrap(data, extra={}) {
     this.setState({
       orders:data.orders, couriers:data.couriers, settings:data.settings, version:data.version,
       run:data.run || emptyRun(data.version), branch:data.branch, nextId:data.nextId, nextCId:data.nextCId,
       apiError:null, busy:false, ...extra
-    },()=>this.ensureYandexMap());
+    },()=>this.ensureMap());
   }
-  async ensureYandexMap() {
-    if (this.yandexMap || this.yandexMapLoading || this.state.mapProvider!=='LOADING' || !this.ymapRef.current || !this.state.branch) return;
-    this.yandexMapLoading = (async()=>{
+  async ensureMap() {
+    if (this.leafletMap || this.mapLoading || this.state.mapProvider!=='LOADING' || !this.ymapRef.current || !this.state.branch) return;
+    this.mapLoading = (async()=>{
       try {
-        const config=this.mapConfig;
-        if (!config?.yandexMapsJsApiKey) { this.setState({mapProvider:'NO_KEY'}); return; }
-        this.yandexMap=await window.RoutingLabYandexMap.create({
-          container:this.ymapRef.current,key:config.yandexMapsJsApiKey,language:config.yandexMapsLanguage,
+        this.leafletMap=await window.RoutingLabMap.create({
+          container:this.ymapRef.current,
           branch:this.state.branch,onMapClick:([x,y])=>this.beginOrderAt(Math.round(x),Math.round(y))
         });
-        this.setState({mapProvider:'YANDEX'},()=>this.syncYandexMap());
+        this.setState({mapProvider:'LEAFLET'},()=>this.syncMap());
       } catch(error) { this.setState({mapProvider:'FAILED',apiError:error.message}); }
-      finally { this.yandexMapLoading=null; }
+      finally { this.mapLoading=null; }
     })();
-    await this.yandexMapLoading;
+    await this.mapLoading;
   }
-  syncYandexMap() {
-    if (!this.yandexMap || !this.state.run) return;
+  syncMap() {
+    if (!this.leafletMap || !this.state.run) return;
     const st=this.state,res=st.run.results[st.algo],where={};
     (res.routes||[]).forEach((r,bi)=>r.ids.forEach((id,i)=>where[id]={n:i+1,color:BCOL[bi%BCOL.length]}));
     const routes=(res.routes||[]).map((r,bi)=>({
@@ -673,14 +681,13 @@ class Component extends DCLogic {
       points:[BR,...r.ids.map(id=>st.run.pos[id]).filter(Boolean)]
     }));
     const markerMeta={}; st.orders.forEach(o=>{const w=where[o.id],out=zonesOf(o.x,o.y).length===0;markerMeta[o.id]={n:w?w.n:'·',color:w?w.color:out?'#D23B3B':'#9A9C98'};});
-    this.yandexMap.update({orders:st.orders,routes,markerMeta,onOrderClick:id=>this.openOrder(id)});
+    this.leafletMap.update({orders:st.orders,routes,markerMeta,onOrderClick:id=>this.openOrder(id)});
   }
   async loadBootstrap() {
     this.setState({busy:true});
     try {
-      const [data,config]=await Promise.all([api('/bootstrap'),api('/config')]);
-      this.mapConfig=config;
-      this.applyBootstrap(data,{mapProvider:config.yandexMapsJsApiKey?'LOADING':'NO_KEY'});
+      const data=await api('/bootstrap');
+      this.applyBootstrap(data,{mapProvider:'LOADING'});
     }
     catch(error) { this.setState({apiError:error.message,busy:false}); }
   }
@@ -708,21 +715,21 @@ class Component extends DCLogic {
     if (this.state.drawer==='order' && this.state.draft) { this.setState(s=>({draft:{...s.draft,x,y,address:revGeo(x,y)},candidates:[]})); return; }
     const id='O'+this.state.nextId;
     this.setState({drawer:'order', confirmDelete:false, candidates:[], tab:'orders',
-      draft:{id,isNew:true,address:revGeo(x,y),status:'COOKING_STARTED',sum:'100000',created:'18:00',ready:'18:10',deadline:'18:35',service:'60',x,y}});
+      draft:{id,isNew:true,address:revGeo(x,y),status:'COOKING_STARTED',sum:'100000',...defaultTimes(),service:'60',x,y}});
   }
   openOrder(id) { const o=this.state.orders.find(o=>o.id===id); if (!o) return;
     this.setState({drawer:'order', confirmDelete:false, candidates:[], tab:'orders', draft:{...o,isNew:false,orig:o.status,sum:String(o.sum),service:String(o.service)}});
     api(`/orders/${id}/history`).then(events=>this.setState(s=>({history:{...s.history,[id]:events.map(e=>({v:e.id,text:`${e.from_status||'—'} → ${e.to_status} · ${e.reason||''}`}))}}))).catch(()=>{});
   }
   newOrderAtCenter() { const x=330,y=190; const id='O'+this.state.nextId;
-    this.setState({drawer:'order',confirmDelete:false,candidates:[],draft:{id,isNew:true,address:'',status:'COOKING_STARTED',sum:'100000',created:'18:00',ready:'18:10',deadline:'18:35',service:'60',x:null,y:null}}); }
+    this.setState({drawer:'order',confirmDelete:false,candidates:[],draft:{id,isNew:true,address:'',status:'COOKING_STARTED',sum:'100000',...defaultTimes(),service:'60',x:null,y:null}}); }
   setD(k) { return e => { const v=e.target.value; this.setState(s=>({draft:{...s.draft,[k]:v}})); }; }
   setC(k, num) { return e => { const v=e.target.value; this.setState(s=>({cdraft:{...s.cdraft,[k]:num?Number(v):v}})); }; }
   draftErrors(d) {
     const e=[];
     if (d.x==null) e.push({block:true,text:'Выберите адрес из результатов поиска или кликните по карте'});
     if (!(Number(d.sum)>0)) e.push({block:true,text:'Сумма должна быть больше 0'});
-    if (!(toMin(d.created)<=toMin(d.ready) && toMin(d.ready)<=toMin(d.deadline))) e.push({block:true,text:'Нужно: создан ≤ готов ≤ deadline'});
+    if (!(toMin(d.created)<=nearMin(d.ready,toMin(d.created)) && nearMin(d.ready,toMin(d.created))<=nearMin(d.deadline,toMin(d.created)))) e.push({block:true,text:'Нужно: создан ≤ готов ≤ deadline'});
     if (!(Number(d.service)>=0)) e.push({block:true,text:'Время обслуживания не может быть отрицательным'});
     if (d.x!=null && zonesOf(d.x,d.y).length===0) e.push({block:false,text:'Точка вне активных зон — в run заказ получит OUTSIDE_ZONE'});
     return e;
@@ -735,7 +742,7 @@ class Component extends DCLogic {
   saveCourier = async () => {
     const c=this.state.cdraft; if (!c.name.trim() || !(c.maxOrders>=1) || !(c.maxSum>0)) return;
     const prev=this.state.couriers.find(x=>x.id===c.id);
-    const nc={...c, freeSince: c.status==='FREE' ? (prev && prev.status==='FREE' ? prev.freeSince : '18:00') : null};
+    const nc={...c, freeSince: c.status==='FREE' ? (prev && prev.status==='FREE' ? prev.freeSince : tashkentNow().hm) : null};
     delete nc.isNew;
     await this.mutate(c.isNew?'/couriers':`/couriers/${c.id}`,{method:c.isNew?'POST':'PATCH',body:JSON.stringify(nc)},{drawer:null,cdraft:null});
   };
@@ -856,6 +863,7 @@ class Component extends DCLogic {
       bannerBg: st.apiError ? '#FDF1F1' : stale ? '#FFF6E5' : '#EEF6F0', bannerFg: st.apiError ? '#B42323' : stale ? '#8A5300' : '#1E7A45',
       bannerTitle: st.apiError ? 'Ошибка backend' : st.busy ? 'Выполняется…' : noRun ? 'Готов к новому сценарию' : stale ? 'Устарел: сценарий изменён' : 'Результат актуален',
       bannerText: st.apiError ? st.apiError : st.busy ? 'Синхронизация с SQLite и planning engine.' : noRun ? 'Тестовые заказы удалены. Создайте свои заказы через UI, затем запустите алгоритмы.' : stale ? `Сценарий v${st.version}, run построен на v${run.version}. Старый run не пересчитывается — нажмите «Запустить все».` : 'Все пять алгоритмов получили один snapshot и одну Matrix на backend.',
+      planningText: (()=>{ const t=(!noRun && run.planningAt) || st.now; return `${t.date} ${t.hm} · Asia/Tashkent (GMT+5)`; })(),
       runInfo: noRun ? 'Запусков пока нет' : `Run #${run.number} · snapshot v${run.version} · ${run.eligible} заказов × ${run.couriers} курьеров · Matrix ${run.matrix} элементов`,
       tabs: [['orders','Заказы',st.orders.length],['couriers','Курьеры',st.couriers.length],['zones','Зоны',ZONES.length],['settings','Настройки','']].map(([k,l,c]) => ({label:l,count:c,
         border: st.tab===k?'#16181A':'transparent', color: st.tab===k?'#16181A':'#6B6E70', onClick:()=>this.setState({tab:k})})),
@@ -869,9 +877,9 @@ class Component extends DCLogic {
       lateTrack: st.settings.allowLate ? '#16181A' : '#C9CBC6', lateKnob: st.settings.allowLate ? '16px' : '2px',
       settingRows: [['Филиал','iikoId · 9f5b02ea…','Amir Temur · #24'],['Рабочее время','open / close','11:00–23:00'],['Delivery SLA','deliveryDuration','35 мин'],['Буферы','выезд / передача клиенту','2 / 2 мин'],['Старт курьера','courier_start_policy','BRANCH_PICKUP'],['Eligible статусы','Готовится, Приготовлен, Ожидает','3 статуса'],['Назначаемые курьеры','RETURNING — экспериментальный флаг','FREE'],['Лимиты Exact','orders / couriers / время','8 / 3 / 3000 мс'],['Matrix','Схема: расстояние на карте / скорость','20 px ≈ 1 мин']].map(([label,hint,value])=>({label,hint,value})),
       svgRef: this.svgRef, ymapRef:this.ymapRef, onMapClick: this.onMapClick,
-      svgOpacity: st.mapProvider==='YANDEX' ? 0 : 1, svgPointerEvents:st.mapProvider==='YANDEX'?'none':'auto',
-      showFallbackMarkers:st.mapProvider!=='YANDEX',
-      mapProviderLabel: st.mapProvider==='YANDEX' ? 'Yandex Maps JavaScript API v3' : st.mapProvider==='LOADING' ? 'Загрузка Yandex Maps…' : st.mapProvider==='FAILED' ? 'Yandex Maps недоступна · резервная схема' : 'Добавьте YANDEX_MAPS_JS_API_KEY · резервная схема',
+      svgOpacity: st.mapProvider==='LEAFLET' ? 0 : 1, svgPointerEvents:st.mapProvider==='LEAFLET'?'none':'auto',
+      showFallbackMarkers:st.mapProvider!=='LEAFLET', showProviderLabel:st.mapProvider!=='LEAFLET',
+      mapProviderLabel: st.mapProvider==='LEAFLET' ? 'Leaflet · OpenStreetMap' : st.mapProvider==='LOADING' ? 'Загрузка карты…' : st.mapProvider==='FAILED' ? 'Карта недоступна · резервная схема' : 'Резервная схема',
       routes, markers, hasPin: !!(d && d.x!=null), pinTransform: d && d.x!=null ? `translate(${d.x},${d.y})` : '',
       mapHint: st.drawer==='order' ? 'Клик по карте переносит точку заказа' : 'Клик по карте — новый заказ в этой точке',
       hintLeft: drawerOpen ? '392px' : '12px',
@@ -894,7 +902,7 @@ class Component extends DCLogic {
         return {text:c.text, zone: z.length ? z.join(', ') : 'вне зоны', zoneColor: z.length ? ZC[z[0]] : '#D23B3B', bg: sel?'#F1F5FE':'#FFFFFF', ring: sel?'#2F6FDF':'#C9CBC6', dot: sel?'#2F6FDF':'#FFFFFF',
           pick: () => this.setState(s=>({draft:{...s.draft,x:c.x,y:c.y,address:c.text}}))}; }),
       statusOptions, drawerErrors: errs.map(e=>({text:e.text,color:e.block?'#B42323':'#9A5B00'})),
-      sumBorder: d && !(Number(d.sum)>0) ? '#D23B3B' : '#DADAD3', timeBorder: d && !(toMin(d.created)<=toMin(d.ready) && toMin(d.ready)<=toMin(d.deadline)) ? '#D23B3B' : '#DADAD3',
+      sumBorder: d && !(Number(d.sum)>0) ? '#D23B3B' : '#DADAD3', timeBorder: d && !(toMin(d.created)<=nearMin(d.ready,toMin(d.created)) && nearMin(d.ready,toMin(d.created))<=nearMin(d.deadline,toMin(d.created))) ? '#D23B3B' : '#DADAD3',
       hasHistory: !!(d && !d.isNew), history: d && !d.isNew ? [{v:'—',text:'Создан (импорт golden-сценария)'}, ...(st.history[d.id]||[])] : [],
       saveOrder: this.saveOrder, saveBg: blocked ? '#A9ABA7' : '#16181A', saveCursor: blocked ? 'not-allowed' : 'pointer', saveLabel: d && d.isNew ? 'Создать заказ' : 'Сохранить',
       canDelete: !!(d && !d.isNew), confirmDelete: st.confirmDelete,

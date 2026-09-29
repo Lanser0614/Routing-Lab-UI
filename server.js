@@ -13,10 +13,6 @@ export function createApp(repository) {
   const route = handler => (req, res, next) => { try { const value = handler(req, res); if (value !== undefined && !res.headersSent) res.json(value); } catch (error) { next(error); } };
 
   app.get('/health', route(() => ({ status: 'ok', storage: 'sqlite', matrixProvider: 'LOCAL_DETERMINISTIC' })));
-  app.get('/api/v1/config', route(() => ({
-    yandexMapsJsApiKey: process.env.YANDEX_MAPS_JS_API_KEY || '',
-    yandexMapsLanguage: process.env.YANDEX_MAPS_LANGUAGE || 'ru_RU'
-  })));
   app.get('/api/v1/bootstrap', route(() => repository.bootstrap()));
   app.post('/api/v1/orders', route(req => repository.upsertOrder(req.body.id, req.body, true)));
   app.patch('/api/v1/orders/:id', route(req => repository.upsertOrder(req.params.id, req.body, false)));
@@ -31,7 +27,7 @@ export function createApp(repository) {
   app.post('/api/v1/runs', route(() => repository.createRun()));
   app.get('/', (req, res) => res.sendFile(path.join(root, 'Routing Lab.dc.html')));
   app.get('/support.js', (req, res) => res.sendFile(path.join(root, 'support.js')));
-  app.get('/yandex-map.js', (req, res) => res.sendFile(path.join(root, 'yandex-map.js')));
+  app.get('/leaflet-map.js', (req, res) => res.sendFile(path.join(root, 'leaflet-map.js')));
 
   app.use((error, req, res, next) => {
     if (res.headersSent) return next(error);

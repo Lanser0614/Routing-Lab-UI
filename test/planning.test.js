@@ -42,3 +42,15 @@ test('orders outside zones remain visible and unassigned', () => {
   const run = runAlgorithms(changed);
   run.results.forEach(result => assert.ok(result.unassigned.some(item => item.id === 'O1' && item.code === 'OUTSIDE_ZONE')));
 });
+
+test('planning uses the Tashkent planning moment and handles midnight', () => {
+  const snapshot = {
+    settings: { allowLate: false },
+    planningAt: { date: '30.09.2026', hm: '23:50', minutes: 23 * 60 + 50, timezone: 'Asia/Tashkent' },
+    orders: [{ id:'N1', address:'A', status:'WAITING', sum:100000, created:'23:45', ready:'23:55', deadline:'00:25', service:60, x:400, y:330 }],
+    couriers: [{ id:'C1', name:'One', status:'FREE', mode:'SCOOTER', maxOrders:2, maxSum:200000, zones:['Z1'], freeSince:'23:40' }]
+  };
+  const result = runAlgorithms(snapshot);
+  assert.equal(result.planningAt.hm, '23:50');
+  result.results.forEach(algorithm => assert.equal(algorithm.onTime, 1, algorithm.code));
+});

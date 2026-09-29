@@ -4,6 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { runAlgorithms } from './planning.js';
 import { COURIER_TRANSITIONS, ORDER_TRANSITIONS, problem, validateCourier, validateOrder } from './domain.js';
 import { BRANCH } from './branch.js';
+import { tashkentNow } from './time.js';
 
 const INITIAL_ORDERS = [];
 const INITIAL_COURIERS = [
@@ -13,7 +14,8 @@ const INITIAL_COURIERS = [
 ];
 
 export class Repository {
-  constructor(filename) {
+  constructor(filename, { clock = () => new Date() } = {}) {
+    this.clock = clock;
     fs.mkdirSync(path.dirname(filename), { recursive: true });
     this.db = new DatabaseSync(filename);
     this.db.exec('PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL;');
@@ -74,8 +76,10 @@ export class Repository {
 
   snapshot() {
     const scenario = this.scenario();
-    return { scenarioId: scenario.id, version: scenario.version, settings: scenario.settings, orders: this.list('orders'), couriers: this.list('couriers') };
+    return { scenarioId: scenario.id, version: scenario.version, settings: scenario.settings, planningAt: this.now(), orders: this.list('orders'), couriers: this.list('couriers') };
   }
+
+  now() { return tashkentNow(this.clock()); }
 
   latestRun() {
     const row = this.db.prepare('SELECT * FROM planning_runs ORDER BY id DESC LIMIT 1').get();
@@ -126,7 +130,7 @@ export class Repository {
   deleteOrder(id) { const result = this.db.prepare('DELETE FROM orders WHERE id=?').run(id); if (!result.changes) throw problem(404, 'ENTITY_NOT_FOUND', `Заказ ${id} не найден`); this.bumpVersion(); return this.bootstrap(); }
 
   upsertCourier(id, data, isNew) {
-    const courier = { id, name: String(data.name || '').trim(), status: data.status, mode: data.mode, maxOrders: Number(data.maxOrders), maxSum: Number(data.maxSum), zones: [...new Set(data.zones || [])], freeSince: data.status === 'FREE' ? (data.freeSince || '18:00') : null };
+    const courier = { id, name: String(data.name || '').trim(), status: data.status, mode: data.mode, maxOrders: Number(data.maxOrders), maxSum: Number(data.maxSum), zones: [...new Set(data.zones || [])], freeSince: data.status === 'FREE' ? (data.freeSince || this.now().hm) : null };
     validateCourier(courier);
     const current = this.db.prepare('SELECT data_json FROM couriers WHERE id=?').get(id);
     if (isNew && current) throw problem(409, 'ENTITY_ALREADY_EXISTS', `Курьер ${id} уже существует`);
@@ -146,7 +150,7 @@ export class Repository {
     if (!row) throw problem(404, 'ENTITY_NOT_FOUND', `Курьер ${id} не найден`);
     const courier = JSON.parse(row.data_json);
     if (!COURIER_TRANSITIONS[courier.status]?.includes(status)) throw problem(409, 'COURIER_STATUS_TRANSITION_INVALID', `Переход ${courier.status} → ${status} запрещён`);
-    const previous = courier.status; courier.status = status; courier.freeSince = status === 'FREE' ? '18:00' : null;
+    const previous = courier.status; courier.status = status; courier.freeSince = status === 'FREE' ? this.now().hm : null;
     this.db.exec('BEGIN');
     try { this.db.prepare('UPDATE couriers SET data_json=?,version=version+1 WHERE id=?').run(JSON.stringify(courier), id); this.addStatusEvent('courier', id, previous, status, reason); this.bumpVersion(); this.db.exec('COMMIT'); return this.bootstrap(); }
     catch (error) { this.db.exec('ROLLBACK'); throw error; }

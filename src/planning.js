@@ -1,9 +1,10 @@
 import { performance } from 'node:perf_hooks';
-import { ELIGIBLE_ORDER_STATUSES, ZONES, toMinutes } from './domain.js';
+import { ELIGIBLE_ORDER_STATUSES, ZONES, minutesNear } from './domain.js';
 import { BRANCH_POINT } from './branch.js';
 
 export const ALGORITHMS = ['A1', 'A2', 'A3', 'A4', 'Exact'];
-const PLANNING_AT_MIN = 18 * 60;
+const DEFAULT_PLANNING_AT_MIN = 18 * 60;
+const hm = value => { const m = ((Math.round(value) % 1440) + 1440) % 1440; return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; };
 
 function pointInPolygon(point, polygon) {
   let inside = false;
@@ -20,6 +21,8 @@ export function zonesOf(x, y) {
 }
 
 function buildInput(snapshot) {
+  const plan = snapshot.planningAt?.minutes ?? DEFAULT_PLANNING_AT_MIN;
+  const time = value => minutesNear(value, plan);
   const positions = { BR: BRANCH_POINT };
   const outside = [];
   const orders = [];
@@ -29,16 +32,16 @@ function buildInput(snapshot) {
     const normalized = {
       id: order.id,
       zones: zoneIds,
-      ready: toMinutes(order.ready),
-      deadline: toMinutes(order.deadline),
-      created: toMinutes(order.created),
+      ready: time(order.ready),
+      deadline: time(order.deadline),
+      created: time(order.created),
       service: Number(order.service || 0) / 60,
       sum: Number(order.sum || 0)
     };
     (zoneIds.length ? orders : outside).push(normalized);
   });
   const couriers = snapshot.couriers.filter(courier => courier.status === 'FREE' && courier.zones.length)
-    .sort((a, b) => toMinutes(a.freeSince) - toMinutes(b.freeSince) || a.id.localeCompare(b.id));
+    .sort((a, b) => time(a.freeSince) - time(b.freeSince) || a.id.localeCompare(b.id));
   const byId = Object.fromEntries(orders.map(order => [order.id, order]));
   const legCache = new Map();
   const leg = (from, to) => {
@@ -50,7 +53,7 @@ function buildInput(snapshot) {
     legCache.set(key, value);
     return value;
   };
-  return { orders, outside, couriers, byId, leg, positions, allowLate: snapshot.settings.allowLate !== false };
+  return { orders, outside, couriers, byId, leg, positions, plan, allowLate: snapshot.settings.allowLate !== false };
 }
 
 const urgency = (a, b) => a.deadline - b.deadline || a.created - b.created || a.id.localeCompare(b.id);
@@ -72,7 +75,7 @@ export function evaluateRoute(courier, orderIds, input) {
   const sum = orders.reduce((total, order) => total + order.sum, 0);
   if (sum > courier.maxSum) violations.push('MAX_FULL_SUM');
   if (violations.length) return { feasible: false, violations, sum };
-  const departure = Math.max(PLANNING_AT_MIN, ...orders.map(order => order.ready));
+  const departure = Math.max(input.plan, ...orders.map(order => order.ready));
   let clock = departure;
   let previous = 'BR';
   let travel = 0;
@@ -120,7 +123,7 @@ function appendAlgorithm(input, nearest) {
       let accepted;
       for (const order of candidates) {
         const verdict = evaluateRoute(courier, [...ids, order.id], input);
-        if (verdict.feasible) { accepted = order; trace.push(['accept', `${order.id} → ${courier.name}, ETA ${verdict.stops.at(-1).eta}`]); break; }
+        if (verdict.feasible) { accepted = order; trace.push(['accept', `${order.id} → ${courier.name}, ETA ${hm(verdict.stops.at(-1).eta)}`]); break; }
         trace.push(['reject', `${order.id} отклонён: ${rejectionReason(verdict)}`]);
       }
       if (!accepted) break;
@@ -281,6 +284,7 @@ export function runAlgorithms(snapshot) {
     matrix: (input.orders.length + 1) ** 2,
     eligible: input.orders.length + input.outside.length,
     couriers: input.couriers.length,
+    planningAt: snapshot.planningAt || null,
     matrixProvider: 'LOCAL_DETERMINISTIC'
   };
 }

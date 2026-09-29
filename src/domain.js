@@ -45,7 +45,7 @@ export function validateOrder(order) {
   if (!(Number(order.service) >= 0)) errors.push({ field: 'service', code: 'NON_NEGATIVE', message: 'Время обслуживания не может быть отрицательным' });
   const times = [order.created, order.ready, order.deadline];
   if (times.some(value => !/^\d{2}:\d{2}$/.test(value || ''))) errors.push({ field: 'time', code: 'INVALID', message: 'Время должно быть в формате HH:MM' });
-  else if (!(toMinutes(order.created) <= toMinutes(order.ready) && toMinutes(order.ready) <= toMinutes(order.deadline))) {
+  else if (!(toMinutes(order.created) <= minutesNear(order.ready, toMinutes(order.created)) && minutesNear(order.ready, toMinutes(order.created)) <= minutesNear(order.deadline, toMinutes(order.created)))) {
     errors.push({ field: 'deadline', code: 'ORDER_DEADLINE_BEFORE_READY', message: 'Нужно: создан ≤ готов ≤ deadline' });
   }
   if (errors.length) throw problem(422, 'RUN_INPUT_INVALID', 'Заказ не прошёл валидацию', errors);
@@ -65,4 +65,12 @@ export function validateCourier(courier) {
 export function toMinutes(value) {
   const [hours, minutes] = String(value || '0:0').split(':').map(Number);
   return hours * 60 + minutes;
+}
+
+// HH:MM без даты: выбираем ближайшие к anchor сутки, чтобы 23:50 → 00:20 считалось как +30 мин, а не −23:30.
+export function minutesNear(value, anchor) {
+  let result = toMinutes(value);
+  if (result - anchor > 720) result -= 1440;
+  else if (anchor - result > 720) result += 1440;
+  return result;
 }
