@@ -36,8 +36,15 @@
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    L.polygon(options.branch.zone.map(toLatLng), {
-      color: '#26967F', weight: 3, dashArray: '7 5', fillColor: '#26967F', fillOpacity: 0.14, interactive: false
+    const zone = options.branch.zone.map(toLatLng);
+    const world = [[-90, -180], [-90, 180], [90, 180], [90, -180]];
+    // Затемняем всё вне зоны доставки, чтобы сама зона читалась сразу.
+    L.polygon([world, zone], { stroke: false, fillColor: '#16181A', fillOpacity: 0.22, interactive: false }).addTo(map);
+    // Белая подложка под контуром — контраст на любых тайлах.
+    L.polygon(zone, { color: '#FFFFFF', weight: 8, opacity: 0.9, fill: false, interactive: false }).addTo(map);
+    L.polygon(zone, {
+      color: '#0B7A62', weight: 4, dashArray: '12 6', lineJoin: 'round',
+      fillColor: '#1FA37F', fillOpacity: 0.2, interactive: false
     }).addTo(map);
 
     L.marker([options.branch.latitude, options.branch.longitude], {
