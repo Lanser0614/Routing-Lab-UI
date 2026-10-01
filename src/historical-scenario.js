@@ -66,7 +66,7 @@ export function ordersInRange(data, range) {
     && Date.parse(order.createdAt) < Date.parse(range.end));
 }
 
-export function runTestScenario(at, settings = {}, rangeId) {
+export function prepareTestScenario(at, settings = {}, rangeId) {
   validateSettings(settings);
   const data = fixture();
   const ranges = hourlyRanges(data);
@@ -83,8 +83,15 @@ export function runTestScenario(at, settings = {}, rangeId) {
   const snapshot = testSnapshot(cohort, selected);
   if (range) snapshot.version = `test-${range.id}-${snapshot.planningAt.hm}`;
   snapshot.settings = { ...snapshot.settings, ...settings, alwaysFreeCouriers: true };
-  const result = runAlgorithms(snapshot);
-  return { ...snapshot, couriers: result.testCouriers || [], times, ranges, range,
-    extraction: data.extraction, assumptions: data.assumptions,
-    run: { ...result, version: snapshot.version, number: `TEST ${range ? range.label + ' · ' : ''}${snapshot.planningAt.hm}` } };
+  return { ...snapshot, times, ranges, range, extraction: data.extraction, assumptions: data.assumptions };
+}
+
+export function calculateTestScenario(snapshot) {
+  const result=runAlgorithms(snapshot);
+  return { ...snapshot, couriers: result.testCouriers || [],
+    run: { ...result, version: snapshot.version, number: `TEST ${snapshot.range ? snapshot.range.label + ' · ' : ''}${snapshot.planningAt.hm}` } };
+}
+
+export function runTestScenario(at, settings = {}, rangeId) {
+  return calculateTestScenario(prepareTestScenario(at,settings,rangeId));
 }

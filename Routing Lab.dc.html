@@ -183,6 +183,10 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
           </div>
           <label style="display:flex;gap:10px;align-items:flex-start;padding:12px;border-bottom:1px solid #EEEEE8"><input type="checkbox" checked="{{ alwaysFreeCouriers }}" onChange="{{ toggleAlwaysFree }}"><span>Тест: курьеры всегда свободны<br><span style="font-size:12px;color:#6B6E70">Для каждого бакета доступен тестовый курьер. Проверяем группировку и SLA по лимитам филиала.</span></span></label>
           <div style="padding:12px;font-size:12px;color:#55585A">Модель времени IO Planner · стандарт приготовления 12 мин. Ready и deadline задаются в заказах; service не участвует в этой модели.</div>
+          <label style="display:block;padding:12px;font-size:12px">Источник дороги<select value="{{ matrixProviderSetting }}" onChange="{{ changeMatrixProvider }}" style="width:100%;margin-top:6px;padding:6px"><option value="yandex">Яндекс Matrix API</option><option value="local">Локальный расчёт</option></select></label>
+          <div style="padding:0 12px 12px;font-size:12px;color:#55585A">Локальный расчёт использует геометрию карты: без запросов API и пробок. Экономный режим применяется только к Яндексу; локально рассчитывается полная матрица.</div>
+          <label style="display:block;padding:12px;font-size:12px">Режим дорожного расчёта<select value="{{ matrixMode }}" onChange="{{ changeMatrixMode }}" style="width:100%;margin-top:6px;padding:6px"><option value="full">Сравнение · полная матрица</option><option value="economy">Экономный · ближайшие соседи</option></select></label>
+          <div style="padding:0 12px 12px;font-size:12px;color:#55585A">Экономный режим ограничивает варианты: результат может отличаться от полной матрицы. Для неназначенных заказов поиск расширяется; выбранные маршруты проверяются по свежим данным. Это проверка расчёта, отправка курьера здесь не моделируется.</div>
           <sc-for list="{{ timingSettings }}" as="s">
             <label style="display:flex;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid #EEEEE8"><span style="flex:1;font-size:12px">{{ s.label }}</span><input type="number" min="{{ s.min }}" step="{{ s.step }}" value="{{ s.value }}" onChange="{{ s.change }}" style="width:100px;padding:6px;border:1px solid #DADAD3;border-radius:5px"></label>
           </sc-for>
@@ -463,7 +467,7 @@ const ZC = {Z1:'#26967F'};
 const BCOL = ['#2F6FDF','#E0652B','#1E9E6A','#B0359B','#8C6D1F'];
 const BR = [367.3,350.4];
 const STREETS = ['ул. Бунёдкор','ул. Катартал','ул. Мукими','ул. Гавхар','ул. Лутфий','ул. Арнасай','ул. Кичик Халка йули','ул. Чупон ота','ул. Дийдор','ул. Кумарык'];
-const REASON = {OUTSIDE_ZONE:'точка вне активных зон',NO_COURIER:'нет свободных курьеров',NO_ZONE_COMPATIBLE_COURIER:'ни один курьер не обслуживает зону',MAX_ORDERS:'у всех подходящих курьеров исчерпан max_orders',MAX_FULL_SUM:'превышен max_full_sum',SLA:'не успевает к deadline',ALGORITHM_CHOICE:'вариант был, но эвристика его закрыла'};
+const REASON = {OUTSIDE_ZONE:'точка вне активных зон',NO_COURIER:'нет свободных курьеров',NO_ZONE_COMPATIBLE_COURIER:'ни один курьер не обслуживает зону',MAX_ORDERS:'у всех подходящих курьеров исчерпан max_orders',MAX_FULL_SUM:'превышен max_full_sum',SLA:'не успевает к deadline',MATRIX_NOT_REQUESTED:'переход ещё не запрашивался',UNREACHABLE:'Яндекс не нашёл маршрут',ALGORITHM_CHOICE:'вариант был, но эвристика его закрыла'};
 const ALGOS = [['A1','Urgency append','A1 · Urgency-seeded append'],['A2','Nearest neighbor','A2 · Nearest Neighbor'],['A3','Cheapest insert','A3 · Cheapest Feasible Insertion'],['A4','Regret-2','A4 · Regret-2 Insertion'],['Exact','Полный перебор','A5 · Exact Exhaustive Search']];
 const TC = {start:'#6B6E70',seed:'#2F6FDF',check:'#6B6E70',accept:'#1E7A45',reject:'#B42323',close:'#9A5B00',done:'#16181A',regret:'#6A3FC0',best:'#2F6FDF',prune:'#9A5B00',late:'#B42323',limit:'#B42323'};
 const TL = {start:'start',seed:'seed',check:'checked',accept:'accepted',reject:'rejected',close:'closed',done:'completed',regret:'regret',best:'best',prune:'pruned',late:'late solo',limit:'limit'};
@@ -476,7 +480,7 @@ const tashkentNow = () => { const p=Object.fromEntries(TZ_FMT.formatToParts(new 
 const nearMin = (s, anchor) => { let m=toMin(s); if (m-anchor>720) m-=1440; else if (anchor-m>720) m+=1440; return m; };
 const defaultTimes = () => { const n=tashkentNow().minutes; return {created:hm(n),ready:hm(n+10),deadline:hm(n+35)}; };
 const fmt = n => Number(n||0).toLocaleString('ru-RU').replace(/\u00a0|,/g,' ');
-const mins = v => (Math.round(v*10)/10).toString().replace('.',',');
+const mins = v => v==null ? '—' : (Math.round(v*10)/10).toString().replace('.',',');
 const signed = v => { const r = Math.round(v); return r>0 ? '+'+r : r<0 ? '−'+(-r) : '0'; };
 const pip = (p, poly) => { let ins=false; for (let i=0,j=poly.length-1;i<poly.length;j=i++){ const [xi,yi]=poly[i],[xj,yj]=poly[j]; if(((yi>p[1])!==(yj>p[1])) && (p[0] < (xj-xi)*(p[1]-yi)/(yj-yi)+xi)) ins=!ins; } return ins; };
 const zonesOf = (x,y) => ZONES.filter(z => pip([x,y], z.pts)).map(z => z.id);
@@ -735,9 +739,9 @@ class Component extends DCLogic {
       'Общая дорога':'Сумма времени движения всех маршрутов: от филиала до первого заказа и далее между заказами. Например, 10 + 15 минут у двух курьеров = 25 минут. Возврат в филиал, ожидание готовности и буферы выхода/передачи сюда не входят. Меньше — лучше при одинаковом числе доставленных вовремя заказов.',
       'Макс. маршрут':'Время движения самого длинного маршрута среди всех бакетов, включая Late solo. Учитываются только участки от филиала до последней остановки, без возврата, ожидания и буферов. Меньше — лучше при одинаковом объёме доставки.',
       'Мин. запас SLA':'Наименьшая разница deadline − ETA среди заказов в маршрутах без Late solo. +5 минут означает, что даже у самого критичного заказа остаётся 5 минут до deadline. ETA включает буферы выхода и предыдущих передач. Больше — лучше; «—» — таких маршрутов нет.',
-      'Matrix':'Размер общей матрицы времени движения: (N + 1)², где N — допустимые по статусу заказы внутри зоны, а +1 — филиал. Например, 3 заказа дают 16 элементов. Это размер матрицы, а не число запросов к API. Сейчас время дороги оценивается по геометрии карты.',
+      'Matrix':'Размер общей матрицы времени движения: (N + 1)², где N — допустимые по статусу заказы внутри зоны, а +1 — филиал. Это размер матрицы на один вид транспорта, а не число HTTP-запросов. Источник указан в строке результата. Яндекс запрашивается пакетами до 100 ячеек; повторные координаты и кеш уменьшают число запрашиваемых ячеек.',
       'Расчёт':'Время выполнения алгоритма на backend в миллисекундах, включая подготовку его результата. Не включает загрузку страницы, сетевой запрос и построение общей матрицы. Меньше — быстрее; значение может меняться между запусками.',
-      'Gap к Exact':'Разница с результатом полного перебора Exact. «−2 зак.» — алгоритм доставляет вовремя на 2 заказа меньше. Иначе показывается увеличение общей дороги относительно Exact в процентах: (дорога алгоритма − дорога Exact) / дорога Exact × 100%. Положительная разница округляется, остальные значения показаны как 0%. «—» — сравнение недоступно из-за лимита Exact или пропуска алгоритма.'
+      'Gap к Exact':'В экономном режиме Exact ограничен теми же запрошенными переходами и не является эталоном полной матрицы. Разница с результатом полного перебора Exact. «−2 зак.» — алгоритм доставляет вовремя на 2 заказа меньше. Иначе показывается увеличение общей дороги относительно Exact в процентах: (дорога алгоритма − дорога Exact) / дорога Exact × 100%. Положительная разница округляется, остальные значения показаны как 0%. «—» — сравнение недоступно из-за лимита Exact или пропуска алгоритма.'
     };
     const METRICS = [
       ['Вовремя', r=>val(r,'onTime'), 'max', v=>String(v)],
@@ -789,9 +793,9 @@ class Component extends DCLogic {
       runAll: this.runAll,
       bannerBg: st.apiError ? '#FDF1F1' : stale ? '#FFF6E5' : '#EEF6F0', bannerFg: st.apiError ? '#B42323' : stale ? '#8A5300' : '#1E7A45',
       bannerTitle: st.apiError ? 'Ошибка backend' : st.busy ? 'Выполняется…' : noRun ? 'Готов к новому сценарию' : stale ? 'Устарел: сценарий изменён' : 'Результат актуален',
-      bannerText: st.apiError ? st.apiError : st.busy ? 'Синхронизация с SQLite и planning engine.' : noRun ? 'Тестовые заказы удалены. Создайте свои заказы через UI, затем запустите алгоритмы.' : stale ? `Сценарий v${st.version}, run построен на v${run.version}. Старый run не пересчитывается — нажмите «Запустить все».` : st.testMode ? 'Тест из логов 01.10: курьеры всегда FREE, проверяем бакеты и SLA. Матрица — оценка по геометрии.' : 'Все пять алгоритмов получили один snapshot и одну Matrix на backend.',
+      bannerText: st.apiError ? st.apiError : st.busy ? 'Получение матрицы и расчёт алгоритмов…' : noRun ? 'Тестовые заказы удалены. Создайте свои заказы через UI, затем запустите алгоритмы.' : stale ? `Сценарий v${st.version}, run построен на v${run.version}. Старый run не пересчитывается — нажмите «Запустить все».` : st.testMode ? `Тест из логов 01.10: курьеры всегда FREE. Дорога: ${run.matrixProvider==='YANDEX_DISTANCE_MATRIX' ? (run.matrixStats?.traffic==='enabled' ? 'Яндекс, пробки на момент запроса' : 'Яндекс без пробок') : 'геометрическая оценка'}.` : 'Все пять алгоритмов получили один snapshot и одну Matrix на backend.',
       planningText: (()=>{ const t=(!noRun && run.planningAt) || st.now; return `${t.date} ${t.hm} · Asia/Tashkent (GMT+5)`; })(),
-      runInfo: noRun ? 'Запусков пока нет' : `Run #${run.number} · snapshot v${run.version} · ${run.eligible} заказов × ${run.couriers} курьеров · Matrix ${run.matrix} элементов`,
+      runInfo: noRun ? 'Запусков пока нет' : `Run #${run.number} · ${run.eligible} заказов × ${run.couriers} курьеров · ${run.matrixProvider==='YANDEX_DISTANCE_MATRIX' ? `Яндекс · ${run.matrixStats?.calculationMode==='economy' ? 'экономный' : 'полный'} · ${run.matrixStats?.requests || 0} HTTP · ${run.matrixStats?.requestedElements || 0} ячеек · кеш ${run.matrixStats?.cacheHits || 0}` : `Matrix ${run.matrix} · геометрия`}`,
       tabs: [['orders','Заказы',st.orders.length],['couriers','Курьеры',st.couriers.length],['zones','Зоны',ZONES.length],['settings','Настройки','']].map(([k,l,c]) => ({label:l,count:c,
         border: st.tab===k?'#16181A':'transparent', color: st.tab===k?'#16181A':'#6B6E70', onClick:()=>this.setState({tab:k})})),
       isOrders: st.tab==='orders', isCouriers: st.tab==='couriers', isZones: st.tab==='zones', isSettings: st.tab==='settings',
@@ -810,15 +814,20 @@ class Component extends DCLogic {
       testTimeOptions:(st.testTimes || []).map(t=>({...t,label:`${t.at.slice(11,16)} · ${t.orders} заказов`})),
       alwaysFreeCouriers: !!st.settings.alwaysFreeCouriers, toggleAlwaysFree: this.toggleAlwaysFree,
       saveTimingSettings: this.saveTimingSettings,
+      matrixMode:(st.settingsDraft || st.settings).matrixMode || 'full',
+      matrixProviderSetting:(st.settingsDraft || st.settings).matrixProvider==='local' ? 'local' : 'yandex',
+      changeMatrixProvider:e=>this.setState(s=>({settingsDraft:{...(s.settingsDraft || s.settings),matrixProvider:e.target.value}})),
+      changeMatrixMode:e=>this.setState(s=>({settingsDraft:{...(s.settingsDraft || s.settings),matrixMode:e.target.value}})),
       timingSettings: [
         ['goOutFromBranchMin','Выход из филиала, мин',0,0.5],
         ['giveOrderToClientMin','Передача клиенту, мин',0,0.5],
         ['bucketMaxFullSum','Лимит суммы филиала, UZS',1,1],
         ['bucketMaxOrders','Лимит заказов филиала (1–12)',1,1],
-        ['returnBufferPct','Буфер возврата, %',0,1]
+        ['returnBufferPct','Буфер возврата, %',0,1],
+        ['matrixNeighbors','Соседей в экономном режиме (1–20)',1,1]
       ].map(([key,label,min,step])=>({label,min,step,value:(st.settingsDraft || st.settings)[key],
         change:e=>{const value=e.target.value;this.setState(s=>({settingsDraft:{...(s.settingsDraft || s.settings),[key]:value===''?null:Number(value)}}));}})),
-      settingRows: [['Филиал','iikoId · 9f5b02ea…','Amir Temur · #24'],['Рабочее время','open / close','11:00–23:00'],['SLA / готовность','Входные значения сценария','deadline / ready'],['Старт курьера','courier_start_policy','BRANCH_PICKUP'],['Eligible статусы','Готовится, Приготовлен, Ожидает','3 статуса'],['Курьеры сравнения','Во время pairing показывается кандидат','FREE'],['Лимиты Exact','orders / couriers / время',st.settings.alwaysFreeCouriers ? '8 / без лимита / 3000 мс' : '8 / 3 / 3000 мс'],['Matrix','Схема: расстояние на карте / скорость','20 px ≈ 1 мин']].map(([label,hint,value])=>({label,hint,value})),
+      settingRows: [['Филиал','iikoId · 9f5b02ea…','Amir Temur · #24'],['Рабочее время','open / close','11:00–23:00'],['SLA / готовность','Входные значения сценария','deadline / ready'],['Старт курьера','courier_start_policy','BRANCH_PICKUP'],['Eligible статусы','Готовится, Приготовлен, Ожидает','3 статуса'],['Курьеры сравнения','Во время pairing показывается кандидат','FREE'],['Лимиты Exact','orders / couriers / время',st.settings.alwaysFreeCouriers ? '8 / без лимита / 3000 мс' : '8 / 3 / 3000 мс'],['Matrix','Источник последнего расчёта',run.matrixProvider==='YANDEX_DISTANCE_MATRIX' ? 'Яндекс Distance Matrix' : 'Геометрия: 20 px ≈ 1 мин']].map(([label,hint,value])=>({label,hint,value})),
       svgRef: this.svgRef, ymapRef:this.ymapRef, onMapClick: this.onMapClick,
       svgOpacity: st.mapProvider==='LEAFLET' ? 0 : 1, svgPointerEvents:st.mapProvider==='LEAFLET'?'none':'auto',
       showFallbackMarkers:st.mapProvider!=='LEAFLET', showProviderLabel:st.mapProvider!=='LEAFLET',

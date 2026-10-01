@@ -1,6 +1,20 @@
 # Routing-Lab-UI
 
 **Документация текущей реализации:** [полное описание алгоритмов, формул, метрик и тестового режима](docs/algorithms.md).
+Подключение реальной дороги: [клиент Яндекс Matrix, bulk и кеш](docs/yandex-matrix.md).
+
+В текущем прототипе доступны два режима в **Настройки → Режим дорожного расчёта**:
+**Сравнение · полная матрица** (по умолчанию) и **Экономный · ближайшие соседи**.
+Экономный режим начинает с 5 соседей, расширяет поиск для неназначенных заказов
+и проверяет маршруты по данным не старше 10 секунд. Его результат может отличаться
+от полной матрицы. Сохраните параметры и запустите расчёт; в историческом режиме
+сохранение параметров пересчитывает тест сразу.
+
+Пробки включены по умолчанию. `SCOOTER` означает мотороллер: используется
+автомобильная дорога Яндекса с нижней границей времени по скорости 40 км/ч.
+Кеш исходной дороги общий с `DRIVING`, TTL с пробками — 1 минута, хранение в памяти.
+В исторических срезах используются пробки на момент запроса. Реальная отправка
+курьеров в прототипе не моделируется.
 Ниже находится исходный технический дизайн; актуальное поведение описано в указанном документе.
 
 # Технический дизайн: лаборатория алгоритмов доставки
@@ -2004,8 +2018,10 @@ This is a snapshot comparison, not a production dispatch simulator: a courier sh
 `pairing` is a comparison candidate. It does not reserve the real courier or simulate
 scan locks, All checked, persisted dispatched buckets, future planning cycles, kitchen
 outage detection or automatic SLA/ECT derivation. Outage-adjusted values can be supplied
-as ready/deadline inputs. Routing still uses LOCAL_DETERMINISTIC geometric durations,
-not production Geomatrix/traffic. Old runs require an explicit new run to use this model.
+as ready/deadline inputs. With `YANDEX_ROUTING_API_KEY`, routing uses the direct Yandex
+Distance Matrix client; without it (or with `MATRIX_PROVIDER=local`), it uses
+LOCAL_DETERMINISTIC geometry. See `docs/yandex-matrix.md` for bulk/cache details.
+Old runs require an explicit new run to use the new provider.
 
 
 ### Historical test orders and unlimited courier mode (2026-10-01)
@@ -2038,7 +2054,9 @@ symmetry pruning, but still skips more than 8 orders or its time/state limits.
 Run the fixture without the UI: `npm run test:orders`, or
 `npm run test:orders -- 2026-10-01T12:30:00+05:00` for a specific slice.
 The result is written to `test/fixtures/orders-2026-10-01-result.json`.
-Routing remains the prototype's geometric duration estimate, not real road/traffic data.
+Routing uses Yandex road durations when configured, otherwise local geometry.
+SCOOTER applies the 40 km/h time floor to Yandex driving durations; historical
+unlimited couriers are currently generated as DRIVING. See `docs/yandex-matrix.md`.
 
 
 Hourly cohorts: the historical test UI now first selects an hour by order creation

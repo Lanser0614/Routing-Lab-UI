@@ -39,6 +39,14 @@ test('HTTP flow preserves stale run until the operator starts a new one', async 
   assert.equal(repository.scenario().version,scenarioBeforeTest.version);
   assert.equal(repository.latestRun().number,run.number);
 
+  const local = await fetch(`${base}/api/v1/test-orders`,{method:'POST',
+    headers:{'content-type':'application/json'},body:JSON.stringify({
+      settings:{matrixProvider:'local',matrixMode:'economy'}})}).then(r=>r.json());
+  assert.equal(local.run.matrixProvider,'LOCAL_DETERMINISTIC');
+  const unavailable = await fetch(`${base}/api/v1/test-orders`,{method:'POST',
+    headers:{'content-type':'application/json'},body:JSON.stringify({settings:{matrixProvider:'yandex'}})});
+  assert.equal(unavailable.status,503);
+
   const invalid = await fetch(`${base}/api/v1/orders/O1/status`, {
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ status: 'DELIVERED' })
   });

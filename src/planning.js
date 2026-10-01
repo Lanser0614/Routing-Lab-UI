@@ -50,7 +50,11 @@ function buildInput(snapshot) {
     .sort((a, b) => time(a.freeSince) - time(b.freeSince) || a.id.localeCompare(b.id));
   const byId = Object.fromEntries(orders.map(order => [order.id, order]));
   const legCache = new Map();
-  const leg = (from, to) => {
+  const leg = (from, to, mode) => {
+    if (snapshot.roadMatrix) {
+      const cell = snapshot.roadMatrix.cells[mode]?.[from]?.[to];
+      return cell?.status === 'OK' && Number.isFinite(cell.minutes) ? cell.minutes : Infinity;
+    }
     const key = `${from}>${to}`;
     if (legCache.has(key)) return legCache.get(key);
     const [x1, y1] = positions[from];
@@ -59,7 +63,7 @@ function buildInput(snapshot) {
     legCache.set(key, value);
     return value;
   };
-  return { orders, outside, couriers, byId, leg, positions, plan, settings, allowLate: settings.allowLate !== false };
+  return { orders, outside, couriers, byId, leg, positions, plan, settings, matrix:snapshot.roadMatrix, allowLate: settings.allowLate !== false };
 }
 
 const urgency = (a, b) => a.deadline - b.deadline || a.created - b.created || a.id.localeCompare(b.id);
@@ -83,17 +87,21 @@ export function evaluateRoute(courier, orderIds, input) {
   if (violations.length) return { feasible: false, violations, sum };
   let previous = 'BR';
   let travel = 0;
+  let unknown = false;
   const routeTimes = orders.map(order => {
-    travel += input.leg(previous, order.id);
+    if (input.matrix?.cells[courier.mode]?.[previous]?.[order.id]?.status === 'UNKNOWN') unknown = true;
+    travel += input.leg(previous, order.id, courier.mode);
     previous = order.id;
     return travel;
   });
+  if (!Number.isFinite(travel)) return { feasible: false, violations: [unknown ? 'MATRIX_NOT_REQUESTED' : 'UNREACHABLE'], sum };
   const timing = bucketTiming(orders, routeTimes, sum, input.plan, input.settings);
   if (timing.isLate) violations.push('SLA');
-  const returnLegMin = orders.length ? input.leg(previous, 'BR') : 0;
+  const back = orders.length ? input.leg(previous, 'BR', courier.mode) : 0;
+  const returnLegMin = Number.isFinite(back) ? back : null;
   return { ...timing, feasible: violations.length === 0, violations, sum, travel,
     finish: timing.stops.at(-1)?.eta ?? timing.dep,
-    returnLegMin, bufferedReturnMin: returnLegMin * (1 + input.settings.returnBufferPct / 100) };
+    returnLegMin, bufferedReturnMin: returnLegMin === null ? null : returnLegMin * (1 + input.settings.returnBufferPct / 100) };
 
 }
 
@@ -120,7 +128,7 @@ function appendAlgorithm(input, nearest) {
     }
     while (remaining.length) {
       const previous = ids.at(-1) || 'BR';
-      const candidates = remaining.filter(order => canServe(courier, order)).sort((a, b) => input.leg(previous, a.id) - input.leg(previous, b.id) || urgency(a, b));
+      const candidates = remaining.filter(order => canServe(courier, order)).sort((a, b) => input.leg(previous, a.id, courier.mode) - input.leg(previous, b.id, courier.mode) || urgency(a, b));
       let accepted;
       for (const order of candidates) {
         const verdict = evaluateRoute(courier, [...ids, order.id], input);
@@ -254,6 +262,8 @@ function finish(code, raw, input, computeMs) {
         return Array.from({ length: base.length + 1 }, (_, position) => evaluateRoute(courier, insertAt(base, position, order.id), input));
       });
       if (verdicts.some(value => value.feasible)) reason = 'ALGORITHM_CHOICE';
+      else if (verdicts.some(value => value.violations.includes('MATRIX_NOT_REQUESTED'))) reason = 'MATRIX_NOT_REQUESTED';
+      else if (verdicts.every(value => value.violations.includes('UNREACHABLE'))) reason = 'UNREACHABLE';
       else if (verdicts.every(value => value.violations.includes('MAX_ORDERS'))) reason = 'MAX_ORDERS';
       else if (verdicts.every(value => value.violations.some(codeValue => codeValue === 'MAX_ORDERS' || codeValue === 'MAX_FULL_SUM'))) reason = 'MAX_FULL_SUM';
     }
@@ -292,6 +302,7 @@ export function runAlgorithms(snapshot) {
     couriers: input.couriers.length,
     planningAt: snapshot.planningAt || null,
     testCouriers: input.settings.alwaysFreeCouriers ? input.couriers : undefined,
-    matrixProvider: 'LOCAL_DETERMINISTIC', timingModel: TIMING_MODEL, settings: input.settings
+    matrixProvider: snapshot.roadMatrix?.provider || 'LOCAL_DETERMINISTIC',
+    matrixStats: snapshot.roadMatrix?.stats, timingModel: TIMING_MODEL, settings: input.settings
   };
 }
