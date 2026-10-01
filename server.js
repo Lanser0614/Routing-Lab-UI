@@ -8,6 +8,7 @@ import { matrixClientFromEnv } from './src/yandex-matrix.js';
 import { problem } from './src/domain.js';
 import { BRANCH } from './src/branch.js';
 import { KafkaObserver, observerConfig } from './src/kafka-observer.js';
+import { applyRuntimeSettings } from './src/runtime-settings.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 
@@ -30,9 +31,11 @@ export function createApp(repository, { matrixClient=null, observer=null }={}) {
 
   app.get('/health', route((req,res) => {
     const kafka=observer?.status();
-    const ready=!observer || Object.keys(kafka.streams).length===2 && Object.values(kafka.streams).every(s=>s.connected);
+    const selectedProvider=repository.scenario().settings.matrixProvider;
+    const matrixReady=selectedProvider!=='yandex'||!!matrixClient;
+    const ready=matrixReady && (!observer || Object.keys(kafka.streams).length===2 && Object.values(kafka.streams).every(s=>s.connected));
     res.status(ready?200:503);
-    return {status:ready?'ok':'not_ready',storage:'sqlite',kafka,matrixProvider:matrixClient?'YANDEX_DISTANCE_MATRIX':'LOCAL_DETERMINISTIC'};
+    return {status:ready?'ok':'not_ready',storage:'sqlite',kafka,matrixReady,matrixProvider:selectedProvider==='local'?'LOCAL_DETERMINISTIC':matrixClient?'YANDEX_DISTANCE_MATRIX':'UNAVAILABLE'};
   }));
   app.post('/api/v1/test-orders', route(async req => ({ ...await testScenario(req.body.at, req.body.settings, req.body.range), branch: BRANCH })));
   app.get('/api/v1/test-orders', route(async req => ({ ...await testScenario(req.query.at, {}, req.query.range), branch: BRANCH })));
@@ -72,6 +75,7 @@ export function createApp(repository, { matrixClient=null, observer=null }={}) {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const config=observerConfig();
   const repository = new Repository(path.resolve(root,process.env.SQLITE_PATH || (config.enabled?'data/observer.sqlite':'data/routing-lab.sqlite')), {observer:config.enabled});
+  applyRuntimeSettings(repository);
   let dirty=true,calculating=false;
   const observer=config.enabled?new KafkaObserver(repository,config,()=>{dirty=true;}):null;
   const app = createApp(repository, { matrixClient: matrixClientFromEnv(),observer });

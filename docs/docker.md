@@ -1,5 +1,7 @@
 # Запуск контейнера
 
+Для Яндекс в `/app/.env` указать `MATRIX_PROVIDER=yandex` и `YANDEX_ROUTING_API_KEY=ваш_ключ`, затем `docker restart routing-lab`. Это работает также в Kafka observer: настройка применяется к существующей SQLite-базе при каждом старте. `MATRIX_PROVIDER=local` включает локальную оценку; `auto` выбирает Яндекс при наличии ключа, иначе локальную оценку. Если переменная отсутствует, сохраняется выбранный ранее провайдер. При явном yandex без ключа нет скрытого перехода на локальную оценку, health возвращает 503.
+
 ## Публикация без ручных registry credentials
 
 В репозитории подготовлен workflow `.github/workflows/docker-publish.yml`. Он запускается только вручную: GitHub → Actions → Publish Docker image → Run workflow. После загрузки изменений в GitHub workflow проверяет тесты и публикует образы для amd64 и arm64, используя встроенный GITHUB_TOKEN. Ручной Docker Hub аккаунт или PAT не нужны. Для текущего репозитория имя будет `ghcr.io/lanser0614/routing-lab-ui:latest`.
