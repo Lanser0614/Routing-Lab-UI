@@ -3,6 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
 import { Repository } from './src/repository.js';
+import { runTestScenario } from './src/historical-scenario.js';
+import { BRANCH } from './src/branch.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,6 +15,8 @@ export function createApp(repository) {
   const route = handler => (req, res, next) => { try { const value = handler(req, res); if (value !== undefined && !res.headersSent) res.json(value); } catch (error) { next(error); } };
 
   app.get('/health', route(() => ({ status: 'ok', storage: 'sqlite', matrixProvider: 'LOCAL_DETERMINISTIC' })));
+  app.post('/api/v1/test-orders', route(req => ({ ...runTestScenario(req.body.at, req.body.settings, req.body.range), branch: BRANCH })));
+  app.get('/api/v1/test-orders', route(req => ({ ...runTestScenario(req.query.at, {}, req.query.range), branch: BRANCH })));
   app.get('/api/v1/bootstrap', route(() => repository.bootstrap()));
   app.post('/api/v1/orders', route(req => repository.upsertOrder(req.body.id, req.body, true)));
   app.patch('/api/v1/orders/:id', route(req => repository.upsertOrder(req.params.id, req.body, false)));

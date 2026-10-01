@@ -31,6 +31,14 @@ test('HTTP flow preserves stale run until the operator starts a new one', async 
   assert.equal(run.version, changed.version);
   assert.equal(run.results.length, 5);
 
+  const scenarioBeforeTest = repository.snapshot();
+  const testResponse = await fetch(`${base}/api/v1/test-orders`).then(response=>response.json());
+  assert.equal(testResponse.settings.alwaysFreeCouriers,true);
+  assert.equal(testResponse.orders.length,20);
+  assert.deepEqual(repository.list('orders'), scenarioBeforeTest.orders);
+  assert.equal(repository.scenario().version,scenarioBeforeTest.version);
+  assert.equal(repository.latestRun().number,run.number);
+
   const invalid = await fetch(`${base}/api/v1/orders/O1/status`, {
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ status: 'DELIVERED' })
   });

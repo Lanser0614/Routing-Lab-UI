@@ -20,6 +20,10 @@ html,body{margin:0;padding:0;height:100%;background:#F2F2EE;color:#16181A;font-f
 *{box-sizing:border-box}
 a{color:#2F6FDF;text-decoration:none}a:hover{color:#1D4FA8;text-decoration:underline}
 input,select,button{font-family:inherit;font-size:13px;color:#16181A}
+.metric-help{position:relative}
+.metric-tooltip{display:none;position:absolute;left:6px;top:100%;width:290px;max-width:calc(100vw - 32px);padding:11px 13px;background:#16181A;color:#FFFFFF;border-radius:7px;box-shadow:0 5px 18px #0003;z-index:20;font-size:12px;line-height:1.5;text-align:left;font-weight:400}
+.metric-help:hover .metric-tooltip,.metric-help:focus-within .metric-tooltip{display:block}
+.metric-help button:focus-visible{outline:2px solid #2F6FDF;outline-offset:2px}
 input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
 </style>
 </helmet>
@@ -41,7 +45,7 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
     </div>
     <div style="flex:1"></div>
     <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#6B6E70">
-      <span>Старт: филиал</span><span>·</span><span>Late solo: {{ lateLabel }}</span><span>·</span><span>Exact: 8 / 3 / 3 с</span>
+      <span>Старт: филиал</span><span>·</span><span>Late solo: {{ lateLabel }}</span><span>·</span><span>Exact: {{ exactLimits }}</span>
     </div>
     <button onClick="{{ runAll }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 16px;border:none;border-radius:6px;background:#16181A;color:#FFFFFF;font-weight:600;cursor:pointer" style-hover="background:#33373A">
       <span style="font-size:10px">▶</span> Запустить все
@@ -77,7 +81,7 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
           <sc-for list="{{ orderRows }}" as="o" hint-placeholder-count="5">
             <div onClick="{{ o.open }}" style="display:flex;flex-direction:column;gap:6px;padding:10px 12px;border-bottom:1px solid #EEEEE8;cursor:pointer;background:{{ o.bg }};box-shadow:inset 3px 0 0 {{ o.edge }}" style-hover="background:#F7F7F3">
               <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-family:'IBM Plex Mono',monospace;font-weight:600">{{ o.id }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-weight:600">{{ o.displayId }}</span>
                 <span style="padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600;background:{{ o.sBg }};color:{{ o.sFg }}">{{ o.statusLabel }}</span>
                 <div style="flex:1"></div>
                 <span style="font-family:'IBM Plex Mono',monospace">{{ o.sumText }}</span>
@@ -174,6 +178,15 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
             <div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-weight:500">Late solo</span><span style="font-size:12px;color:#6B6E70">Просроченный заказ — отдельный bucket с пометкой late</span></div>
             <span style="width:34px;height:20px;border-radius:10px;background:{{ lateTrack }};position:relative"><span style="position:absolute;top:2px;left:{{ lateKnob }};width:16px;height:16px;border-radius:50%;background:#FFFFFF"></span></span>
           </div>
+          <div style="padding:12px;display:flex;flex-direction:column;gap:8px"><button onClick="{{ loadTestOrders }}" style="padding:8px;border:1px solid #DADAD3;border-radius:6px;background:#FFFFFF;cursor:pointer">Тестовые заказы · 01.10.2026</button>
+            <sc-if value="{{ isTestMode }}"><label style="font-size:12px">Заказы за час (по времени создания)<select value="{{ testRange }}" onChange="{{ changeTestRange }}" style="width:100%;margin-top:4px;padding:6px"><sc-for list="{{ testRangeOptions }}" as="t"><option value="{{ t.id }}">{{ t.label }}</option></sc-for></select></label><span style="font-size:12px;color:#55585A">{{ testRangeInfo }}</span><label style="font-size:12px">Момент расчёта внутри часа (GMT+5)<select value="{{ testAt }}" onChange="{{ changeTestAt }}" style="width:100%;margin-top:4px;padding:6px"><sc-for list="{{ testTimeOptions }}" as="t"><option value="{{ t.at }}">{{ t.label }}</option></sc-for></select></label><span style="font-size:12px;color:#6B6E70">Срез: заказы с ещё не истёкшим deadline. Это отдельный тест; обычный сценарий сохранён.</span><button onClick="{{ exitTestOrders }}" style="padding:8px;border:1px solid #DADAD3;border-radius:6px;background:#FFFFFF;cursor:pointer">Вернуться к обычному сценарию</button></sc-if>
+          </div>
+          <label style="display:flex;gap:10px;align-items:flex-start;padding:12px;border-bottom:1px solid #EEEEE8"><input type="checkbox" checked="{{ alwaysFreeCouriers }}" onChange="{{ toggleAlwaysFree }}"><span>Тест: курьеры всегда свободны<br><span style="font-size:12px;color:#6B6E70">Для каждого бакета доступен тестовый курьер. Проверяем группировку и SLA по лимитам филиала.</span></span></label>
+          <div style="padding:12px;font-size:12px;color:#55585A">Модель времени IO Planner · стандарт приготовления 12 мин. Ready и deadline задаются в заказах; service не участвует в этой модели.</div>
+          <sc-for list="{{ timingSettings }}" as="s">
+            <label style="display:flex;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid #EEEEE8"><span style="flex:1;font-size:12px">{{ s.label }}</span><input type="number" min="{{ s.min }}" step="{{ s.step }}" value="{{ s.value }}" onChange="{{ s.change }}" style="width:100px;padding:6px;border:1px solid #DADAD3;border-radius:5px"></label>
+          </sc-for>
+          <button onClick="{{ saveTimingSettings }}" style="margin:12px;padding:8px;border:1px solid #DADAD3;border-radius:6px;cursor:pointer">Сохранить параметры · затем запустить все</button>
           <sc-for list="{{ settingRows }}" as="s" hint-placeholder-count="5">
             <div style="display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid #EEEEE8">
               <div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-weight:500">{{ s.label }}</span><span style="font-size:12px;color:#6B6E70">{{ s.hint }}</span></div>
@@ -202,6 +215,7 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
           <rect x="-13" y="-13" width="26" height="26" rx="5" fill="#16181A"></rect>
           <text x="0" y="4" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700" font-family="IBM Plex Mono">Ф</text>
         </g>
+        <sc-for list="{{ mapRoutes }}" as="r"><polyline points="{{ r.points }}" fill="none" stroke="{{ r.color }}" stroke-width="4" stroke-dasharray="{{ r.dash }}" opacity="{{ r.opacity }}" style="pointer-events:none"></polyline></sc-for>
       </svg>
 
       <sc-if value="{{ showFallbackMarkers }}" hint-placeholder-val="{{ true }}">
@@ -219,7 +233,8 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
       </div>
       <div style="position:absolute;left:{{ hintLeft }};bottom:12px;display:flex;flex-direction:column;gap:6px;padding:10px 12px;background:#FFFFFF;border:1px solid #DADAD3;border-radius:7px;font-size:12px">
         <span style="font-weight:600">{{ algoName }}</span>
-        <sc-for list="{{ routes }}" as="r" hint-placeholder-count="2">
+        <sc-if value="{{ bucketFocused }}"><button onClick="{{ showAllBuckets }}" style="padding:5px 8px;border:1px solid #DADAD3;border-radius:5px;background:#FFFFFF;cursor:pointer">Показать все бакеты</button></sc-if>
+        <sc-for list="{{ mapRoutes }}" as="r" hint-placeholder-count="2">
           <div style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:4px;border-radius:2px;background:{{ r.color }}"></span><span>{{ r.legend }}</span></div>
         </sc-for>
         <div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:#9A9C98"></span><span>Не в результате run</span><span style="width:10px;height:10px;border-radius:50%;background:#D23B3B;margin-left:6px"></span><span>Вне зоны</span></div>
@@ -271,7 +286,7 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
               <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Создан</span><input type="text" inputmode="numeric" placeholder="HH:MM" value="{{ d.created }}" onChange="{{ onCreated }}" style="height:34px;padding:0 10px;border:1px solid #DADAD3;border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
               <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Готов (ready_at)</span><input type="text" inputmode="numeric" placeholder="HH:MM" value="{{ d.ready }}" onChange="{{ onReady }}" style="height:34px;padding:0 10px;border:1px solid {{ timeBorder }};border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
               <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Deadline</span><input type="text" inputmode="numeric" placeholder="HH:MM" value="{{ d.deadline }}" onChange="{{ onDeadline }}" style="height:34px;padding:0 10px;border:1px solid {{ timeBorder }};border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
-              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Обслуживание, сек</span><input type="text" inputmode="numeric" value="{{ d.service }}" onChange="{{ onService }}" style="height:34px;padding:0 10px;border:1px solid #DADAD3;border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:#6B6E70">Service, сек (не используется)</span><input type="text" inputmode="numeric" value="{{ d.service }}" onChange="{{ onService }}" style="height:34px;padding:0 10px;border:1px solid #DADAD3;border-radius:6px;font-family:'IBM Plex Mono',monospace"></label>
             </div>
             <sc-for list="{{ drawerErrors }}" as="err" hint-placeholder-count="0">
               <div style="font-size:12px;color:{{ err.color }}">{{ err.text }}</div>
@@ -361,7 +376,10 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
             </button>
           </sc-for>
           <sc-for list="{{ metricRows }}" as="row" hint-placeholder-count="10">
-            <div style="padding:6px;border-top:1px solid #EEEEE8;color:#55585A">{{ row.label }}</div>
+            <div class="metric-help" style="padding:6px;border-top:1px solid #EEEEE8;color:#55585A">
+              <button type="button" aria-describedby="{{ row.tipId }}" aria-label="{{ row.helpLabel }}" style="display:flex;gap:4px;align-items:center;padding:0;border:none;background:transparent;font-size:12px;color:inherit;text-align:left;cursor:help"><span>{{ row.label }}</span><span aria-hidden="true" style="color:#8A8D8F;font-size:11px">ⓘ</span></button>
+              <span id="{{ row.tipId }}" role="tooltip" class="metric-tooltip">{{ row.help }}</span>
+            </div>
             <sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="5">
               <div onClick="{{ c.onClick }}" style="padding:6px;border-top:1px solid #EEEEE8;text-align:right;font-family:'IBM Plex Mono',monospace;background:{{ c.bg }};font-weight:{{ c.weight }};color:{{ c.color }};cursor:pointer">{{ c.v }}</div>
             </sc-for>
@@ -378,11 +396,12 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
       </sc-if>
       <div style="display:flex;flex-direction:column;gap:10px;padding:4px 14px 10px">
         <sc-for list="{{ routes }}" as="r" hint-placeholder-count="2">
-          <div style="border:1px solid #E2E2DC;border-radius:8px;overflow:hidden">
-            <div style="display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-left:4px solid {{ r.color }};background:#FAFAF8">
+          <div onClick="{{ r.select }}" onKeyDown="{{ r.keySelect }}" role="button" tabindex="0" aria-label="{{ r.selectionLabel }}" aria-pressed="{{ r.selected }}" style="border:1px solid {{ r.cardBorder }};border-radius:8px;overflow:hidden;cursor:pointer">
+            <div style="display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-left:4px solid {{ r.color }};background:{{ r.cardBg }}">
               <div style="display:flex;align-items:center;gap:8px"><span style="font-weight:600">Bucket {{ r.b }} · {{ r.courier }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B6E70">{{ r.mode }}</span><div style="flex:1"></div><span style="font-size:11px;font-weight:600;color:{{ r.statusColor }}">{{ r.statusText }}</span></div>
               <div style="font-size:12px;color:#55585A">{{ r.capText }}</div>
               <div style="font-size:12px;color:#55585A">{{ r.travelText }}</div>
+              <div style="font-size:12px;color:#55585A">{{ r.timingText }}</div>
             </div>
             <div style="display:grid;grid-template-columns:22px 1fr auto auto 40px;column-gap:12px;padding:6px 12px 8px;font-size:12px;font-family:'IBM Plex Mono',monospace">
               <sc-for list="{{ r.stops }}" as="s" hint-placeholder-count="3">
@@ -443,7 +462,6 @@ const ZONES = [
 const ZC = {Z1:'#26967F'};
 const BCOL = ['#2F6FDF','#E0652B','#1E9E6A','#B0359B','#8C6D1F'];
 const BR = [367.3,350.4];
-const PLAN = 18*60;
 const STREETS = ['ул. Бунёдкор','ул. Катартал','ул. Мукими','ул. Гавхар','ул. Лутфий','ул. Арнасай','ул. Кичик Халка йули','ул. Чупон ота','ул. Дийдор','ул. Кумарык'];
 const REASON = {OUTSIDE_ZONE:'точка вне активных зон',NO_COURIER:'нет свободных курьеров',NO_ZONE_COMPATIBLE_COURIER:'ни один курьер не обслуживает зону',MAX_ORDERS:'у всех подходящих курьеров исчерпан max_orders',MAX_FULL_SUM:'превышен max_full_sum',SLA:'не успевает к deadline',ALGORITHM_CHOICE:'вариант был, но эвристика его закрыла'};
 const ALGOS = [['A1','Urgency append','A1 · Urgency-seeded append'],['A2','Nearest neighbor','A2 · Nearest Neighbor'],['A3','Cheapest insert','A3 · Cheapest Feasible Insertion'],['A4','Regret-2','A4 · Regret-2 Insertion'],['Exact','Полный перебор','A5 · Exact Exhaustive Search']];
@@ -471,148 +489,6 @@ const INIT_COURIERS = [
   {id:'C2',name:'Бекзод',status:'FREE',mode:'DRIVING',maxOrders:3,maxSum:300000,zones:['Z1'],freeSince:'17:54'},
   {id:'C3',name:'Дилшод',status:'OFFLINE',mode:'BICYCLING',maxOrders:2,maxSum:200000,zones:['Z1'],freeSince:null}
 ];
-
-function buildInput(orders, couriers, settings) {
-  const pos = {BR};
-  const outside = [];
-  const os = [];
-  orders.filter(o => ELIGIBLE.includes(o.status)).forEach(o => {
-    const zones = zonesOf(o.x,o.y);
-    pos[o.id] = [o.x,o.y];
-    const n = {id:o.id,zones,ready:toMin(o.ready),deadline:toMin(o.deadline),created:toMin(o.created),service:(Number(o.service)||0)/60,sum:Number(o.sum)||0};
-    if (zones.length===0) outside.push(n); else os.push(n);
-  });
-  const cs = couriers.filter(c => c.status==='FREE' && c.zones.length>0)
-    .sort((a,b) => toMin(a.freeSince)-toMin(b.freeSince) || (a.id<b.id?-1:1)).map(c => ({...c}));
-  const byId = {}; os.forEach(o => byId[o.id]=o);
-  const legCache = {};
-  const leg = (a,b) => { const k=a+'>'+b; if (legCache[k]!=null) return legCache[k];
-    const [x1,y1]=pos[a],[x2,y2]=pos[b]; return legCache[k] = Math.max(0.5, Math.round(Math.hypot(x2-x1,y2-y1)/20*2)/2); };
-  return {orders:os, outside, couriers:cs, byId, leg, pos, allowLate:settings.allowLate};
-}
-const urg = (a,b) => a.deadline-b.deadline || a.created-b.created || (a.id<b.id?-1:1);
-function canServe(c,o){ return o.zones.some(z => c.zones.includes(z) && (!ZONES.find(zz=>zz.id===z).modes || ZONES.find(zz=>zz.id===z).modes.includes(c.mode))); }
-function evalRoute(c, ids, inp) {
-  const os = ids.map(id => inp.byId[id]);
-  const v = [];
-  if (new Set(ids).size!==ids.length) return {feasible:false,violations:['DUPLICATE']};
-  if (os.some(o => !canServe(c,o))) v.push('ZONE');
-  if (ids.length > c.maxOrders) v.push('MAX_ORDERS');
-  const sum = os.reduce((s,o)=>s+o.sum,0);
-  if (sum > c.maxSum) v.push('MAX_FULL_SUM');
-  if (v.length) return {feasible:false,violations:v,sum};
-  const dep = Math.max(PLAN, ...os.map(o=>o.ready));
-  let t = dep, prev='BR', travel=0, minSlack=Infinity; const stops=[];
-  os.forEach((o,i) => { const l = inp.leg(prev,o.id); t+=l; travel+=l; const ss=Math.max(t,o.ready); const slack=o.deadline-ss;
-    if (slack<0) v.push('SLA'); minSlack=Math.min(minSlack,slack); stops.push({id:o.id,eta:ss,deadline:o.deadline,slack}); t=ss+o.service; prev=o.id; });
-  return {feasible:v.length===0,violations:v,dep,finish:t,travel,stops,minSlack,sum};
-}
-function why(v){ if (v.violations.includes('ZONE')) return 'зона не обслуживается'; if (v.violations.includes('MAX_ORDERS')) return 'лимит max_orders'; if (v.violations.includes('MAX_FULL_SUM')) return 'лимит max_full_sum';
-  const s = v.stops.find(s=>s.slack<0); return `${s.id} опоздает на ${mins(-s.slack)} мин`; }
-const insertAt = (a,i,x) => [...a.slice(0,i),x,...a.slice(i)];
-
-function algoAppend(inp, nearest) {
-  const rem=[...inp.orders].sort(urg), routes=[], tr=[];
-  tr.push(['start', nearest ? 'Старт: текущая точка каждого курьера — филиал' : `Старт: ${rem.length} заказов, FIFO ${inp.couriers.map(c=>c.name).join(' → ')||'—'}`]);
-  for (const c of inp.couriers) {
-    let ids=[];
-    if (!nearest) {
-      const seed = rem.find(o => canServe(c,o) && evalRoute(c,[o.id],inp).feasible);
-      if (!seed) { tr.push(['check',`${c.name}: нет допустимого seed`]); continue; }
-      ids=[seed.id]; rem.splice(rem.indexOf(seed),1);
-      tr.push(['seed',`Seed ${seed.id} для ${c.name}: самый срочный, deadline ${hm(seed.deadline)}`]);
-    }
-    while (rem.length) {
-      const last = ids.length ? ids[ids.length-1] : 'BR';
-      const cands = rem.filter(o=>canServe(c,o)).sort((a,b)=>inp.leg(last,a.id)-inp.leg(last,b.id)||urg(a,b));
-      let acc=null;
-      for (const o of cands) { const v=evalRoute(c,[...ids,o.id],inp);
-        if (v.feasible) { acc=o; const s=v.stops[v.stops.length-1]; tr.push(['accept',`${o.id} → ${c.name}${nearest?`, ближайший (${mins(inp.leg(last,o.id))} мин)`:' в конец'}: ETA ${hm(s.eta)}, запас ${signed(s.slack)} мин`]); break; }
-        tr.push(['reject',`${o.id} для ${c.name} отклонён: ${why(v)}`]); }
-      if (!acc) break;
-      ids.push(acc.id); rem.splice(rem.indexOf(acc),1);
-    }
-    if (ids.length) { routes.push({c,ids}); tr.push(['close',`Маршрут ${c.name} закрыт: ${ids.length} заказ.`]); }
-  }
-  return {routes, rem, tr};
-}
-function allInsertions(o, routes, inp) {
-  const out=[];
-  routes.forEach((r,ri) => { if (!canServe(r.c,o)) return; const before = r.ids.length ? evalRoute(r.c,r.ids,inp).travel : 0;
-    for (let p=0;p<=r.ids.length;p++){ const ids=insertAt(r.ids,p,o.id); const v=evalRoute(r.c,ids,inp); if (v.feasible) out.push({o,ri,p,ids,delta:v.travel-before}); } });
-  return out;
-}
-const cmpIns = (a,b) => a.delta-b.delta || urg(a.o,b.o) || a.ri-b.ri || a.p-b.p;
-function algoCheapest(inp) {
-  const routes=inp.couriers.map(c=>({c,ids:[]})), rem=[...inp.orders].sort(urg), tr=[['start','Старт: пустые маршруты у всех свободных курьеров']];
-  while (rem.length) { let best=null, n=0;
-    for (const o of rem) { const cs=allInsertions(o,routes,inp); n+=cs.length; for (const c of cs) if (!best||cmpIns(c,best)<0) best=c; }
-    if (!best) break;
-    routes[best.ri].ids=best.ids; rem.splice(rem.indexOf(best.o),1);
-    tr.push(['accept',`${best.o.id} → ${routes[best.ri].c.name}, позиция ${best.p}: +${mins(best.delta)} мин (минимум из ${n} вариантов)`]); }
-  return {routes:routes.filter(r=>r.ids.length), rem, tr};
-}
-function algoRegret(inp) {
-  const routes=inp.couriers.map(c=>({c,ids:[]})), rem=[...inp.orders].sort(urg), tr=[['start','Старт: regret = второй лучший − лучший']];
-  while (rem.length) { const ch=[];
-    for (const o of rem) { const cs=allInsertions(o,routes,inp).sort(cmpIns); if (!cs.length) continue; ch.push({o,best:cs[0],regret:cs[1]?cs[1].delta-cs[0].delta:Infinity}); }
-    if (!ch.length) break;
-    ch.sort((a,b)=> (b.regret-a.regret) || urg(a.o,b.o) || a.best.delta-b.best.delta);
-    if (ch[0].regret===Infinity && ch[1] && ch[1].regret===Infinity) ch.sort((a,b)=> (a.regret===Infinity&&b.regret===Infinity) ? urg(a.o,b.o) : 0);
-    const x=ch[0]; tr.push(['regret',`Regret ${x.o.id} = ${x.regret===Infinity?'INF':mins(x.regret)+' мин'}`]);
-    routes[x.best.ri].ids=x.best.ids; rem.splice(rem.indexOf(x.o),1);
-    tr.push(['accept',`${x.o.id} → ${routes[x.best.ri].c.name}, позиция ${x.best.p}: +${mins(x.best.delta)} мин`]); }
-  return {routes:routes.filter(r=>r.ids.length), rem, tr};
-}
-function algoExact(inp) {
-  const os=[...inp.orders].sort(urg), cs=inp.couriers, tr=[['start','Лимиты: 8 заказов, 3 курьера, 3000 мс, 2 000 000 состояний']];
-  if (os.length>8 || cs.length>3) return {skipped:`${os.length} заказов × ${cs.length} курьеров превышает лимит 8 × 3`, tr:[...tr,['limit','algorithm.limit_exceeded до начала перебора']]};
-  const t0=performance.now(); let states=0, pruned=0, best=null; const routes=cs.map(()=>[]);
-  const score = () => { let a=0,u=0,tt=0,mx=0; routes.forEach((r,i)=>{ if(!r.length) return; a+=r.length; u++; const v=evalRoute(cs[i],r,inp); tt+=v.travel; mx=Math.max(mx,v.travel); }); return {a,u,tt,mx}; };
-  const better = (s,b) => !b || s.a>b.a || (s.a===b.a && (s.u<b.u || (s.u===b.u && (s.tt<b.tt-1e-9 || (Math.abs(s.tt-b.tt)<1e-9 && s.mx<b.mx)))));
-  const rec = i => { states++; if ((states & 255)===0 && (performance.now()-t0>3000 || states>2e6)) throw 'LIMIT';
-    if (i===os.length) { const s=score(); if (better(s,best)) { best={...s,routes:routes.map(r=>[...r])}; tr.push(['best',`Новый лучший: ${s.a} вовремя, ${s.u} курьера, ${mins(s.tt)} мин`]); } return; }
-    const assigned=routes.reduce((s,r)=>s+r.length,0); if (best && assigned+(os.length-i)<best.a) { pruned++; return; }
-    const o=os[i];
-    cs.forEach((c,k) => { if (!canServe(c,o)) return; const old=routes[k];
-      for (let p=0;p<=old.length;p++){ const ids=insertAt(old,p,o.id); if (!evalRoute(c,ids,inp).feasible){ pruned++; continue; } routes[k]=ids; rec(i+1); routes[k]=old; } });
-    rec(i+1); };
-  try { rec(0); } catch(e) { return {skipped:`превышен лимит: ${fmt(states)} состояний`, tr:[...tr,['limit','algorithm.limit_exceeded']]}; }
-  tr.push(['prune',`Отсечено веток: ${fmt(pruned)}`]);
-  const rs = best ? best.routes.map((ids,k)=>({c:cs[k],ids})).filter(r=>r.ids.length) : [];
-  const used=new Set(rs.flatMap(r=>r.ids));
-  return {routes:rs, rem:os.filter(o=>!used.has(o.id)), tr, states};
-}
-function finish(code, res, inp, ms) {
-  if (res.skipped) return {code, skipped:res.skipped, routes:[], unassigned:[], trace:res.tr, ms};
-  const tr=res.tr, routes=res.routes.map(r=>({...r,late:false})), rem=[...res.rem].sort(urg);
-  if (inp.allowLate) { const used=new Set(routes.map(r=>r.c.id));
-    for (const o of [...rem]) { const c = inp.couriers.find(c => !used.has(c.id) && canServe(c,o) && evalRoute(c,[o.id],inp).violations.every(x=>x==='SLA'));
-      if (c) { used.add(c.id); routes.push({c,ids:[o.id],late:true}); rem.splice(rem.indexOf(o),1); tr.push(['late',`${o.id}: late solo у ${c.name}, опоздание ${mins(-evalRoute(c,[o.id],inp).minSlack)} мин`]); } } }
-  const unassigned = inp.outside.map(o=>({id:o.id,code:'OUTSIDE_ZONE'}));
-  rem.forEach(o => { let code;
-    const comp = inp.couriers.filter(c=>canServe(c,o));
-    if (!inp.couriers.length) code='NO_COURIER'; else if (!comp.length) code='NO_ZONE_COMPATIBLE_COURIER';
-    else { const vs=[]; comp.forEach(c=>{ const r=routes.find(r=>r.c.id===c.id); const base=r?r.ids:[]; for(let p=0;p<=base.length;p++) vs.push(evalRoute(c,insertAt(base,p,o.id),inp)); });
-      if (vs.some(v=>v.feasible)) code='ALGORITHM_CHOICE'; else if (vs.every(v=>v.violations.includes('MAX_ORDERS'))) code='MAX_ORDERS';
-      else if (vs.every(v=>v.violations.includes('MAX_ORDERS')||v.violations.includes('MAX_FULL_SUM'))) code='MAX_FULL_SUM'; else code='SLA'; }
-    unassigned.push({id:o.id,code}); tr.push(['reject',`${o.id} не назначен: ${code}`]); });
-  const evals = routes.map(r=>evalRoute(r.c,r.ids,inp));
-  const ok = routes.map((r,i)=>({...r,ev:evals[i]}));
-  const onTime = ok.filter(r=>!r.late).reduce((s,r)=>s+r.ids.length,0);
-  const travel = evals.reduce((s,v)=>s+v.travel,0);
-  const slacks = ok.filter(r=>!r.late).map(r=>r.ev.minSlack);
-  tr.push(['done',`Готово: ${onTime} вовремя, ${mins(travel)} мин дороги, ${ms.toFixed(2).replace('.',',')} мс`]);
-  return {code, routes:ok, unassigned, trace:tr, ms, onTime, late:ok.filter(r=>r.late).length, travel,
-    maxRoute: evals.reduce((m,v)=>Math.max(m,v.travel),0), minSlack: slacks.length?Math.min(...slacks):null, buckets:ok.length};
-}
-function runAlgorithms(orders, couriers, settings) {
-  const inp = buildInput(orders, couriers, settings);
-  const fns = [()=>algoAppend(inp,false),()=>algoAppend(inp,true),()=>algoCheapest(inp),()=>algoRegret(inp),()=>algoExact(inp)];
-  const results = fns.map((f,i) => { const t=performance.now(); const r=f(); return finish(ALGOS[i][0], r, inp, performance.now()-t); });
-  const snap = {}; orders.forEach(o => snap[o.id] = [o.x,o.y]);
-  return {results, pos:snap, matrix:(inp.orders.length+1)**2, eligible:inp.orders.length+inp.outside.length, couriers:inp.couriers.length};
-}
 
 function emptyRun(version) {
   return {
@@ -644,7 +520,7 @@ class Component extends DCLogic {
     this.leafletMap = null;
     this.mapLoading = null;
     this.mapConfig = null;
-    this.state = { tab:'orders', algo:0, orders:INIT_ORDERS.map(o=>({...o})), couriers:INIT_COURIERS.map(c=>({...c})), settings,
+    this.state = { tab:'orders', algo:0, selectedBucket:null, orders:INIT_ORDERS.map(o=>({...o})), couriers:INIT_COURIERS.map(c=>({...c})), settings,
       version:11, run:emptyRun(11), branch:null, mapProvider:'LOADING', now:tashkentNow(),
       drawer:null, draft:null, candidates:[], confirmDelete:false, cdraft:null, showTerminal:false, orderQuery:'', nextId:6, nextCId:4, history:{}, apiError:null, busy:false };
   }
@@ -655,7 +531,7 @@ class Component extends DCLogic {
     this.setState({
       orders:data.orders, couriers:data.couriers, settings:data.settings, version:data.version,
       run:data.run || emptyRun(data.version), branch:data.branch, nextId:data.nextId, nextCId:data.nextCId,
-      apiError:null, busy:false, ...extra
+      apiError:null, busy:false, settingsDraft:null, selectedBucket:null, ...extra
     },()=>this.ensureMap());
   }
   async ensureMap() {
@@ -672,16 +548,21 @@ class Component extends DCLogic {
     })();
     await this.mapLoading;
   }
+  toggleBucket = index => this.setState(s=>({selectedBucket:s.selectedBucket===index ? null : index}));
+  showAllBuckets = () => this.setState({selectedBucket:null});
+
   syncMap() {
     if (!this.leafletMap || !this.state.run) return;
     const st=this.state,res=st.run.results[st.algo],where={};
-    (res.routes||[]).forEach((r,bi)=>r.ids.forEach((id,i)=>where[id]={n:i+1,color:BCOL[bi%BCOL.length]}));
+    (res.routes||[]).forEach((r,bi)=>r.ids.forEach((id,i)=>where[id]={n:i+1,color:BCOL[bi%BCOL.length],bucket:String.fromCharCode(65+bi),eta:r.ev?.stops[i]?.eta}));
+    const focused=st.selectedBucket==null ? null : res.routes?.[st.selectedBucket];
+    const ids=focused ? new Set(focused.ids) : null;
     const routes=(res.routes||[]).map((r,bi)=>({
       color:BCOL[bi%BCOL.length],dash:r.late?'8 6':'none',opacity:0.9,
-      points:[BR,...r.ids.map(id=>st.run.pos[id]).filter(Boolean)]
-    }));
-    const markerMeta={}; st.orders.forEach(o=>{const w=where[o.id],out=zonesOf(o.x,o.y).length===0;markerMeta[o.id]={n:w?w.n:'·',color:w?w.color:out?'#D23B3B':'#9A9C98'};});
-    this.leafletMap.update({orders:st.orders,routes,markerMeta,onOrderClick:id=>this.openOrder(id)});
+      points:[BR,...r.ids.map(id=>st.run.pos[id]).filter(Boolean)], index:bi
+    })).filter(route=>!focused || route.index===st.selectedBucket);
+    const markerMeta={}; st.orders.forEach(o=>{const w=where[o.id],out=zonesOf(o.x,o.y).length===0;markerMeta[o.id]={n:w?w.n:'·',color:w?w.color:out?'#D23B3B':'#9A9C98',bucket:w?.bucket,eta:w?.eta==null ? null : hm(w.eta)};});
+    this.leafletMap.update({orders:st.orders.filter(o=>(!ids || ids.has(o.id)) && (st.showTerminal || !['DELIVERED','CANCELLED'].includes(o.status))),routes,markerMeta,onOrderClick:id=>this.openOrder(id)});
   }
   async loadBootstrap() {
     this.setState({busy:true});
@@ -692,6 +573,7 @@ class Component extends DCLogic {
     catch(error) { this.setState({apiError:error.message,busy:false}); }
   }
   async mutate(path, options, extra={}) {
+    if (this.state.testMode) { this.setState({apiError:'В тесте изменяйте параметры расчёта. Заказы из файла доступны для просмотра.'}); return false; }
     this.setState({busy:true,apiError:null});
     try { this.applyBootstrap(await api(path,options),extra); return true; }
     catch(error) { this.setState({apiError:error.message,busy:false}); return false; }
@@ -747,22 +629,45 @@ class Component extends DCLogic {
     await this.mutate(c.isNew?'/couriers':`/couriers/${c.id}`,{method:c.isNew?'POST':'PATCH',body:JSON.stringify(nc)},{drawer:null,cdraft:null});
   };
   runAll = async () => {
+    if (this.state.testMode) { await this.loadTestOrders(this.state.testAt, this.state.settings); return; }
     this.setState({busy:true,apiError:null});
-    try { const run=await api('/runs',{method:'POST',body:'{}'}); this.setState({run,busy:false}); }
+    try { const run=await api('/runs',{method:'POST',body:'{}'}); this.setState({run,busy:false,selectedBucket:null}); }
     catch(error) { this.setState({apiError:error.message,busy:false}); }
   };
   toggleLate = async () => {
+    if (this.state.testMode) { this.setState(s=>({settings:{...s.settings,allowLate:!s.settings.allowLate},version:`${s.version}-edited`})); return; }
     await this.mutate('/settings',{method:'PATCH',body:JSON.stringify({allowLate:!this.state.settings.allowLate})});
+  };
+
+  toggleAlwaysFree = async () => {
+    if (this.state.testMode) return;
+    await this.mutate('/settings',{method:'PATCH',body:JSON.stringify({alwaysFreeCouriers:!this.state.settings.alwaysFreeCouriers})});
+  };
+
+  loadTestOrders = async (at, settings, range) => {
+    this.setState({busy:true,apiError:null});
+    try {
+      const body={range:range || this.state.testRange || '13:00-14:00'}; if (typeof at==='string') body.at=at; if (settings) body.settings=settings;
+      const data=await api('/test-orders',{method:'POST',body:JSON.stringify(body)});
+      this.applyBootstrap({...data,nextId:1,nextCId:1},{testMode:true,testAt:data.testAt,testTimes:data.times,testRanges:data.ranges,testRange:data.range?.id,testRangeCount:data.range?.orders,drawer:null,draft:null,cdraft:null,tab:'settings'});
+    } catch(error) { this.setState({apiError:error.message,busy:false}); }
+  };
+  exitTestOrders = async () => { this.setState({testMode:false}); await this.loadBootstrap(); };
+
+  saveTimingSettings = async () => {
+    if (this.state.testMode) { if (this.state.settingsDraft) await this.loadTestOrders(this.state.testAt,this.state.settingsDraft); return; }
+    if (this.state.settingsDraft) await this.mutate('/settings',{method:'PATCH',body:JSON.stringify(this.state.settingsDraft)});
   };
 
   renderVals() {
     const st=this.state, run=st.run;
     const noRun = run.number==='—';
-    const stale = run.version!==st.version || (this.props.stale ?? false);
+    const stale = (!noRun && run.timingModel!=='IO_PLANNER_V1') || run.version!==st.version || (this.props.stale ?? false);
     const res = run.results[st.algo];
     const where = {};
     (res.routes||[]).forEach((r,bi) => r.ids.forEach((id,i) => where[id]={b:String.fromCharCode(65+bi),n:i+1,color:BCOL[bi%BCOL.length],courier:r.c.name,eta:r.ev.stops[i].eta,late:r.late}));
     const unIdx = {}; (res.unassigned||[]).forEach(u=>unIdx[u.id]=u.code);
+    const labelId = id => { const order=st.orders.find(o=>o.id===id); return order?.number ? `№${order.number}` : id; };
     const open = id => e => { if (e && e.stopPropagation) e.stopPropagation(); this.openOrder(id); };
 
     const q = st.orderQuery.trim().toLowerCase();
@@ -770,13 +675,13 @@ class Component extends DCLogic {
       .sort((a,b)=>toMin(a.deadline)-toMin(b.deadline));
     const orderRows = visible.map(o => { const s=ST[o.status], z=zonesOf(o.x,o.y), w=where[o.id], nx=NEXT[o.status];
       const nxt = nx && nx!=='ASSIGNED' || (nx==='ASSIGNED');
-      return {...o, sumText:fmt(o.sum), coords:coordsText(o.x,o.y), statusLabel:s[0], sBg:s[1], sFg:s[2],
+      return {...o, displayId:labelId(o.id), sumText:fmt(o.sum), coords:coordsText(o.x,o.y), statusLabel:s[0], sBg:s[1], sFg:s[2],
         zoneText: z.length ? z.join(', ') : 'вне зоны', zoneColor: z.length ? ZC[z[0]] : '#D23B3B',
         assign: w ? `${res.code} · ${w.b}${w.n} · ${w.courier}` : unIdx[o.id] ? `${res.code} · ${unIdx[o.id]}` : (run.pos[o.id] ? '—' : 'нет в run'),
         assignColor: w ? w.color : unIdx[o.id] ? '#B42323' : '#8A8D8F',
         bg: st.draft && st.draft.id===o.id ? '#F1F5FE' : '#FFFFFF', edge: w ? w.color : 'transparent',
-        hasNext: !!nxt && !!nx, nextLabel: nx ? ST[nx][0] : '', hasBack: o.status==='ASSIGNED',
-        canCancel: TRANS[o.status].includes('CANCELLED'), hasActions: TRANS[o.status].length>0,
+        hasNext: !st.testMode && !!nxt && !!nx, nextLabel: nx ? ST[nx][0] : '', hasBack: !st.testMode && o.status==='ASSIGNED',
+        canCancel: !st.testMode && TRANS[o.status].includes('CANCELLED'), hasActions: !st.testMode && TRANS[o.status].length>0,
         advance: e => { e.stopPropagation(); this.setOrderStatus(o.id,nx); },
         unassign: e => { e.stopPropagation(); this.setOrderStatus(o.id,'WAITING'); },
         cancel: e => { e.stopPropagation(); this.setOrderStatus(o.id,'CANCELLED'); },
@@ -796,16 +701,24 @@ class Component extends DCLogic {
     const uncovered = st.orders.filter(o=>ELIGIBLE.includes(o.status) && zonesOf(o.x,o.y).length===0).map(o=>o.id);
 
     const routes = (res.routes||[]).map((r,bi) => { const b=String.fromCharCode(65+bi), color=BCOL[bi%BCOL.length];
-      return { b, color, courier:r.c.name, mode:r.c.mode,
+      return { b, color, index:bi, selected:st.selectedBucket===bi,
+        cardBorder:st.selectedBucket===bi ? color : '#E2E2DC', cardBg:st.selectedBucket===bi ? '#EEF4FF' : '#FAFAF8',
+        select:()=>this.toggleBucket(bi), keySelect:e=>{if(e.target===e.currentTarget && ['Enter',' '].includes(e.key)){e.preventDefault();this.toggleBucket(bi);}},
+        selectionLabel:`Показать на карте только Bucket ${b}`,
+        courier:r.c.name + (r.ev.status==='pairing' ? ' (кандидат)' : ''), mode:r.c.mode,
         points: [BR, ...r.ids.map(id=>run.pos[id])].map(p=>p.join(',')).join(' '),
         dash: r.late ? '8 6' : 'none', opacity: stale ? 0.45 : 0.9,
         legend: `Bucket ${b} · ${r.c.name} · ${r.ids.length} заказ.${r.late?' · late':''}`,
-        statusText: r.late ? 'late solo' : 'feasible', statusColor: r.late ? '#B42323' : '#1E7A45',
-        capText: `${r.ids.length} / ${r.c.maxOrders} заказов · ${fmt(r.ev.sum)} / ${fmt(r.c.maxSum)} UZS`,
-        travelText: `Дорога ${mins(r.ev.travel)} мин · выезд ${hm(r.ev.dep)} · минимальный запас ${signed(r.ev.minSlack)} мин`,
-        stops: r.ev.stops.map((s,i)=>({n:i+1,id:s.id,eta:hm(s.eta),deadline:hm(s.deadline),slack:signed(s.slack),slackColor: s.slack<0?'#B42323':s.slack<2?'#9A5B00':'#1E7A45',open:open(s.id)})) }; });
+        statusText: `${r.ev.status || 'старый расчёт'}${r.late ? ' · late solo' : ''}`, statusColor: r.late ? '#B42323' : '#1E7A45',
+        capText: `${r.ids.length} / ${Math.min(r.c.maxOrders,run.settings?.bucketMaxOrders ?? 8)} заказов · ${fmt(r.ev.sum)} / ${fmt(Math.min(r.c.maxSum,run.settings?.bucketMaxFullSum ?? 1000000))} UZS`,
+        travelText: `Дорога ${mins(r.ev.travel)} мин · выезд ${hm(r.ev.dep)} · запас ${signed(r.ev.minSlack)} мин`,
+        timingText: r.ev.closingTime==null ? 'Старый расчёт — запустите все заново' : `Закрытие ${hm(r.ev.closingTime)} · безопасный выезд до ${hm(r.ev.latestSafeDeparture)} · возврат ${mins(r.ev.bufferedReturnMin)} мин`,
+        stops: r.ev.stops.map((s,i)=>({n:i+1,id:labelId(s.id),eta:hm(s.eta),deadline:hm(s.deadline),slack:signed(s.slack),slackColor: s.slack<0?'#B42323':s.slack<2?'#9A5B00':'#1E7A45',open:open(s.id)})) }; });
 
-    const markers = st.orders.filter(o => st.showTerminal || !['DELIVERED','CANCELLED'].includes(o.status)).map(o => {
+    const focusedRoute=st.selectedBucket==null ? null : res.routes?.[st.selectedBucket];
+    const focusedIds=focusedRoute ? new Set(focusedRoute.ids) : null;
+    const mapRoutes=routes.filter(route=>!focusedRoute || route.index===st.selectedBucket);
+    const markers = st.orders.filter(o=>!focusedIds || focusedIds.has(o.id)).filter(o => st.showTerminal || !['DELIVERED','CANCELLED'].includes(o.status)).map(o => {
       const w=where[o.id], out=zonesOf(o.x,o.y).length===0, sel = st.draft && st.draft.id===o.id;
       return {id:o.id, n: w ? w.n : '·', sub: w ? `ETA ${hm(w.eta)}` : out ? 'вне зоны' : ST[o.status][0].toLowerCase(),
         color: w ? w.color : out ? '#D23B3B' : '#9A9C98', ring: sel ? 20 : 0,
@@ -814,6 +727,18 @@ class Component extends DCLogic {
 
     const ex = run.results[4];
     const val = (r,k) => r.skipped ? null : r[k];
+    const METRIC_HELP = {
+      'Вовремя':'Количество заказов в маршрутах, которые укладываются в deadline с учётом готовности, закрытия бакета, дороги и буферов. Больше — лучше.',
+      'Late solo':'Количество отдельных бакетов с одним опаздывающим заказом. Создаются при включённой настройке Late solo, если доступен подходящий курьер. Меньше — лучше.',
+      'Не назначено':'Количество допустимых по статусу заказов, которые алгоритм не включил ни в один маршрут, включая заказы вне зоны. Причины показаны под бакетами. Меньше — лучше.',
+      'Buckets':'Количество сформированных групп заказов — маршрутов, включая Late solo. Один маршрут соответствует одному курьеру-кандидату в этом сравнении.',
+      'Общая дорога':'Сумма времени движения всех маршрутов: от филиала до первого заказа и далее между заказами. Например, 10 + 15 минут у двух курьеров = 25 минут. Возврат в филиал, ожидание готовности и буферы выхода/передачи сюда не входят. Меньше — лучше при одинаковом числе доставленных вовремя заказов.',
+      'Макс. маршрут':'Время движения самого длинного маршрута среди всех бакетов, включая Late solo. Учитываются только участки от филиала до последней остановки, без возврата, ожидания и буферов. Меньше — лучше при одинаковом объёме доставки.',
+      'Мин. запас SLA':'Наименьшая разница deadline − ETA среди заказов в маршрутах без Late solo. +5 минут означает, что даже у самого критичного заказа остаётся 5 минут до deadline. ETA включает буферы выхода и предыдущих передач. Больше — лучше; «—» — таких маршрутов нет.',
+      'Matrix':'Размер общей матрицы времени движения: (N + 1)², где N — допустимые по статусу заказы внутри зоны, а +1 — филиал. Например, 3 заказа дают 16 элементов. Это размер матрицы, а не число запросов к API. Сейчас время дороги оценивается по геометрии карты.',
+      'Расчёт':'Время выполнения алгоритма на backend в миллисекундах, включая подготовку его результата. Не включает загрузку страницы, сетевой запрос и построение общей матрицы. Меньше — быстрее; значение может меняться между запусками.',
+      'Gap к Exact':'Разница с результатом полного перебора Exact. «−2 зак.» — алгоритм доставляет вовремя на 2 заказа меньше. Иначе показывается увеличение общей дороги относительно Exact в процентах: (дорога алгоритма − дорога Exact) / дорога Exact × 100%. Положительная разница округляется, остальные значения показаны как 0%. «—» — сравнение недоступно из-за лимита Exact или пропуска алгоритма.'
+    };
     const METRICS = [
       ['Вовремя', r=>val(r,'onTime'), 'max', v=>String(v)],
       ['Late solo', r=>val(r,'late'), 'min', v=>String(v)],
@@ -829,15 +754,17 @@ class Component extends DCLogic {
       const bestV = dir==='max' ? Math.max(...nums) : dir==='min' ? Math.min(...nums) : null;
       const allSame = nums.every(v=>v===nums[0]);
       return {label, cells: vs.map((v,i)=>({v: v==null ? '—' : f(v), bg: i===st.algo ? '#F1F5FE' : 'transparent',
-        weight: dir && !allSame && v===bestV ? 600 : 400, color:'#16181A', onClick:()=>this.setState({algo:i})}))}; });
+        weight: dir && !allSame && v===bestV ? 600 : 400, color:'#16181A', onClick:()=>this.setState({algo:i,selectedBucket:null})}))}; });
     metricRows.push({label:'Gap к Exact', cells: run.results.map((r,i)=>{ let v='—', color='#16181A';
       if (!ex.skipped && !r.skipped) { if (r.onTime<ex.onTime) { v=`−${ex.onTime-r.onTime} зак.`; color='#B42323'; }
         else { const g = ex.travel ? Math.round((r.travel-ex.travel)/ex.travel*100) : 0; v = g>0 ? `+${g}%` : '0%'; if (g>0) color='#B42323'; } }
-      return {v, color, bg: i===st.algo ? '#F1F5FE' : 'transparent', weight:400, onClick:()=>this.setState({algo:i})}; })});
+      return {v, color, bg: i===st.algo ? '#F1F5FE' : 'transparent', weight:400, onClick:()=>this.setState({algo:i,selectedBucket:null})}; })});
 
-    const algoHeads = ALGOS.map((a,i) => ({code:a[0], short:a[1], border: i===st.algo ? '#2F6FDF' : 'transparent', bg: i===st.algo ? '#F1F5FE' : 'transparent', onClick:()=>this.setState({algo:i})}));
+    metricRows.forEach((row,i)=>{row.help=METRIC_HELP[row.label];row.tipId=`metric-help-${i}`;row.helpLabel=`${row.label}: пояснение`;});
+
+    const algoHeads = ALGOS.map((a,i) => ({code:a[0], short:a[1], border: i===st.algo ? '#2F6FDF' : 'transparent', bg: i===st.algo ? '#F1F5FE' : 'transparent', onClick:()=>this.setState({algo:i,selectedBucket:null})}));
     const traceAll = res.trace.slice(0,60);
-    const trace = traceAll.map(([t,text],i) => ({seq:i+1, type:TL[t], color:TC[t], text}));
+    const trace = traceAll.map(([t,text],i) => ({seq:i+1, type:TL[t], color:TC[t], text:st.testMode ? st.orders.reduce((message,order)=>message.split(order.id).join(labelId(order.id)),text) : text}));
 
     const d = st.draft;
     let dv = {}, errs=[], statusOptions=[];
@@ -858,11 +785,11 @@ class Component extends DCLogic {
 
     const drawerOpen = !!st.drawer;
     return {
-      version: st.version, lateLabel: st.settings.allowLate ? 'вкл.' : 'выкл.',
+      version: st.version, exactLimits: st.settings.alwaysFreeCouriers ? '8 заказов / 3 с' : '8 / 3 / 3 с', lateLabel: st.settings.allowLate ? 'вкл.' : 'выкл.',
       runAll: this.runAll,
       bannerBg: st.apiError ? '#FDF1F1' : stale ? '#FFF6E5' : '#EEF6F0', bannerFg: st.apiError ? '#B42323' : stale ? '#8A5300' : '#1E7A45',
       bannerTitle: st.apiError ? 'Ошибка backend' : st.busy ? 'Выполняется…' : noRun ? 'Готов к новому сценарию' : stale ? 'Устарел: сценарий изменён' : 'Результат актуален',
-      bannerText: st.apiError ? st.apiError : st.busy ? 'Синхронизация с SQLite и planning engine.' : noRun ? 'Тестовые заказы удалены. Создайте свои заказы через UI, затем запустите алгоритмы.' : stale ? `Сценарий v${st.version}, run построен на v${run.version}. Старый run не пересчитывается — нажмите «Запустить все».` : 'Все пять алгоритмов получили один snapshot и одну Matrix на backend.',
+      bannerText: st.apiError ? st.apiError : st.busy ? 'Синхронизация с SQLite и planning engine.' : noRun ? 'Тестовые заказы удалены. Создайте свои заказы через UI, затем запустите алгоритмы.' : stale ? `Сценарий v${st.version}, run построен на v${run.version}. Старый run не пересчитывается — нажмите «Запустить все».` : st.testMode ? 'Тест из логов 01.10: курьеры всегда FREE, проверяем бакеты и SLA. Матрица — оценка по геометрии.' : 'Все пять алгоритмов получили один snapshot и одну Matrix на backend.',
       planningText: (()=>{ const t=(!noRun && run.planningAt) || st.now; return `${t.date} ${t.hm} · Asia/Tashkent (GMT+5)`; })(),
       runInfo: noRun ? 'Запусков пока нет' : `Run #${run.number} · snapshot v${run.version} · ${run.eligible} заказов × ${run.couriers} курьеров · Matrix ${run.matrix} элементов`,
       tabs: [['orders','Заказы',st.orders.length],['couriers','Курьеры',st.couriers.length],['zones','Зоны',ZONES.length],['settings','Настройки','']].map(([k,l,c]) => ({label:l,count:c,
@@ -875,13 +802,29 @@ class Component extends DCLogic {
       uncoveredColor: uncovered.length ? '#B42323' : '#6B6E70', uncoveredBorder: uncovered.length ? '#E3A9A9' : '#DADAD3',
       toggleLate: this.toggleLate,
       lateTrack: st.settings.allowLate ? '#16181A' : '#C9CBC6', lateKnob: st.settings.allowLate ? '16px' : '2px',
-      settingRows: [['Филиал','iikoId · 9f5b02ea…','Amir Temur · #24'],['Рабочее время','open / close','11:00–23:00'],['Delivery SLA','deliveryDuration','35 мин'],['Буферы','выезд / передача клиенту','2 / 2 мин'],['Старт курьера','courier_start_policy','BRANCH_PICKUP'],['Eligible статусы','Готовится, Приготовлен, Ожидает','3 статуса'],['Назначаемые курьеры','RETURNING — экспериментальный флаг','FREE'],['Лимиты Exact','orders / couriers / время','8 / 3 / 3000 мс'],['Matrix','Схема: расстояние на карте / скорость','20 px ≈ 1 мин']].map(([label,hint,value])=>({label,hint,value})),
+      isTestMode: !!st.testMode, loadTestOrders:()=>this.loadTestOrders(), exitTestOrders:this.exitTestOrders,
+      testRange:st.testRange || '', changeTestRange:e=>this.loadTestOrders(undefined,st.settings,e.target.value),
+      testRangeOptions:(st.testRanges || []).map(t=>({...t,label:`${t.label} · ${t.orders} заказов`})),
+      testRangeInfo:`В этом часе создано ${st.testRangeCount || 0} заказов; на выбранный момент в расчёте ${st.orders.length}. Исходные времена сохранены.`,
+      testAt:st.testAt || '', changeTestAt:e=>this.loadTestOrders(e.target.value,st.settings),
+      testTimeOptions:(st.testTimes || []).map(t=>({...t,label:`${t.at.slice(11,16)} · ${t.orders} заказов`})),
+      alwaysFreeCouriers: !!st.settings.alwaysFreeCouriers, toggleAlwaysFree: this.toggleAlwaysFree,
+      saveTimingSettings: this.saveTimingSettings,
+      timingSettings: [
+        ['goOutFromBranchMin','Выход из филиала, мин',0,0.5],
+        ['giveOrderToClientMin','Передача клиенту, мин',0,0.5],
+        ['bucketMaxFullSum','Лимит суммы филиала, UZS',1,1],
+        ['bucketMaxOrders','Лимит заказов филиала (1–12)',1,1],
+        ['returnBufferPct','Буфер возврата, %',0,1]
+      ].map(([key,label,min,step])=>({label,min,step,value:(st.settingsDraft || st.settings)[key],
+        change:e=>{const value=e.target.value;this.setState(s=>({settingsDraft:{...(s.settingsDraft || s.settings),[key]:value===''?null:Number(value)}}));}})),
+      settingRows: [['Филиал','iikoId · 9f5b02ea…','Amir Temur · #24'],['Рабочее время','open / close','11:00–23:00'],['SLA / готовность','Входные значения сценария','deadline / ready'],['Старт курьера','courier_start_policy','BRANCH_PICKUP'],['Eligible статусы','Готовится, Приготовлен, Ожидает','3 статуса'],['Курьеры сравнения','Во время pairing показывается кандидат','FREE'],['Лимиты Exact','orders / couriers / время',st.settings.alwaysFreeCouriers ? '8 / без лимита / 3000 мс' : '8 / 3 / 3000 мс'],['Matrix','Схема: расстояние на карте / скорость','20 px ≈ 1 мин']].map(([label,hint,value])=>({label,hint,value})),
       svgRef: this.svgRef, ymapRef:this.ymapRef, onMapClick: this.onMapClick,
       svgOpacity: st.mapProvider==='LEAFLET' ? 0 : 1, svgPointerEvents:st.mapProvider==='LEAFLET'?'none':'auto',
       showFallbackMarkers:st.mapProvider!=='LEAFLET', showProviderLabel:st.mapProvider!=='LEAFLET',
       mapProviderLabel: st.mapProvider==='LEAFLET' ? 'Leaflet · OpenStreetMap' : st.mapProvider==='LOADING' ? 'Загрузка карты…' : st.mapProvider==='FAILED' ? 'Карта недоступна · резервная схема' : 'Резервная схема',
-      routes, markers, hasPin: !!(d && d.x!=null), pinTransform: d && d.x!=null ? `translate(${d.x},${d.y})` : '',
-      mapHint: st.drawer==='order' ? 'Клик по карте переносит точку заказа' : 'Клик по карте — новый заказ в этой точке',
+      routes, mapRoutes, bucketFocused:!!focusedRoute, showAllBuckets:this.showAllBuckets, markers, hasPin: !!(d && d.x!=null), pinTransform: d && d.x!=null ? `translate(${d.x},${d.y})` : '',
+      mapHint: focusedRoute ? `На карте только Bucket ${String.fromCharCode(65+st.selectedBucket)}` : st.drawer==='order' ? 'Клик по карте переносит точку заказа' : 'Клик по карте — новый заказ в этой точке',
       hintLeft: drawerOpen ? '392px' : '12px',
       algoName: ALGOS[st.algo][2], algoHeads, metricRows, trace, traceCount: `${res.trace.length} событий`,
       skipped: !!res.skipped, skipText: res.skipped||'', hasUnassigned: (res.unassigned||[]).length>0,

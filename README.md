@@ -1977,3 +1977,71 @@ overlapping zones = allowed
 exact = 8 orders / 3 couriers / 3 seconds
 UI = Russian first, strings externalized for localization
 ```
+
+
+### Implemented timing model (2026-10-01)
+
+All five backend algorithms use `src/timing.js`, ported from IO Planner's
+`app/bucketing/timing.py` formulas (10)–(12). Settings are persisted with the scenario
+and copied into each immutable run. The Settings tab edits exit and customer handover
+minutes, branch value/count caps and return buffer percent. The 12-minute hypothetical
+cook standard is fixed, as in production. Branch caps and courier caps both constrain
+comparison routes. `ready` is the scenario ECT, and `deadline` is the scenario's effective
+computed deadline; legacy per-order `service` is ignored in this model.
+
+- Safe departure = min(deadline − cumulative travel − handover × zero-based stop index) − exit.
+  Handover applies only to multi-order buckets.
+- Closing = min(planning tick, safe departure) when the real branch value cap is reached;
+  otherwise max(safe departure − 12 minutes, planning tick).
+- Target departure = max(latest ready, closing).
+- ETA = target departure + exit + cumulative travel + prior handovers.
+- Return buffer pads the last-stop → branch leg for display only, never SLA timing.
+
+This is a snapshot comparison, not a production dispatch simulator: a courier shown on
+`pairing` is a comparison candidate. It does not reserve the real courier or simulate
+scan locks, All checked, persisted dispatched buckets, future planning cycles, kitchen
+outage detection or automatic SLA/ECT derivation. Outage-adjusted values can be supplied
+as ready/deadline inputs. Routing still uses LOCAL_DETERMINISTIC geometric durations,
+not production Geomatrix/traffic. Old runs require an explicit new run to use this model.
+
+
+### Historical test orders and unlimited courier mode (2026-10-01)
+
+`test/fixtures/orders-2026-10-01.json` is the planning-only extraction from the supplied
+Explore logs: 328 events, 84 unique order IDs, 79 retained delivery orders; 3 cancelled
+orders and 2 pickups are excluded. 288 log strings have incomplete trailing JSON;
+`python3 scripts/extract_test_orders.py INPUT OUTPUT` extracts only fully decoded fields.
+The fixture records source row numbers, observations and explicit assumptions. It omits
+customer/courier identity, telephone numbers and address details.
+
+In Settings, **Тестовые заказы · 01.10.2026** opens an isolated in-memory comparison.
+Select a historical time slice; the default is the largest cohort, 13:30 (20 orders).
+Only orders already observed, not yet OnWay, with a deadline at or after the tick are
+included. Expired last-known Waiting records are excluded explicitly: the export is
+incomplete and cannot establish the full live backlog. `WaitCooking` is treated as
+cooking for this test; initial ECT is cookingStartTime + 12 minutes, later actual cook
+completion is used only after its event has been observed. Delivery deadline is creation
+time + 35 minutes. IIKO `completeBefore` is a kitchen target and does not affect delivery
+SLA; `sum` stands in for missing fullSum. Coordinates are
+fixed to the extracted latest location. This is a cohort comparison, not a full replay.
+
+The isolated view does not mutate SQLite orders, couriers, settings or saved runs.
+Timing settings can be changed and recalculated; orders are read-only. Return with
+**Вернуться к обычному сценарию**. The ordinary scenario also supports **Тест: курьеры
+всегда свободны**: synthetic FREE couriers are generated independently of the real pool,
+with the branch count/value caps. Exact supports identical synthetic couriers through
+symmetry pruning, but still skips more than 8 orders or its time/state limits.
+
+Run the fixture without the UI: `npm run test:orders`, or
+`npm run test:orders -- 2026-10-01T12:30:00+05:00` for a specific slice.
+The result is written to `test/fixtures/orders-2026-10-01-result.json`.
+Routing remains the prototype's geometric duration estimate, not real road/traffic data.
+
+
+Hourly cohorts: the historical test UI now first selects an hour by order creation
+(e.g. 13:00–14:00), with an inclusive start and exclusive end. It then selects a planning
+moment inside that hour. The hour count covers all retained fixture orders created then;
+the calculation count covers only the eligible observed, unexpired orders at that moment.
+Original creation, readiness and deadline timestamps are preserved, without rebasing.
+The default UI cohort is 13:00–14:00. CLI example:
+`npm run test:orders -- 2026-10-01T13:30:00+05:00 13:00-14:00`.

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node --watch server.js",
     "start": "node server.js",
-    "test": "node --test"
+    "test": "node --test",
+    "test:orders": "node scripts/run-test-orders.js"
   },
   "dependencies": {
     "dotenv": "^17.2.3",

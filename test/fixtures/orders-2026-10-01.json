@@ -1,0 +1,4456 @@
+{
+  "schemaVersion": 1,
+  "name": "Amir Temur · 2026-10-01 · test orders",
+  "timezone": "Asia/Tashkent",
+  "sourceFile": "Explore-logs-2026-10-01_unique_eventInfo_id.json",
+  "extraction": {
+    "rows": 328,
+    "truncatedRows": 288,
+    "uniqueOrders": 84,
+    "usableOrders": 79,
+    "excluded": [
+      {
+        "id": "b08cb7bf-40fc-417b-9de3-06ca5267bf0a",
+        "reason": "CANCELLED"
+      },
+      {
+        "id": "4243f128-0114-4f92-a566-7fb4fe3e8ce3",
+        "reason": "CANCELLED"
+      },
+      {
+        "id": "b2c0ec90-1033-41a4-bf0c-5d0e786e4165",
+        "reason": "CANCELLED"
+      },
+      {
+        "id": "3a0ac543-dd1c-4772-8390-f7803e7315a6",
+        "reason": "PICKUP"
+      },
+      {
+        "id": "34d059e8-e6c5-49f7-8d17-507f39cbcbdf",
+        "reason": "PICKUP"
+      }
+    ]
+  },
+  "assumptions": [
+    "Enough synthetic FREE couriers for every bucket; branch caps apply.",
+    "Initial ECT = cookingStartTime + 12 min; actual readiness is used only after its event is observed.",
+    "Delivery deadline = whenCreated + 35 min; IIKO completeBefore is a kitchen target, not delivery SLA.",
+    "Order value uses IIKO sum; fullSum before discounts is absent.",
+    "Incomplete trailing JSON is ignored; only complete fields are extracted.",
+    "No phone, customer identity, courier identity, apartment or delivery comment is copied.",
+    "Snapshots are independent comparisons, not a simulation of a complete dispatch day.",
+    "Snapshot cohort: only observed, not dispatched orders whose delivery deadline has not passed.",
+    "Positions are fixed to the latest extracted coordinates; address-change replay is not simulated."
+  ],
+  "settings": {
+    "allowLate": true,
+    "alwaysFreeCouriers": true,
+    "goOutFromBranchMin": 2,
+    "giveOrderToClientMin": 2,
+    "bucketMaxFullSum": 1000000,
+    "bucketMaxOrders": 8,
+    "returnBufferPct": 20
+  },
+  "couriers": [],
+  "orders": [
+    {
+      "id": "13471743-e386-4e29-aa52-63a4239c36c9",
+      "number": 8,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №8",
+      "status": "COOKING_STARTED",
+      "sum": 54000.0,
+      "service": 0,
+      "created": "10:38",
+      "ready": "10:50",
+      "deadline": "11:13",
+      "x": 462.9,
+      "y": 494.3,
+      "latitude": 41.320003051473,
+      "longitude": 69.294289982815,
+      "createdAt": "2026-10-01T10:38:29+05:00",
+      "readyAt": "2026-10-01T10:50:32+05:00",
+      "deadlineAt": "2026-10-01T11:13:29+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T10:38:35+05:00",
+          "sourceRow": 1,
+          "status": "WaitCooking",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:13:32+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T10:49:03+05:00",
+          "sourceRow": 2,
+          "status": "OnWay",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:13:32+05:00",
+          "cookingCompletedAt": "2026-10-01T10:48:35+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:00:02+05:00",
+          "sourceRow": 5,
+          "status": "Delivered",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:13:32+05:00",
+          "cookingCompletedAt": "2026-10-01T10:48:35+05:00"
+        }
+      ]
+    },
+    {
+      "id": "590c7e68-173b-4f44-b55e-a3b4b685dbbb",
+      "number": 9,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №9",
+      "status": "COOKING_STARTED",
+      "sum": 124000.0,
+      "service": 0,
+      "created": "10:50",
+      "ready": "11:02",
+      "deadline": "11:25",
+      "x": 503.4,
+      "y": 232.2,
+      "latitude": 41.3422543,
+      "longitude": 69.2983421,
+      "createdAt": "2026-10-01T10:50:17+05:00",
+      "readyAt": "2026-10-01T11:02:19+05:00",
+      "deadlineAt": "2026-10-01T11:25:17+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T10:50:25+05:00",
+          "sourceRow": 3,
+          "status": "WaitCooking",
+          "sum": 124000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:25:19+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T10:50:26+05:00",
+          "sourceRow": 4,
+          "status": "CookingStarted",
+          "sum": 124000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:25:19+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:00:28+05:00",
+          "sourceRow": 7,
+          "status": "Waiting",
+          "sum": 124000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:25:19+05:00",
+          "cookingCompletedAt": "2026-10-01T11:00:24+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:16:00+05:00",
+          "sourceRow": 12,
+          "status": "OnWay",
+          "sum": 124000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:25:19+05:00",
+          "cookingCompletedAt": "2026-10-01T11:00:24+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:23:14+05:00",
+          "sourceRow": 15,
+          "status": "Delivered",
+          "sum": 124000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:25:19+05:00",
+          "cookingCompletedAt": "2026-10-01T11:00:24+05:00"
+        }
+      ]
+    },
+    {
+      "id": "6ea59d57-1244-4359-b682-1b690b4d47ba",
+      "number": 10,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №10",
+      "status": "COOKING_STARTED",
+      "sum": 73900.0,
+      "service": 0,
+      "created": "11:00",
+      "ready": "11:17",
+      "deadline": "11:35",
+      "x": 235.6,
+      "y": 319.2,
+      "latitude": 41.334866,
+      "longitude": 69.271562,
+      "createdAt": "2026-10-01T11:00:20+05:00",
+      "readyAt": "2026-10-01T11:17:22+05:00",
+      "deadlineAt": "2026-10-01T11:35:20+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T11:00:24+05:00",
+          "sourceRow": 6,
+          "status": "WaitCooking",
+          "sum": 73900.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:40:22+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "6218334b-a893-438e-8615-a386a3ba591d",
+      "number": 11,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №11",
+      "status": "COOKING_STARTED",
+      "sum": 111900.0,
+      "service": 0,
+      "created": "11:02",
+      "ready": "11:19",
+      "deadline": "11:37",
+      "x": 381.5,
+      "y": 473.2,
+      "latitude": 41.321796611591594,
+      "longitude": 69.28615458647461,
+      "createdAt": "2026-10-01T11:02:30+05:00",
+      "readyAt": "2026-10-01T11:19:32+05:00",
+      "deadlineAt": "2026-10-01T11:37:30+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T11:02:35+05:00",
+          "sourceRow": 8,
+          "status": "WaitCooking",
+          "sum": 111900.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:42:32+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:07:40+05:00",
+          "sourceRow": 9,
+          "status": "CookingStarted",
+          "sum": 111900.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:42:32+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:26:33+05:00",
+          "sourceRow": 17,
+          "status": "Waiting",
+          "sum": 111900.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:42:32+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:27+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:32:18+05:00",
+          "sourceRow": 20,
+          "status": "OnWay",
+          "sum": 111900.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:42:32+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:27+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:44:16+05:00",
+          "sourceRow": 27,
+          "status": "Delivered",
+          "sum": 111900.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:42:32+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:27+05:00"
+        }
+      ]
+    },
+    {
+      "id": "720d0d71-f099-4bb3-a1ff-0eb692cc7f5e",
+      "number": 13,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №13",
+      "status": "COOKING_STARTED",
+      "sum": 109000.0,
+      "service": 0,
+      "created": "11:15",
+      "ready": "11:27",
+      "deadline": "11:50",
+      "x": 388.6,
+      "y": 230.8,
+      "latitude": 41.342372473523,
+      "longitude": 69.28685830906,
+      "createdAt": "2026-10-01T11:15:39+05:00",
+      "readyAt": "2026-10-01T11:27:41+05:00",
+      "deadlineAt": "2026-10-01T11:50:39+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T11:15:44+05:00",
+          "sourceRow": 10,
+          "status": "WaitCooking",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:15:48+05:00",
+          "sourceRow": 11,
+          "status": "CookingStarted",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:26:39+05:00",
+          "sourceRow": 18,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:52:19+05:00",
+          "sourceRow": 31,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:58:37+05:00",
+          "sourceRow": 36,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:58:45+05:00",
+          "sourceRow": 37,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:59:08+05:00",
+          "sourceRow": 38,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:00:37+05:00",
+          "sourceRow": 41,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:00:49+05:00",
+          "sourceRow": 42,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:00:51+05:00",
+          "sourceRow": 43,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:01:08+05:00",
+          "sourceRow": 44,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:01:15+05:00",
+          "sourceRow": 45,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:03:06+05:00",
+          "sourceRow": 51,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:03:16+05:00",
+          "sourceRow": 52,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:03:41+05:00",
+          "sourceRow": 55,
+          "status": "Delivered",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:50:41+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:31+05:00"
+        }
+      ]
+    },
+    {
+      "id": "0211887b-8fa4-455a-99b1-1d127918e65f",
+      "number": 14,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №14",
+      "status": "COOKING_STARTED",
+      "sum": 56000.0,
+      "service": 0,
+      "created": "11:16",
+      "ready": "11:28",
+      "deadline": "11:51",
+      "x": 463.7,
+      "y": 488.6,
+      "latitude": 41.320484592352,
+      "longitude": 69.294371679425,
+      "createdAt": "2026-10-01T11:16:55+05:00",
+      "readyAt": "2026-10-01T11:28:57+05:00",
+      "deadlineAt": "2026-10-01T11:51:55+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T11:16:59+05:00",
+          "sourceRow": 13,
+          "status": "WaitCooking",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:51:57+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:17:03+05:00",
+          "sourceRow": 14,
+          "status": "CookingStarted",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:51:57+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:27:03+05:00",
+          "sourceRow": 19,
+          "status": "Waiting",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:51:57+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:57+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:32:26+05:00",
+          "sourceRow": 21,
+          "status": "OnWay",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:51:57+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:57+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:49:15+05:00",
+          "sourceRow": 30,
+          "status": "Delivered",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:51:57+05:00",
+          "cookingCompletedAt": "2026-10-01T11:26:57+05:00"
+        }
+      ]
+    },
+    {
+      "id": "068e218e-e798-437b-9de5-b08dc3598e97",
+      "number": 16,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №16",
+      "status": "COOKING_STARTED",
+      "sum": 62000.0,
+      "service": 0,
+      "created": "11:23",
+      "ready": "11:35",
+      "deadline": "11:58",
+      "x": 387.5,
+      "y": 406.0,
+      "latitude": 41.327497023394,
+      "longitude": 69.286746494472,
+      "createdAt": "2026-10-01T11:23:14+05:00",
+      "readyAt": "2026-10-01T11:35:16+05:00",
+      "deadlineAt": "2026-10-01T11:58:14+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T11:23:18+05:00",
+          "sourceRow": 16,
+          "status": "WaitCooking",
+          "sum": 62000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T11:58:16+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "5be886e1-842b-4d57-b9f3-13192905f4fb",
+      "number": 17,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №17",
+      "status": "COOKING_STARTED",
+      "sum": 243000.0,
+      "service": 0,
+      "created": "11:32",
+      "ready": "11:44",
+      "deadline": "12:07",
+      "x": 325.5,
+      "y": 168.4,
+      "latitude": 41.347675,
+      "longitude": 69.28055,
+      "createdAt": "2026-10-01T11:32:40+05:00",
+      "readyAt": "2026-10-01T11:44:42+05:00",
+      "deadlineAt": "2026-10-01T12:07:40+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T11:32:46+05:00",
+          "sourceRow": 22,
+          "status": "WaitCooking",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:32:49+05:00",
+          "sourceRow": 23,
+          "status": "CookingStarted",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:42:53+05:00",
+          "sourceRow": 26,
+          "status": "Waiting",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:52:27+05:00",
+          "sourceRow": 32,
+          "status": "OnWay",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T11:59:08+05:00",
+          "sourceRow": 39,
+          "status": "OnWay",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:01:23+05:00",
+          "sourceRow": 46,
+          "status": "Waiting",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:01:29+05:00",
+          "sourceRow": 47,
+          "status": "OnWay",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:01:36+05:00",
+          "sourceRow": 48,
+          "status": "Waiting",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:01:43+05:00",
+          "sourceRow": 49,
+          "status": "OnWay",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:05:36+05:00",
+          "sourceRow": 60,
+          "status": "Waiting",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:05:47+05:00",
+          "sourceRow": 61,
+          "status": "OnWay",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:07:27+05:00",
+          "sourceRow": 63,
+          "status": "Waiting",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:07:33+05:00",
+          "sourceRow": 64,
+          "status": "OnWay",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:09:11+05:00",
+          "sourceRow": 65,
+          "status": "Delivered",
+          "sum": 243000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:07:42+05:00",
+          "cookingCompletedAt": "2026-10-01T11:42:46+05:00"
+        }
+      ]
+    },
+    {
+      "id": "399fffd4-eefc-42e8-b4d3-777a6ae60706",
+      "number": 18,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №18",
+      "status": "COOKING_STARTED",
+      "sum": 72000.0,
+      "service": 0,
+      "created": "11:38",
+      "ready": "11:50",
+      "deadline": "12:13",
+      "x": 320.0,
+      "y": 453.1,
+      "latitude": 41.323499587291,
+      "longitude": 69.280000068247,
+      "createdAt": "2026-10-01T11:38:14+05:00",
+      "readyAt": "2026-10-01T11:50:17+05:00",
+      "deadlineAt": "2026-10-01T12:13:14+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T11:38:18+05:00",
+          "sourceRow": 24,
+          "status": "WaitCooking",
+          "sum": 72000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:13:17+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "ac8ea66d-283b-4452-8cb4-4bf2c90be184",
+      "number": 19,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №19",
+      "status": "COOKING_STARTED",
+      "sum": 82000.0,
+      "service": 0,
+      "created": "11:39",
+      "ready": "11:51",
+      "deadline": "12:14",
+      "x": 172.3,
+      "y": 226.6,
+      "latitude": 41.342731710961,
+      "longitude": 69.265226125717,
+      "createdAt": "2026-10-01T11:39:54+05:00",
+      "readyAt": "2026-10-01T11:51:57+05:00",
+      "deadlineAt": "2026-10-01T12:14:54+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T11:39:58+05:00",
+          "sourceRow": 25,
+          "status": "WaitCooking",
+          "sum": 82000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:14:57+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "7f289d97-8939-4203-ae12-7d63452d0f55",
+      "number": 21,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №21",
+      "status": "COOKING_STARTED",
+      "sum": 404000.0,
+      "service": 0,
+      "created": "11:45",
+      "ready": "11:57",
+      "deadline": "12:20",
+      "x": 376.3,
+      "y": 279.5,
+      "latitude": 41.338239012014,
+      "longitude": 69.285634894803,
+      "createdAt": "2026-10-01T11:45:01+05:00",
+      "readyAt": "2026-10-01T11:57:04+05:00",
+      "deadlineAt": "2026-10-01T12:20:01+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T11:45:09+05:00",
+          "sourceRow": 28,
+          "status": "WaitCooking",
+          "sum": 404000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:20:04+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:45:12+05:00",
+          "sourceRow": 29,
+          "status": "CookingStarted",
+          "sum": 404000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:20:04+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:55:14+05:00",
+          "sourceRow": 35,
+          "status": "Waiting",
+          "sum": 404000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:20:04+05:00",
+          "cookingCompletedAt": "2026-10-01T11:55:07+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:09:24+05:00",
+          "sourceRow": 68,
+          "status": "Waiting",
+          "sum": 404000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:20:04+05:00",
+          "cookingCompletedAt": "2026-10-01T11:55:07+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:09:37+05:00",
+          "sourceRow": 69,
+          "status": "OnWay",
+          "sum": 404000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:20:04+05:00",
+          "cookingCompletedAt": "2026-10-01T11:55:07+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:15:44+05:00",
+          "sourceRow": 81,
+          "status": "Waiting",
+          "sum": 404000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:20:04+05:00",
+          "cookingCompletedAt": "2026-10-01T11:55:07+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:15:51+05:00",
+          "sourceRow": 82,
+          "status": "OnWay",
+          "sum": 404000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:20:04+05:00",
+          "cookingCompletedAt": "2026-10-01T11:55:07+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:21:21+05:00",
+          "sourceRow": 90,
+          "status": "OnWay",
+          "sum": 404000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:20:04+05:00",
+          "cookingCompletedAt": "2026-10-01T11:55:07+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:33:42+05:00",
+          "sourceRow": 118,
+          "status": "Delivered",
+          "sum": 404000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:20:04+05:00",
+          "cookingCompletedAt": "2026-10-01T11:55:07+05:00"
+        }
+      ]
+    },
+    {
+      "id": "984ee8ee-3d2e-48ac-b106-0df8c08ead58",
+      "number": 22,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №22",
+      "status": "COOKING_STARTED",
+      "sum": 54000.0,
+      "service": 0,
+      "created": "11:53",
+      "ready": "12:05",
+      "deadline": "12:28",
+      "x": 260.2,
+      "y": 437.7,
+      "latitude": 41.324805370425,
+      "longitude": 69.274016898125,
+      "createdAt": "2026-10-01T11:53:36+05:00",
+      "readyAt": "2026-10-01T12:05:38+05:00",
+      "deadlineAt": "2026-10-01T12:28:36+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T11:53:40+05:00",
+          "sourceRow": 33,
+          "status": "WaitCooking",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:28:38+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T11:53:44+05:00",
+          "sourceRow": 34,
+          "status": "CookingStarted",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:28:38+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:03:44+05:00",
+          "sourceRow": 56,
+          "status": "Waiting",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:28:38+05:00",
+          "cookingCompletedAt": "2026-10-01T12:03:39+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:04:40+05:00",
+          "sourceRow": 57,
+          "status": "OnWay",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:28:38+05:00",
+          "cookingCompletedAt": "2026-10-01T12:03:39+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:13:30+05:00",
+          "sourceRow": 75,
+          "status": "Delivered",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:28:38+05:00",
+          "cookingCompletedAt": "2026-10-01T12:03:39+05:00"
+        }
+      ]
+    },
+    {
+      "id": "fe86089c-fdb8-45dd-a56c-52579c83018d",
+      "number": 23,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №23",
+      "status": "COOKING_STARTED",
+      "sum": 103000.0,
+      "service": 0,
+      "created": "11:59",
+      "ready": "12:11",
+      "deadline": "12:34",
+      "x": 467.4,
+      "y": 251.5,
+      "latitude": 41.340619432209,
+      "longitude": 69.294736124575,
+      "createdAt": "2026-10-01T11:59:50+05:00",
+      "readyAt": "2026-10-01T12:11:53+05:00",
+      "deadlineAt": "2026-10-01T12:34:50+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T11:59:55+05:00",
+          "sourceRow": 40,
+          "status": "WaitCooking",
+          "sum": 103000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:34:53+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "895db5ae-14ec-4118-ab1e-e6aa60b5b3c6",
+      "number": 24,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №24",
+      "status": "COOKING_STARTED",
+      "sum": 174000.0,
+      "service": 0,
+      "created": "12:02",
+      "ready": "12:14",
+      "deadline": "12:37",
+      "x": 510.2,
+      "y": 476.4,
+      "latitude": 41.32151947640149,
+      "longitude": 69.2990186469405,
+      "createdAt": "2026-10-01T12:02:10+05:00",
+      "readyAt": "2026-10-01T12:14:12+05:00",
+      "deadlineAt": "2026-10-01T12:37:10+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:02:17+05:00",
+          "sourceRow": 50,
+          "status": "WaitCooking",
+          "sum": 174000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:37:12+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:21:22+05:00",
+          "sourceRow": 91,
+          "status": "Waiting",
+          "sum": 174000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:37:12+05:00",
+          "cookingCompletedAt": "2026-10-01T12:12:18+05:00"
+        }
+      ]
+    },
+    {
+      "id": "b7bc3c7a-8af2-4d2b-9b1e-c1975dfd6d86",
+      "number": 26,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №26",
+      "status": "COOKING_STARTED",
+      "sum": 56000.0,
+      "service": 0,
+      "created": "12:03",
+      "ready": "12:15",
+      "deadline": "12:38",
+      "x": 386.8,
+      "y": 261.4,
+      "latitude": 41.339780076521,
+      "longitude": 69.286677092314,
+      "createdAt": "2026-10-01T12:03:19+05:00",
+      "readyAt": "2026-10-01T12:15:21+05:00",
+      "deadlineAt": "2026-10-01T12:38:19+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:03:23+05:00",
+          "sourceRow": 53,
+          "status": "WaitCooking",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:38:21+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:03:26+05:00",
+          "sourceRow": 54,
+          "status": "CookingStarted",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:38:21+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:11:30+05:00",
+          "sourceRow": 70,
+          "status": "Waiting",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:38:21+05:00",
+          "cookingCompletedAt": "2026-10-01T12:11:29+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:11:32+05:00",
+          "sourceRow": 71,
+          "status": "OnWay",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:38:21+05:00",
+          "cookingCompletedAt": "2026-10-01T12:11:29+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:16:34+05:00",
+          "sourceRow": 83,
+          "status": "Waiting",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:38:21+05:00",
+          "cookingCompletedAt": "2026-10-01T12:11:29+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:16:43+05:00",
+          "sourceRow": 86,
+          "status": "OnWay",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:38:21+05:00",
+          "cookingCompletedAt": "2026-10-01T12:11:29+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:17:00+05:00",
+          "sourceRow": 87,
+          "status": "OnWay",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:38:21+05:00",
+          "cookingCompletedAt": "2026-10-01T12:11:29+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:20:03+05:00",
+          "sourceRow": 88,
+          "status": "OnWay",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:38:21+05:00",
+          "cookingCompletedAt": "2026-10-01T12:11:29+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:21:22+05:00",
+          "sourceRow": 92,
+          "status": "OnWay",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:38:21+05:00",
+          "cookingCompletedAt": "2026-10-01T12:11:29+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:38:01+05:00",
+          "sourceRow": 120,
+          "status": "Delivered",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:38:21+05:00",
+          "cookingCompletedAt": "2026-10-01T12:11:29+05:00"
+        }
+      ]
+    },
+    {
+      "id": "a89e6262-8dde-4e4d-87bb-c8a0298bcc86",
+      "number": 28,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №28",
+      "status": "COOKING_STARTED",
+      "sum": 188000.0,
+      "service": 0,
+      "created": "12:05",
+      "ready": "12:17",
+      "deadline": "12:40",
+      "x": 470.3,
+      "y": 330.0,
+      "latitude": 41.333956495353,
+      "longitude": 69.295030497015,
+      "createdAt": "2026-10-01T12:05:27+05:00",
+      "readyAt": "2026-10-01T12:17:30+05:00",
+      "deadlineAt": "2026-10-01T12:40:27+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:05:31+05:00",
+          "sourceRow": 58,
+          "status": "WaitCooking",
+          "sum": 188000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:40:30+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:05:36+05:00",
+          "sourceRow": 59,
+          "status": "CookingStarted",
+          "sum": 188000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:40:30+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:15:35+05:00",
+          "sourceRow": 80,
+          "status": "Waiting",
+          "sum": 188000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:40:30+05:00",
+          "cookingCompletedAt": "2026-10-01T12:15:31+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:21:23+05:00",
+          "sourceRow": 93,
+          "status": "Waiting",
+          "sum": 188000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:40:30+05:00",
+          "cookingCompletedAt": "2026-10-01T12:15:31+05:00"
+        }
+      ]
+    },
+    {
+      "id": "ffbfe03f-a5a9-4890-a345-054b18f5fe7b",
+      "number": 29,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №29",
+      "status": "COOKING_STARTED",
+      "sum": 142000.0,
+      "service": 0,
+      "created": "12:07",
+      "ready": "12:19",
+      "deadline": "12:42",
+      "x": 549.8,
+      "y": 221.4,
+      "latitude": 41.34317,
+      "longitude": 69.30298,
+      "createdAt": "2026-10-01T12:07:03+05:00",
+      "readyAt": "2026-10-01T12:19:03+05:00",
+      "deadlineAt": "2026-10-01T12:42:03+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:07:07+05:00",
+          "sourceRow": 62,
+          "status": "WaitCooking",
+          "sum": 142000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:37:06+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "d3212580-6605-4968-a427-aa42bf98d680",
+      "number": 31,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №31",
+      "status": "COOKING_STARTED",
+      "sum": 109000.0,
+      "service": 0,
+      "created": "12:12",
+      "ready": "12:24",
+      "deadline": "12:47",
+      "x": 452.2,
+      "y": 298.8,
+      "latitude": 41.336605,
+      "longitude": 69.29322,
+      "createdAt": "2026-10-01T12:12:15+05:00",
+      "readyAt": "2026-10-01T12:24:15+05:00",
+      "deadlineAt": "2026-10-01T12:47:15+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:12:17+05:00",
+          "sourceRow": 72,
+          "status": "WaitCooking",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:47:15+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:12:21+05:00",
+          "sourceRow": 73,
+          "status": "CookingStarted",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:47:15+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:22:21+05:00",
+          "sourceRow": 95,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:47:15+05:00",
+          "cookingCompletedAt": "2026-10-01T12:22:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:24:57+05:00",
+          "sourceRow": 100,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:47:15+05:00",
+          "cookingCompletedAt": "2026-10-01T12:22:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:25:11+05:00",
+          "sourceRow": 102,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:47:15+05:00",
+          "cookingCompletedAt": "2026-10-01T12:22:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:43:12+05:00",
+          "sourceRow": 128,
+          "status": "Delivered",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:47:15+05:00",
+          "cookingCompletedAt": "2026-10-01T12:22:17+05:00"
+        }
+      ]
+    },
+    {
+      "id": "9c25f034-df08-4146-b698-54a2667213cd",
+      "number": 32,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №32",
+      "status": "COOKING_STARTED",
+      "sum": 106000.0,
+      "service": 0,
+      "created": "12:13",
+      "ready": "12:25",
+      "deadline": "12:48",
+      "x": 363.0,
+      "y": 372.2,
+      "latitude": 41.330370064635,
+      "longitude": 69.284304175526,
+      "createdAt": "2026-10-01T12:13:17+05:00",
+      "readyAt": "2026-10-01T12:25:17+05:00",
+      "deadlineAt": "2026-10-01T12:48:17+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:13:18+05:00",
+          "sourceRow": 74,
+          "status": "WaitCooking",
+          "sum": 106000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:48:16+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "c6a4875a-0490-4cff-9c21-885db94049bf",
+      "number": 33,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №33",
+      "status": "COOKING_STARTED",
+      "sum": 238000.0,
+      "service": 0,
+      "created": "12:14",
+      "ready": "12:26",
+      "deadline": "12:49",
+      "x": 336.2,
+      "y": 174.2,
+      "latitude": 41.347184442732186,
+      "longitude": 69.2816210925896,
+      "createdAt": "2026-10-01T12:14:35+05:00",
+      "readyAt": "2026-10-01T12:26:35+05:00",
+      "deadlineAt": "2026-10-01T12:49:35+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:14:39+05:00",
+          "sourceRow": 76,
+          "status": "WaitCooking",
+          "sum": 238000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:49:34+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:14:41+05:00",
+          "sourceRow": 77,
+          "status": "CookingStarted",
+          "sum": 238000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:49:34+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:24:46+05:00",
+          "sourceRow": 98,
+          "status": "Waiting",
+          "sum": 238000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:49:34+05:00",
+          "cookingCompletedAt": "2026-10-01T12:24:42+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:33:05+05:00",
+          "sourceRow": 112,
+          "status": "Waiting",
+          "sum": 238000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:49:34+05:00",
+          "cookingCompletedAt": "2026-10-01T12:24:42+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:33:08+05:00",
+          "sourceRow": 115,
+          "status": "OnWay",
+          "sum": 238000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:49:34+05:00",
+          "cookingCompletedAt": "2026-10-01T12:24:42+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:38:51+05:00",
+          "sourceRow": 121,
+          "status": "Delivered",
+          "sum": 238000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:49:34+05:00",
+          "cookingCompletedAt": "2026-10-01T12:24:42+05:00"
+        }
+      ]
+    },
+    {
+      "id": "c398e47f-f9a6-4a12-80ba-b185052dc749",
+      "number": 34,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №34",
+      "status": "COOKING_STARTED",
+      "sum": 99000.0,
+      "service": 0,
+      "created": "12:15",
+      "ready": "12:27",
+      "deadline": "12:50",
+      "x": 209.4,
+      "y": 252.4,
+      "latitude": 41.340543436688,
+      "longitude": 69.268940985203,
+      "createdAt": "2026-10-01T12:15:10+05:00",
+      "readyAt": "2026-10-01T12:27:10+05:00",
+      "deadlineAt": "2026-10-01T12:50:10+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:15:12+05:00",
+          "sourceRow": 78,
+          "status": "WaitCooking",
+          "sum": 99000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:50:10+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:15:15+05:00",
+          "sourceRow": 79,
+          "status": "CookingStarted",
+          "sum": 99000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:50:10+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:25:14+05:00",
+          "sourceRow": 103,
+          "status": "Waiting",
+          "sum": 99000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:50:10+05:00",
+          "cookingCompletedAt": "2026-10-01T12:25:13+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:33:06+05:00",
+          "sourceRow": 113,
+          "status": "Waiting",
+          "sum": 99000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:50:10+05:00",
+          "cookingCompletedAt": "2026-10-01T12:25:13+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:33:09+05:00",
+          "sourceRow": 116,
+          "status": "OnWay",
+          "sum": 99000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:50:10+05:00",
+          "cookingCompletedAt": "2026-10-01T12:25:13+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:47:56+05:00",
+          "sourceRow": 132,
+          "status": "Delivered",
+          "sum": 99000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:50:10+05:00",
+          "cookingCompletedAt": "2026-10-01T12:25:13+05:00"
+        }
+      ]
+    },
+    {
+      "id": "8fb641c6-1270-4877-8659-701e46a9ba7f",
+      "number": 35,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №35",
+      "status": "COOKING_STARTED",
+      "sum": 168000.0,
+      "service": 0,
+      "created": "12:16",
+      "ready": "12:28",
+      "deadline": "12:51",
+      "x": 241.0,
+      "y": 107.3,
+      "latitude": 41.352861910672,
+      "longitude": 69.272104650736,
+      "createdAt": "2026-10-01T12:16:36+05:00",
+      "readyAt": "2026-10-01T12:28:36+05:00",
+      "deadlineAt": "2026-10-01T12:51:36+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:16:38+05:00",
+          "sourceRow": 84,
+          "status": "WaitCooking",
+          "sum": 168000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:51:35+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:16:42+05:00",
+          "sourceRow": 85,
+          "status": "CookingStarted",
+          "sum": 168000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:51:35+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:26:46+05:00",
+          "sourceRow": 106,
+          "status": "Waiting",
+          "sum": 168000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:51:35+05:00",
+          "cookingCompletedAt": "2026-10-01T12:26:41+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:33:06+05:00",
+          "sourceRow": 114,
+          "status": "Waiting",
+          "sum": 168000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:51:35+05:00",
+          "cookingCompletedAt": "2026-10-01T12:26:41+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:33:11+05:00",
+          "sourceRow": 117,
+          "status": "OnWay",
+          "sum": 168000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:51:35+05:00",
+          "cookingCompletedAt": "2026-10-01T12:26:41+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:41:59+05:00",
+          "sourceRow": 127,
+          "status": "Delivered",
+          "sum": 168000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:51:35+05:00",
+          "cookingCompletedAt": "2026-10-01T12:26:41+05:00"
+        }
+      ]
+    },
+    {
+      "id": "ee373752-e59a-439f-86e2-e87e8cfaa4f3",
+      "number": 36,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №36",
+      "status": "COOKING_STARTED",
+      "sum": 188000.0,
+      "service": 0,
+      "created": "12:21",
+      "ready": "12:33",
+      "deadline": "12:56",
+      "x": 564.7,
+      "y": 385.9,
+      "latitude": 41.32920897150994,
+      "longitude": 69.3044655594507,
+      "createdAt": "2026-10-01T12:21:34+05:00",
+      "readyAt": "2026-10-01T12:33:34+05:00",
+      "deadlineAt": "2026-10-01T12:56:34+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:21:36+05:00",
+          "sourceRow": 94,
+          "status": "WaitCooking",
+          "sum": 188000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:56:33+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "132c8fef-6fd8-4b3a-a1f5-cbb199395938",
+      "number": 37,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №37",
+      "status": "COOKING_STARTED",
+      "sum": 84000.0,
+      "service": 0,
+      "created": "12:23",
+      "ready": "12:35",
+      "deadline": "12:58",
+      "x": 530.1,
+      "y": 375.6,
+      "latitude": 41.330084332352,
+      "longitude": 69.301010314375,
+      "createdAt": "2026-10-01T12:23:41+05:00",
+      "readyAt": "2026-10-01T12:35:41+05:00",
+      "deadlineAt": "2026-10-01T12:58:41+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:23:43+05:00",
+          "sourceRow": 96,
+          "status": "WaitCooking",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:58:40+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:23:45+05:00",
+          "sourceRow": 97,
+          "status": "CookingStarted",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:58:40+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:33:50+05:00",
+          "sourceRow": 119,
+          "status": "Waiting",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:58:40+05:00",
+          "cookingCompletedAt": "2026-10-01T12:33:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:53:08+05:00",
+          "sourceRow": 136,
+          "status": "Waiting",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:58:40+05:00",
+          "cookingCompletedAt": "2026-10-01T12:33:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:53:15+05:00",
+          "sourceRow": 137,
+          "status": "OnWay",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:58:40+05:00",
+          "cookingCompletedAt": "2026-10-01T12:33:46+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:03:08+05:00",
+          "sourceRow": 163,
+          "status": "Delivered",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T12:58:40+05:00",
+          "cookingCompletedAt": "2026-10-01T12:33:46+05:00"
+        }
+      ]
+    },
+    {
+      "id": "996dc3e0-2551-4520-89ee-0380d14f46b3",
+      "number": 38,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №38",
+      "status": "COOKING_STARTED",
+      "sum": 152000.0,
+      "service": 0,
+      "created": "12:29",
+      "ready": "12:45",
+      "deadline": "13:04",
+      "x": 472.1,
+      "y": 398.5,
+      "latitude": 41.328133836261095,
+      "longitude": 69.29520879230618,
+      "createdAt": "2026-10-01T12:29:00+05:00",
+      "readyAt": "2026-10-01T12:45:59+05:00",
+      "deadlineAt": "2026-10-01T13:04:00+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:29:01+05:00",
+          "sourceRow": 108,
+          "status": "WaitCooking",
+          "sum": 152000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:08:59+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "7957bb1e-66a9-4915-a487-351a62e36bce",
+      "number": 39,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №39",
+      "status": "COOKING_STARTED",
+      "sum": 58000.0,
+      "service": 0,
+      "created": "12:29",
+      "ready": "12:41",
+      "deadline": "13:04",
+      "x": 117.6,
+      "y": 264.6,
+      "latitude": 41.33950632062,
+      "longitude": 69.259759448469,
+      "createdAt": "2026-10-01T12:29:27+05:00",
+      "readyAt": "2026-10-01T12:41:27+05:00",
+      "deadlineAt": "2026-10-01T13:04:27+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:29:28+05:00",
+          "sourceRow": 109,
+          "status": "WaitCooking",
+          "sum": 58000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:04:26+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:29:31+05:00",
+          "sourceRow": 110,
+          "status": "CookingStarted",
+          "sum": 58000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:04:26+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:52:24+05:00",
+          "sourceRow": 135,
+          "status": "Waiting",
+          "sum": 58000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:04:26+05:00",
+          "cookingCompletedAt": "2026-10-01T12:52:19+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:54:46+05:00",
+          "sourceRow": 142,
+          "status": "Waiting",
+          "sum": 58000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:04:26+05:00",
+          "cookingCompletedAt": "2026-10-01T12:52:19+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:54:50+05:00",
+          "sourceRow": 145,
+          "status": "OnWay",
+          "sum": 58000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:04:26+05:00",
+          "cookingCompletedAt": "2026-10-01T12:52:19+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:00:47+05:00",
+          "sourceRow": 153,
+          "status": "OnWay",
+          "sum": 58000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:04:26+05:00",
+          "cookingCompletedAt": "2026-10-01T12:52:19+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:19:00+05:00",
+          "sourceRow": 189,
+          "status": "Delivered",
+          "sum": 58000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:04:26+05:00",
+          "cookingCompletedAt": "2026-10-01T12:52:19+05:00"
+        }
+      ]
+    },
+    {
+      "id": "29d88505-f8c2-47f0-aed6-7f1d421426a7",
+      "number": 40,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №40",
+      "status": "COOKING_STARTED",
+      "sum": 69000.0,
+      "service": 0,
+      "created": "12:30",
+      "ready": "12:42",
+      "deadline": "13:05",
+      "x": 338.0,
+      "y": 406.0,
+      "latitude": 41.327499589875,
+      "longitude": 69.281800165772,
+      "createdAt": "2026-10-01T12:30:59+05:00",
+      "readyAt": "2026-10-01T12:42:59+05:00",
+      "deadlineAt": "2026-10-01T13:05:59+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:31:02+05:00",
+          "sourceRow": 111,
+          "status": "WaitCooking",
+          "sum": 69000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:05:58+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "270921c8-f592-4d27-af23-cd806172d6de",
+      "number": 41,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №41",
+      "status": "COOKING_STARTED",
+      "sum": 204000.0,
+      "service": 0,
+      "created": "12:39",
+      "ready": "12:51",
+      "deadline": "13:14",
+      "x": 453.2,
+      "y": 316.4,
+      "latitude": 41.33511,
+      "longitude": 69.29332,
+      "createdAt": "2026-10-01T12:39:52+05:00",
+      "readyAt": "2026-10-01T12:51:52+05:00",
+      "deadlineAt": "2026-10-01T13:14:52+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:39:54+05:00",
+          "sourceRow": 122,
+          "status": "WaitCooking",
+          "sum": 204000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:09:52+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "ff477182-3fbf-4128-94ed-81fa0ab187a2",
+      "number": 42,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №42",
+      "status": "COOKING_STARTED",
+      "sum": 109000.0,
+      "service": 0,
+      "created": "12:40",
+      "ready": "12:52",
+      "deadline": "13:15",
+      "x": 113.2,
+      "y": 257.0,
+      "latitude": 41.340153,
+      "longitude": 69.25932,
+      "createdAt": "2026-10-01T12:40:57+05:00",
+      "readyAt": "2026-10-01T12:52:57+05:00",
+      "deadlineAt": "2026-10-01T13:15:57+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:40:58+05:00",
+          "sourceRow": 123,
+          "status": "WaitCooking",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:15:56+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:41:00+05:00",
+          "sourceRow": 124,
+          "status": "CookingStarted",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:15:56+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:54:24+05:00",
+          "sourceRow": 140,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:15:56+05:00",
+          "cookingCompletedAt": "2026-10-01T12:54:23+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:54:47+05:00",
+          "sourceRow": 143,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:15:56+05:00",
+          "cookingCompletedAt": "2026-10-01T12:54:23+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:54:54+05:00",
+          "sourceRow": 147,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:15:56+05:00",
+          "cookingCompletedAt": "2026-10-01T12:54:23+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:00:50+05:00",
+          "sourceRow": 155,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:15:56+05:00",
+          "cookingCompletedAt": "2026-10-01T12:54:23+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:21:33+05:00",
+          "sourceRow": 190,
+          "status": "Delivered",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:15:56+05:00",
+          "cookingCompletedAt": "2026-10-01T12:54:23+05:00"
+        }
+      ]
+    },
+    {
+      "id": "ed92baa1-0e50-40c5-be90-6dd0cfdf1c55",
+      "number": 43,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №43",
+      "status": "COOKING_STARTED",
+      "sum": 84000.0,
+      "service": 0,
+      "created": "12:41",
+      "ready": "12:53",
+      "deadline": "13:16",
+      "x": 540.4,
+      "y": 221.1,
+      "latitude": 41.3432023,
+      "longitude": 69.302039,
+      "createdAt": "2026-10-01T12:41:05+05:00",
+      "readyAt": "2026-10-01T12:53:05+05:00",
+      "deadlineAt": "2026-10-01T13:16:05+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:41:07+05:00",
+          "sourceRow": 125,
+          "status": "WaitCooking",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:16:04+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:41:08+05:00",
+          "sourceRow": 126,
+          "status": "CookingStarted",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:16:04+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:54:25+05:00",
+          "sourceRow": 141,
+          "status": "Waiting",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:16:04+05:00",
+          "cookingCompletedAt": "2026-10-01T12:54:21+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:54:48+05:00",
+          "sourceRow": 144,
+          "status": "Waiting",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:16:04+05:00",
+          "cookingCompletedAt": "2026-10-01T12:54:21+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T12:54:53+05:00",
+          "sourceRow": 146,
+          "status": "OnWay",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:16:04+05:00",
+          "cookingCompletedAt": "2026-10-01T12:54:21+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:00:47+05:00",
+          "sourceRow": 154,
+          "status": "OnWay",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:16:04+05:00",
+          "cookingCompletedAt": "2026-10-01T12:54:21+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:40:59+05:00",
+          "sourceRow": 228,
+          "status": "Delivered",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:16:04+05:00",
+          "cookingCompletedAt": "2026-10-01T12:54:21+05:00"
+        }
+      ]
+    },
+    {
+      "id": "36022ac4-d2a5-4ed6-a99a-a23b1038adf3",
+      "number": 46,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №46",
+      "status": "COOKING_STARTED",
+      "sum": 109000.0,
+      "service": 0,
+      "created": "12:48",
+      "ready": "13:00",
+      "deadline": "13:23",
+      "x": 510.6,
+      "y": 490.9,
+      "latitude": 41.320293053848,
+      "longitude": 69.299058504403,
+      "createdAt": "2026-10-01T12:48:20+05:00",
+      "readyAt": "2026-10-01T13:00:20+05:00",
+      "deadlineAt": "2026-10-01T13:23:20+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:48:24+05:00",
+          "sourceRow": 133,
+          "status": "CookingStarted",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:23:19+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:48:26+05:00",
+          "sourceRow": 134,
+          "status": "WaitCooking",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:23:19+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:01:56+05:00",
+          "sourceRow": 158,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:23:19+05:00",
+          "cookingCompletedAt": "2026-10-01T13:01:55+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:02:43+05:00",
+          "sourceRow": 161,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:23:19+05:00",
+          "cookingCompletedAt": "2026-10-01T13:01:55+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:02:43+05:00",
+          "sourceRow": 162,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:23:19+05:00",
+          "cookingCompletedAt": "2026-10-01T13:01:55+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:18:53+05:00",
+          "sourceRow": 186,
+          "status": "Delivered",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:23:19+05:00",
+          "cookingCompletedAt": "2026-10-01T13:01:55+05:00"
+        }
+      ]
+    },
+    {
+      "id": "3e8c78cd-f369-4960-8e90-efbecbba80b8",
+      "number": 47,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №47",
+      "status": "COOKING_STARTED",
+      "sum": 547000.0,
+      "service": 0,
+      "created": "12:53",
+      "ready": "13:05",
+      "deadline": "13:28",
+      "x": 517.4,
+      "y": 488.5,
+      "latitude": 41.320493280614,
+      "longitude": 69.29973827675,
+      "createdAt": "2026-10-01T12:53:36+05:00",
+      "readyAt": "2026-10-01T13:05:36+05:00",
+      "deadlineAt": "2026-10-01T13:28:36+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:53:42+05:00",
+          "sourceRow": 138,
+          "status": "WaitCooking",
+          "sum": 547000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:28:35+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:53:44+05:00",
+          "sourceRow": 139,
+          "status": "CookingStarted",
+          "sum": 547000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:28:35+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:11:01+05:00",
+          "sourceRow": 171,
+          "status": "Waiting",
+          "sum": 547000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:28:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:10:56+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:18:43+05:00",
+          "sourceRow": 184,
+          "status": "Waiting",
+          "sum": 547000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:28:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:10:56+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:18:47+05:00",
+          "sourceRow": 185,
+          "status": "OnWay",
+          "sum": 547000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:28:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:10:56+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:27:19+05:00",
+          "sourceRow": 201,
+          "status": "Delivered",
+          "sum": 547000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:28:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:10:56+05:00"
+        }
+      ]
+    },
+    {
+      "id": "f411ca4c-d011-44f0-a856-5a52fafad077",
+      "number": 48,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №48",
+      "status": "COOKING_STARTED",
+      "sum": 109000.0,
+      "service": 0,
+      "created": "12:57",
+      "ready": "13:09",
+      "deadline": "13:32",
+      "x": 344.6,
+      "y": 414.6,
+      "latitude": 41.326773523858,
+      "longitude": 69.282462168485,
+      "createdAt": "2026-10-01T12:57:01+05:00",
+      "readyAt": "2026-10-01T13:09:01+05:00",
+      "deadlineAt": "2026-10-01T13:32:01+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:57:03+05:00",
+          "sourceRow": 148,
+          "status": "WaitCooking",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:32:01+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:57:06+05:00",
+          "sourceRow": 149,
+          "status": "CookingStarted",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:32:01+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:11:22+05:00",
+          "sourceRow": 173,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:32:01+05:00",
+          "cookingCompletedAt": "2026-10-01T13:11:22+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:30:35+05:00",
+          "sourceRow": 207,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:32:01+05:00",
+          "cookingCompletedAt": "2026-10-01T13:11:22+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:30:40+05:00",
+          "sourceRow": 210,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:32:01+05:00",
+          "cookingCompletedAt": "2026-10-01T13:11:22+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:13:56+05:00",
+          "sourceRow": 274,
+          "status": "Delivered",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:32:01+05:00",
+          "cookingCompletedAt": "2026-10-01T13:11:22+05:00"
+        }
+      ]
+    },
+    {
+      "id": "5019d908-349f-42fa-9d5b-6bba504486b9",
+      "number": 49,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №49",
+      "status": "COOKING_STARTED",
+      "sum": 137000.0,
+      "service": 0,
+      "created": "12:57",
+      "ready": "13:14",
+      "deadline": "13:32",
+      "x": 508.5,
+      "y": 314.6,
+      "latitude": 41.33525701806175,
+      "longitude": 69.29885497958342,
+      "createdAt": "2026-10-01T12:57:13+05:00",
+      "readyAt": "2026-10-01T13:14:12+05:00",
+      "deadlineAt": "2026-10-01T13:32:13+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:57:15+05:00",
+          "sourceRow": 150,
+          "status": "WaitCooking",
+          "sum": 137000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:37:12+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "e7c0a34a-40ee-46f5-a3bb-8f85596ee3a7",
+      "number": 50,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №50",
+      "status": "COOKING_STARTED",
+      "sum": 264000.0,
+      "service": 0,
+      "created": "12:58",
+      "ready": "13:10",
+      "deadline": "13:33",
+      "x": 279.2,
+      "y": 457.2,
+      "latitude": 41.323152128088,
+      "longitude": 69.275918584317,
+      "createdAt": "2026-10-01T12:58:09+05:00",
+      "readyAt": "2026-10-01T13:10:09+05:00",
+      "deadlineAt": "2026-10-01T13:33:09+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T12:58:11+05:00",
+          "sourceRow": 151,
+          "status": "WaitCooking",
+          "sum": 264000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:33:08+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T12:58:13+05:00",
+          "sourceRow": 152,
+          "status": "CookingStarted",
+          "sum": 264000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:33:08+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:11:21+05:00",
+          "sourceRow": 172,
+          "status": "Waiting",
+          "sum": 264000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:33:08+05:00",
+          "cookingCompletedAt": "2026-10-01T13:11:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:30:36+05:00",
+          "sourceRow": 208,
+          "status": "Waiting",
+          "sum": 264000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:33:08+05:00",
+          "cookingCompletedAt": "2026-10-01T13:11:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:30:42+05:00",
+          "sourceRow": 211,
+          "status": "OnWay",
+          "sum": 264000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:33:08+05:00",
+          "cookingCompletedAt": "2026-10-01T13:11:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:30:42+05:00",
+          "sourceRow": 212,
+          "status": "Waiting",
+          "sum": 264000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:33:08+05:00",
+          "cookingCompletedAt": "2026-10-01T13:11:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:21:58+05:00",
+          "sourceRow": 282,
+          "status": "Delivered",
+          "sum": 264000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:33:08+05:00",
+          "cookingCompletedAt": "2026-10-01T13:11:17+05:00"
+        }
+      ]
+    },
+    {
+      "id": "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb",
+      "number": 51,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №51",
+      "status": "COOKING_STARTED",
+      "sum": 234000.0,
+      "service": 0,
+      "created": "13:01",
+      "ready": "13:13",
+      "deadline": "13:36",
+      "x": 490.6,
+      "y": 503.5,
+      "latitude": 41.3192198,
+      "longitude": 69.2970575,
+      "createdAt": "2026-10-01T13:01:54+05:00",
+      "readyAt": "2026-10-01T13:13:54+05:00",
+      "deadlineAt": "2026-10-01T13:36:54+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:02:00+05:00",
+          "sourceRow": 159,
+          "status": "WaitCooking",
+          "sum": 234000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:02:00+05:00",
+          "sourceRow": 160,
+          "status": "CookingStarted",
+          "sum": 234000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:12:07+05:00",
+          "sourceRow": 174,
+          "status": "Waiting",
+          "sum": 234000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": "2026-10-01T13:12:02+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:30:37+05:00",
+          "sourceRow": 209,
+          "status": "Waiting",
+          "sum": 234000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": "2026-10-01T13:12:02+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:30:43+05:00",
+          "sourceRow": 213,
+          "status": "OnWay",
+          "sum": 234000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": "2026-10-01T13:12:02+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:27:50+05:00",
+          "sourceRow": 286,
+          "status": "Delivered",
+          "sum": 234000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": "2026-10-01T13:12:02+05:00"
+        }
+      ]
+    },
+    {
+      "id": "c9e16be8-a0ac-4066-a756-1f8cf26c5617",
+      "number": 53,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №53",
+      "status": "COOKING_STARTED",
+      "sum": 175000.0,
+      "service": 0,
+      "created": "13:06",
+      "ready": "13:18",
+      "deadline": "13:41",
+      "x": 341.1,
+      "y": 424.0,
+      "latitude": 41.325969251958,
+      "longitude": 69.28211200381,
+      "createdAt": "2026-10-01T13:06:36+05:00",
+      "readyAt": "2026-10-01T13:18:36+05:00",
+      "deadlineAt": "2026-10-01T13:41:36+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:06:38+05:00",
+          "sourceRow": 165,
+          "status": "WaitCooking",
+          "sum": 175000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:06:41+05:00",
+          "sourceRow": 166,
+          "status": "CookingStarted",
+          "sum": 175000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:25:21+05:00",
+          "sourceRow": 198,
+          "status": "Waiting",
+          "sum": 175000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:15+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:02+05:00",
+          "sourceRow": 218,
+          "status": "Waiting",
+          "sum": 175000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:15+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:09+05:00",
+          "sourceRow": 223,
+          "status": "OnWay",
+          "sum": 175000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:15+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:50:15+05:00",
+          "sourceRow": 239,
+          "status": "Delivered",
+          "sum": 175000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:15+05:00"
+        }
+      ]
+    },
+    {
+      "id": "cc897835-e01b-401e-b5a0-7830f1cb9e4a",
+      "number": 54,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №54",
+      "status": "COOKING_STARTED",
+      "sum": 144000.0,
+      "service": 0,
+      "created": "13:07",
+      "ready": "13:19",
+      "deadline": "13:42",
+      "x": 342.5,
+      "y": 424.3,
+      "latitude": 41.325943,
+      "longitude": 69.28225,
+      "createdAt": "2026-10-01T13:07:26+05:00",
+      "readyAt": "2026-10-01T13:19:26+05:00",
+      "deadlineAt": "2026-10-01T13:42:26+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:07:29+05:00",
+          "sourceRow": 167,
+          "status": "WaitCooking",
+          "sum": 144000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:07:31+05:00",
+          "sourceRow": 168,
+          "status": "CookingStarted",
+          "sum": 144000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:25:19+05:00",
+          "sourceRow": 196,
+          "status": "Waiting",
+          "sum": 144000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:03+05:00",
+          "sourceRow": 219,
+          "status": "Waiting",
+          "sum": 144000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:12+05:00",
+          "sourceRow": 224,
+          "status": "OnWay",
+          "sum": 144000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:54:10+05:00",
+          "sourceRow": 246,
+          "status": "Delivered",
+          "sum": 144000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:17+05:00"
+        }
+      ]
+    },
+    {
+      "id": "3efa4723-10a4-45d3-80bd-f5e8446938f9",
+      "number": 55,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №55",
+      "status": "COOKING_STARTED",
+      "sum": 109000.0,
+      "service": 0,
+      "created": "13:08",
+      "ready": "13:20",
+      "deadline": "13:43",
+      "x": 487.9,
+      "y": 302.1,
+      "latitude": 41.336322138511,
+      "longitude": 69.296787511557,
+      "createdAt": "2026-10-01T13:08:05+05:00",
+      "readyAt": "2026-10-01T13:20:05+05:00",
+      "deadlineAt": "2026-10-01T13:43:05+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:08:07+05:00",
+          "sourceRow": 169,
+          "status": "WaitCooking",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:08:10+05:00",
+          "sourceRow": 170,
+          "status": "CookingStarted",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:25:20+05:00",
+          "sourceRow": 197,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:19+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:03+05:00",
+          "sourceRow": 220,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:19+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:14+05:00",
+          "sourceRow": 225,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:19+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:06:04+05:00",
+          "sourceRow": 262,
+          "status": "Delivered",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:19+05:00"
+        }
+      ]
+    },
+    {
+      "id": "566835f9-2122-40d0-8bb3-c6192a869c43",
+      "number": 56,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №56",
+      "status": "COOKING_STARTED",
+      "sum": 84000.0,
+      "service": 0,
+      "created": "13:12",
+      "ready": "13:24",
+      "deadline": "13:47",
+      "x": 282.0,
+      "y": 178.7,
+      "latitude": 41.3468,
+      "longitude": 69.2762,
+      "createdAt": "2026-10-01T13:12:58+05:00",
+      "readyAt": "2026-10-01T13:24:58+05:00",
+      "deadlineAt": "2026-10-01T13:47:58+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:13:00+05:00",
+          "sourceRow": 175,
+          "status": "WaitCooking",
+          "sum": 84000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:58+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "1e86a52d-e11a-4327-b6c1-213a232289d8",
+      "number": 57,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №57",
+      "status": "COOKING_STARTED",
+      "sum": 58000.0,
+      "service": 0,
+      "created": "13:13",
+      "ready": "13:25",
+      "deadline": "13:48",
+      "x": 320.8,
+      "y": 210.3,
+      "latitude": 41.34412,
+      "longitude": 69.28008,
+      "createdAt": "2026-10-01T13:13:10+05:00",
+      "readyAt": "2026-10-01T13:25:10+05:00",
+      "deadlineAt": "2026-10-01T13:48:10+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:13:11+05:00",
+          "sourceRow": 176,
+          "status": "WaitCooking",
+          "sum": 58000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:48:09+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "1da4f34e-ae71-4e51-9223-318238a315b1",
+      "number": 59,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №59",
+      "status": "COOKING_STARTED",
+      "sum": 203000.0,
+      "service": 0,
+      "created": "13:13",
+      "ready": "13:25",
+      "deadline": "13:48",
+      "x": 321.1,
+      "y": 209.2,
+      "latitude": 41.344208,
+      "longitude": 69.28011,
+      "createdAt": "2026-10-01T13:13:57+05:00",
+      "readyAt": "2026-10-01T13:25:57+05:00",
+      "deadlineAt": "2026-10-01T13:48:57+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:13:58+05:00",
+          "sourceRow": 177,
+          "status": "WaitCooking",
+          "sum": 203000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:48:56+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:39:04+05:00",
+          "sourceRow": 221,
+          "status": "Waiting",
+          "sum": 203000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:48:56+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:18+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:16+05:00",
+          "sourceRow": 226,
+          "status": "OnWay",
+          "sum": 203000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:48:56+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:18+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:18:51+05:00",
+          "sourceRow": 277,
+          "status": "Delivered",
+          "sum": 203000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:48:56+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:18+05:00"
+        }
+      ]
+    },
+    {
+      "id": "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28",
+      "number": 60,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №60",
+      "status": "COOKING_STARTED",
+      "sum": 124000.0,
+      "service": 0,
+      "created": "13:14",
+      "ready": "13:26",
+      "deadline": "13:49",
+      "x": 470.6,
+      "y": 213.2,
+      "latitude": 41.343868,
+      "longitude": 69.295065,
+      "createdAt": "2026-10-01T13:14:46+05:00",
+      "readyAt": "2026-10-01T13:26:46+05:00",
+      "deadlineAt": "2026-10-01T13:49:46+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:14:48+05:00",
+          "sourceRow": 178,
+          "status": "WaitCooking",
+          "sum": 124000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:14:51+05:00",
+          "sourceRow": 179,
+          "status": "CookingStarted",
+          "sum": 124000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:25:26+05:00",
+          "sourceRow": 199,
+          "status": "Waiting",
+          "sum": 124000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:24+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:04+05:00",
+          "sourceRow": 222,
+          "status": "Waiting",
+          "sum": 124000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:24+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:17+05:00",
+          "sourceRow": 227,
+          "status": "OnWay",
+          "sum": 124000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:24+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:10:27+05:00",
+          "sourceRow": 269,
+          "status": "Delivered",
+          "sum": 124000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:24+05:00"
+        }
+      ]
+    },
+    {
+      "id": "8843bb8f-5a60-46f1-b752-f7724ed25ca1",
+      "number": 61,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №61",
+      "status": "COOKING_STARTED",
+      "sum": 56000.0,
+      "service": 0,
+      "created": "13:15",
+      "ready": "13:27",
+      "deadline": "13:50",
+      "x": 349.1,
+      "y": 353.5,
+      "latitude": 41.331954,
+      "longitude": 69.282912,
+      "createdAt": "2026-10-01T13:15:00+05:00",
+      "readyAt": "2026-10-01T13:27:00+05:00",
+      "deadlineAt": "2026-10-01T13:50:00+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:15:02+05:00",
+          "sourceRow": 180,
+          "status": "WaitCooking",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:50:00+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "782fe598-8822-492d-a5ec-1ec8372c8877",
+      "number": 62,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №62",
+      "status": "COOKING_STARTED",
+      "sum": 42000.0,
+      "service": 0,
+      "created": "13:15",
+      "ready": "13:27",
+      "deadline": "13:50",
+      "x": 321.1,
+      "y": 209.7,
+      "latitude": 41.344166404224,
+      "longitude": 69.280107356608,
+      "createdAt": "2026-10-01T13:15:16+05:00",
+      "readyAt": "2026-10-01T13:27:16+05:00",
+      "deadlineAt": "2026-10-01T13:50:16+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:15:17+05:00",
+          "sourceRow": 181,
+          "status": "WaitCooking",
+          "sum": 42000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:50:15+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "48305bf5-801c-45d5-ab76-4ac867724188",
+      "number": 63,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №63",
+      "status": "COOKING_STARTED",
+      "sum": 170000.0,
+      "service": 0,
+      "created": "13:18",
+      "ready": "13:30",
+      "deadline": "13:53",
+      "x": 518.6,
+      "y": 338.1,
+      "latitude": 41.333263164697,
+      "longitude": 69.299856126308,
+      "createdAt": "2026-10-01T13:18:16+05:00",
+      "readyAt": "2026-10-01T13:30:16+05:00",
+      "deadlineAt": "2026-10-01T13:53:16+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:18:19+05:00",
+          "sourceRow": 182,
+          "status": "WaitCooking",
+          "sum": 170000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:18:22+05:00",
+          "sourceRow": 183,
+          "status": "CookingStarted",
+          "sum": 170000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:30:12+05:00",
+          "sourceRow": 204,
+          "status": "Waiting",
+          "sum": 170000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:10+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:33+05:00",
+          "sourceRow": 251,
+          "status": "Waiting",
+          "sum": 170000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:10+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:39+05:00",
+          "sourceRow": 254,
+          "status": "OnWay",
+          "sum": 170000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:10+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:11:10+05:00",
+          "sourceRow": 272,
+          "status": "Delivered",
+          "sum": 170000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:10+05:00"
+        }
+      ]
+    },
+    {
+      "id": "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3",
+      "number": 65,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №65",
+      "status": "COOKING_STARTED",
+      "sum": 56000.0,
+      "service": 0,
+      "created": "13:21",
+      "ready": "13:33",
+      "deadline": "13:56",
+      "x": 409.5,
+      "y": 153.3,
+      "latitude": 41.348959278623,
+      "longitude": 69.288947308453,
+      "createdAt": "2026-10-01T13:21:55+05:00",
+      "readyAt": "2026-10-01T13:33:55+05:00",
+      "deadlineAt": "2026-10-01T13:56:55+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:21:58+05:00",
+          "sourceRow": 191,
+          "status": "WaitCooking",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:56:54+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "1977a86c-2d98-4d7f-9b81-d4a53d3279e0",
+      "number": 66,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №66",
+      "status": "COOKING_STARTED",
+      "sum": 137000.0,
+      "service": 0,
+      "created": "13:22",
+      "ready": "13:34",
+      "deadline": "13:57",
+      "x": 549.6,
+      "y": 388.8,
+      "latitude": 41.32896,
+      "longitude": 69.302956,
+      "createdAt": "2026-10-01T13:22:05+05:00",
+      "readyAt": "2026-10-01T13:34:05+05:00",
+      "deadlineAt": "2026-10-01T13:57:05+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:22:08+05:00",
+          "sourceRow": 192,
+          "status": "WaitCooking",
+          "sum": 137000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:05+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "96f632f9-4be8-4e3e-aa69-670f17f0d3a5",
+      "number": 67,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №67",
+      "status": "COOKING_STARTED",
+      "sum": 139000.0,
+      "service": 0,
+      "created": "13:22",
+      "ready": "13:34",
+      "deadline": "13:57",
+      "x": 436.8,
+      "y": 414.8,
+      "latitude": 41.326755892615,
+      "longitude": 69.291678529563,
+      "createdAt": "2026-10-01T13:22:56+05:00",
+      "readyAt": "2026-10-01T13:34:56+05:00",
+      "deadlineAt": "2026-10-01T13:57:56+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:22:59+05:00",
+          "sourceRow": 193,
+          "status": "WaitCooking",
+          "sum": 139000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:23:02+05:00",
+          "sourceRow": 194,
+          "status": "CookingStarted",
+          "sum": 139000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:42:44+05:00",
+          "sourceRow": 229,
+          "status": "Waiting",
+          "sum": 139000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:41+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:35+05:00",
+          "sourceRow": 252,
+          "status": "Waiting",
+          "sum": 139000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:41+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:44+05:00",
+          "sourceRow": 255,
+          "status": "OnWay",
+          "sum": 139000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:41+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:24:35+05:00",
+          "sourceRow": 284,
+          "status": "Delivered",
+          "sum": 139000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:41+05:00"
+        }
+      ]
+    },
+    {
+      "id": "92784531-0b71-494c-98cd-5bc28c1556e3",
+      "number": 68,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №68",
+      "status": "COOKING_STARTED",
+      "sum": 188000.0,
+      "service": 0,
+      "created": "13:24",
+      "ready": "13:36",
+      "deadline": "13:59",
+      "x": 340.1,
+      "y": 370.3,
+      "latitude": 41.330535,
+      "longitude": 69.282013,
+      "createdAt": "2026-10-01T13:24:07+05:00",
+      "readyAt": "2026-10-01T13:36:07+05:00",
+      "deadlineAt": "2026-10-01T13:59:07+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:24:10+05:00",
+          "sourceRow": 195,
+          "status": "WaitCooking",
+          "sum": 188000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:59:07+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:02:03+05:00",
+          "sourceRow": 258,
+          "status": "OnWay",
+          "sum": 188000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:59:07+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:47+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:02:56+05:00",
+          "sourceRow": 260,
+          "status": "Delivered",
+          "sum": 188000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:59:07+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:47+05:00"
+        }
+      ]
+    },
+    {
+      "id": "2878bbda-7705-4424-ac45-cd35cf176220",
+      "number": 69,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №69",
+      "status": "COOKING_STARTED",
+      "sum": 116000.0,
+      "service": 0,
+      "created": "13:26",
+      "ready": "13:38",
+      "deadline": "14:01",
+      "x": 393.0,
+      "y": 450.8,
+      "latitude": 41.3237,
+      "longitude": 69.2873,
+      "createdAt": "2026-10-01T13:26:36+05:00",
+      "readyAt": "2026-10-01T13:38:36+05:00",
+      "deadlineAt": "2026-10-01T14:01:36+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:26:38+05:00",
+          "sourceRow": 200,
+          "status": "WaitCooking",
+          "sum": 116000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T13:56:36+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "2812b854-ed85-4d92-909f-6e284f1b0f27",
+      "number": 70,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №70",
+      "status": "COOKING_STARTED",
+      "sum": 54000.0,
+      "service": 0,
+      "created": "13:28",
+      "ready": "13:40",
+      "deadline": "14:03",
+      "x": 409.5,
+      "y": 153.3,
+      "latitude": 41.348959278623,
+      "longitude": 69.288947308453,
+      "createdAt": "2026-10-01T13:28:48+05:00",
+      "readyAt": "2026-10-01T13:40:48+05:00",
+      "deadlineAt": "2026-10-01T14:03:48+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:28:50+05:00",
+          "sourceRow": 202,
+          "status": "WaitCooking",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:28:51+05:00",
+          "sourceRow": 203,
+          "status": "CookingStarted",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:42:57+05:00",
+          "sourceRow": 230,
+          "status": "Waiting",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:36+05:00",
+          "sourceRow": 253,
+          "status": "Waiting",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:45+05:00",
+          "sourceRow": 256,
+          "status": "OnWay",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:45+05:00",
+          "sourceRow": 257,
+          "status": "Waiting",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:51:08+05:00",
+          "sourceRow": 299,
+          "status": "Waiting",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:51:30+05:00",
+          "sourceRow": 301,
+          "status": "Waiting",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:01:03+05:00",
+          "sourceRow": 307,
+          "status": "OnWay",
+          "sum": 54000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        }
+      ]
+    },
+    {
+      "id": "467110bd-1090-4703-adaf-5e9607dc0156",
+      "number": 72,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №72",
+      "status": "COOKING_STARTED",
+      "sum": 143900.0,
+      "service": 0,
+      "created": "13:32",
+      "ready": "13:49",
+      "deadline": "14:07",
+      "x": 303.5,
+      "y": 248.1,
+      "latitude": 41.34090439887509,
+      "longitude": 69.27835076188983,
+      "createdAt": "2026-10-01T13:32:54+05:00",
+      "readyAt": "2026-10-01T13:49:53+05:00",
+      "deadlineAt": "2026-10-01T14:07:54+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:32:55+05:00",
+          "sourceRow": 214,
+          "status": "WaitCooking",
+          "sum": 143900.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:12:53+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "c041b33c-12a5-465e-974e-e1d1029327dd",
+      "number": 73,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №73",
+      "status": "COOKING_STARTED",
+      "sum": 55000.0,
+      "service": 0,
+      "created": "13:33",
+      "ready": "13:45",
+      "deadline": "14:08",
+      "x": 329.9,
+      "y": 454.1,
+      "latitude": 41.32342,
+      "longitude": 69.28099,
+      "createdAt": "2026-10-01T13:33:10+05:00",
+      "readyAt": "2026-10-01T13:45:10+05:00",
+      "deadlineAt": "2026-10-01T14:08:10+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:33:12+05:00",
+          "sourceRow": 215,
+          "status": "WaitCooking",
+          "sum": 55000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:10+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "ea1c2e7b-93b2-4242-acfe-c57f455775a5",
+      "number": 74,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №74",
+      "status": "COOKING_STARTED",
+      "sum": 109000.0,
+      "service": 0,
+      "created": "13:37",
+      "ready": "13:49",
+      "deadline": "14:12",
+      "x": 413.8,
+      "y": 417.5,
+      "latitude": 41.326519994492,
+      "longitude": 69.289381954054,
+      "createdAt": "2026-10-01T13:37:16+05:00",
+      "readyAt": "2026-10-01T13:49:16+05:00",
+      "deadlineAt": "2026-10-01T14:12:16+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:37:19+05:00",
+          "sourceRow": 216,
+          "status": "WaitCooking",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:12:16+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "1b042548-9af3-4393-8495-4e8ff17b8be1",
+      "number": 75,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №75",
+      "status": "COOKING_STARTED",
+      "sum": 218000.0,
+      "service": 0,
+      "created": "13:37",
+      "ready": "13:49",
+      "deadline": "14:12",
+      "x": 509.8,
+      "y": 490.7,
+      "latitude": 41.320309058003,
+      "longitude": 69.298979566846,
+      "createdAt": "2026-10-01T13:37:35+05:00",
+      "readyAt": "2026-10-01T13:49:35+05:00",
+      "deadlineAt": "2026-10-01T14:12:35+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:37:38+05:00",
+          "sourceRow": 217,
+          "status": "WaitCooking",
+          "sum": 218000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:12:35+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "220d5ed3-4609-43c3-b939-a6bf19c6d526",
+      "number": 76,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №76",
+      "status": "COOKING_STARTED",
+      "sum": 109000.0,
+      "service": 0,
+      "created": "13:43",
+      "ready": "13:55",
+      "deadline": "14:18",
+      "x": 302.6,
+      "y": 165.7,
+      "latitude": 41.347902299624,
+      "longitude": 69.278257,
+      "createdAt": "2026-10-01T13:43:07+05:00",
+      "readyAt": "2026-10-01T13:55:07+05:00",
+      "deadlineAt": "2026-10-01T14:18:07+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:43:11+05:00",
+          "sourceRow": 231,
+          "status": "WaitCooking",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:18:06+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:43:13+05:00",
+          "sourceRow": 232,
+          "status": "CookingStarted",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:18:06+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:56:50+05:00",
+          "sourceRow": 249,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:18:06+05:00",
+          "cookingCompletedAt": "2026-10-01T13:56:45+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:31:41+05:00",
+          "sourceRow": 289,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:18:06+05:00",
+          "cookingCompletedAt": "2026-10-01T13:56:45+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:51:26+05:00",
+          "sourceRow": 300,
+          "status": "Delivered",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:18:06+05:00",
+          "cookingCompletedAt": "2026-10-01T13:56:45+05:00"
+        }
+      ]
+    },
+    {
+      "id": "2e6ef8ef-70b2-4881-9d83-1198e7ab51f8",
+      "number": 77,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №77",
+      "status": "COOKING_STARTED",
+      "sum": 44000.0,
+      "service": 0,
+      "created": "13:43",
+      "ready": "13:55",
+      "deadline": "14:18",
+      "x": 183.5,
+      "y": 187.0,
+      "latitude": 41.3460942341624,
+      "longitude": 69.26634610350966,
+      "createdAt": "2026-10-01T13:43:12+05:00",
+      "readyAt": "2026-10-01T13:55:12+05:00",
+      "deadlineAt": "2026-10-01T14:18:12+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:43:15+05:00",
+          "sourceRow": 233,
+          "status": "WaitCooking",
+          "sum": 44000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:18:11+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "3b6f3488-de82-44ac-ad45-46c2038e545c",
+      "number": 78,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №78",
+      "status": "COOKING_STARTED",
+      "sum": 40000.0,
+      "service": 0,
+      "created": "13:44",
+      "ready": "13:56",
+      "deadline": "14:19",
+      "x": 312.3,
+      "y": 340.5,
+      "latitude": 41.333058379806,
+      "longitude": 69.27923463285,
+      "createdAt": "2026-10-01T13:44:17+05:00",
+      "readyAt": "2026-10-01T13:56:17+05:00",
+      "deadlineAt": "2026-10-01T14:19:17+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:44:19+05:00",
+          "sourceRow": 234,
+          "status": "WaitCooking",
+          "sum": 40000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:19:17+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "86452bcb-dedf-47af-aba9-80eb68fab8c2",
+      "number": 80,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №80",
+      "status": "COOKING_STARTED",
+      "sum": 188000.0,
+      "service": 0,
+      "created": "13:48",
+      "ready": "14:00",
+      "deadline": "14:23",
+      "x": 469.1,
+      "y": 327.5,
+      "latitude": 41.334167,
+      "longitude": 69.29491,
+      "createdAt": "2026-10-01T13:48:12+05:00",
+      "readyAt": "2026-10-01T14:00:12+05:00",
+      "deadlineAt": "2026-10-01T14:23:12+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:48:14+05:00",
+          "sourceRow": 235,
+          "status": "WaitCooking",
+          "sum": 188000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:23:12+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:48:16+05:00",
+          "sourceRow": 236,
+          "status": "CookingStarted",
+          "sum": 188000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:23:12+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:02:28+05:00",
+          "sourceRow": 259,
+          "status": "Waiting",
+          "sum": 188000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:23:12+05:00",
+          "cookingCompletedAt": "2026-10-01T14:02:26+05:00"
+        }
+      ]
+    },
+    {
+      "id": "1ace5040-fd80-4867-a74e-f006d21908de",
+      "number": 81,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №81",
+      "status": "COOKING_STARTED",
+      "sum": 104000.0,
+      "service": 0,
+      "created": "13:49",
+      "ready": "14:01",
+      "deadline": "14:24",
+      "x": 364.1,
+      "y": 435.8,
+      "latitude": 41.32497177628,
+      "longitude": 69.284408054999,
+      "createdAt": "2026-10-01T13:49:40+05:00",
+      "readyAt": "2026-10-01T14:01:40+05:00",
+      "deadlineAt": "2026-10-01T14:24:40+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:49:43+05:00",
+          "sourceRow": 237,
+          "status": "WaitCooking",
+          "sum": 104000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:24:40+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "82800087-10fd-4f18-b0c5-b1263d1d5592",
+      "number": 83,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №83",
+      "status": "COOKING_STARTED",
+      "sum": 161000.0,
+      "service": 0,
+      "created": "13:53",
+      "ready": "14:05",
+      "deadline": "14:28",
+      "x": 551.0,
+      "y": 315.2,
+      "latitude": 41.335212,
+      "longitude": 69.303103,
+      "createdAt": "2026-10-01T13:53:02+05:00",
+      "readyAt": "2026-10-01T14:05:02+05:00",
+      "deadlineAt": "2026-10-01T14:28:02+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:53:06+05:00",
+          "sourceRow": 241,
+          "status": "WaitCooking",
+          "sum": 161000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:28:01+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:53:06+05:00",
+          "sourceRow": 243,
+          "status": "WaitCooking",
+          "sum": 161000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:28:01+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:53:09+05:00",
+          "sourceRow": 244,
+          "status": "CookingStarted",
+          "sum": 161000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:28:01+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:03:10+05:00",
+          "sourceRow": 261,
+          "status": "Waiting",
+          "sum": 161000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:28:01+05:00",
+          "cookingCompletedAt": "2026-10-01T14:03:06+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:01:57+05:00",
+          "sourceRow": 310,
+          "status": "OnWay",
+          "sum": 161000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:28:01+05:00",
+          "cookingCompletedAt": "2026-10-01T14:03:06+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:17:25+05:00",
+          "sourceRow": 328,
+          "status": "Delivered",
+          "sum": 161000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:28:01+05:00",
+          "cookingCompletedAt": "2026-10-01T14:03:06+05:00"
+        }
+      ]
+    },
+    {
+      "id": "69506887-8f74-4987-b502-10f5f3a92511",
+      "number": 84,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №84",
+      "status": "COOKING_STARTED",
+      "sum": 66000.0,
+      "service": 0,
+      "created": "13:53",
+      "ready": "14:05",
+      "deadline": "14:28",
+      "x": 346.2,
+      "y": 460.5,
+      "latitude": 41.322871573823,
+      "longitude": 69.282624106854,
+      "createdAt": "2026-10-01T13:53:57+05:00",
+      "readyAt": "2026-10-01T14:05:57+05:00",
+      "deadlineAt": "2026-10-01T14:28:57+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:53:58+05:00",
+          "sourceRow": 245,
+          "status": "WaitCooking",
+          "sum": 66000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:28:56+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "e6047392-c999-4b0f-b049-5db7768751ef",
+      "number": 85,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №85",
+      "status": "COOKING_STARTED",
+      "sum": 160000.0,
+      "service": 0,
+      "created": "13:55",
+      "ready": "14:07",
+      "deadline": "14:30",
+      "x": 234.0,
+      "y": 141.8,
+      "latitude": 41.3499325493,
+      "longitude": 69.271398894489,
+      "createdAt": "2026-10-01T13:55:30+05:00",
+      "readyAt": "2026-10-01T14:07:30+05:00",
+      "deadlineAt": "2026-10-01T14:30:30+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:55:32+05:00",
+          "sourceRow": 247,
+          "status": "WaitCooking",
+          "sum": 160000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:30:29+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:55:34+05:00",
+          "sourceRow": 248,
+          "status": "CookingStarted",
+          "sum": 160000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:30:29+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:12:18+05:00",
+          "sourceRow": 273,
+          "status": "Waiting",
+          "sum": 160000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:30:29+05:00",
+          "cookingCompletedAt": "2026-10-01T14:12:14+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:31:19+05:00",
+          "sourceRow": 288,
+          "status": "OnWay",
+          "sum": 160000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:30:29+05:00",
+          "cookingCompletedAt": "2026-10-01T14:12:14+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:53:53+05:00",
+          "sourceRow": 304,
+          "status": "Delivered",
+          "sum": 160000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:30:29+05:00",
+          "cookingCompletedAt": "2026-10-01T14:12:14+05:00"
+        }
+      ]
+    },
+    {
+      "id": "9f8a9185-fc90-402c-993b-b934ef94fb80",
+      "number": 88,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №88",
+      "status": "COOKING_STARTED",
+      "sum": 117000.0,
+      "service": 0,
+      "created": "14:06",
+      "ready": "14:18",
+      "deadline": "14:41",
+      "x": 509.5,
+      "y": 302.7,
+      "latitude": 41.336271769701,
+      "longitude": 69.298946247457,
+      "createdAt": "2026-10-01T14:06:46+05:00",
+      "readyAt": "2026-10-01T14:18:46+05:00",
+      "deadlineAt": "2026-10-01T14:41:46+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:06:49+05:00",
+          "sourceRow": 263,
+          "status": "WaitCooking",
+          "sum": 117000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:41:46+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:06:53+05:00",
+          "sourceRow": 264,
+          "status": "CookingStarted",
+          "sum": 117000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:41:46+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:16:53+05:00",
+          "sourceRow": 275,
+          "status": "Waiting",
+          "sum": 117000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:41:46+05:00",
+          "cookingCompletedAt": "2026-10-01T14:16:49+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:01:45+05:00",
+          "sourceRow": 309,
+          "status": "OnWay",
+          "sum": 117000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:41:46+05:00",
+          "cookingCompletedAt": "2026-10-01T14:16:49+05:00"
+        }
+      ]
+    },
+    {
+      "id": "12c87da2-ba37-4bb6-aa54-151da4c7bb74",
+      "number": 89,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №89",
+      "status": "COOKING_STARTED",
+      "sum": 69000.0,
+      "service": 0,
+      "created": "14:08",
+      "ready": "14:20",
+      "deadline": "14:43",
+      "x": 491.5,
+      "y": 268.6,
+      "latitude": 41.3391623,
+      "longitude": 69.2971454,
+      "createdAt": "2026-10-01T14:08:16+05:00",
+      "readyAt": "2026-10-01T14:20:16+05:00",
+      "deadlineAt": "2026-10-01T14:43:16+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:08:18+05:00",
+          "sourceRow": 266,
+          "status": "WaitCooking",
+          "sum": 69000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:43:16+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:08:19+05:00",
+          "sourceRow": 267,
+          "status": "CookingStarted",
+          "sum": 69000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:43:16+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:18:23+05:00",
+          "sourceRow": 276,
+          "status": "Waiting",
+          "sum": 69000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:43:16+05:00",
+          "cookingCompletedAt": "2026-10-01T14:18:20+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:01:27+05:00",
+          "sourceRow": 308,
+          "status": "OnWay",
+          "sum": 69000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:43:16+05:00",
+          "cookingCompletedAt": "2026-10-01T14:18:20+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:11:00+05:00",
+          "sourceRow": 317,
+          "status": "Delivered",
+          "sum": 69000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:43:16+05:00",
+          "cookingCompletedAt": "2026-10-01T14:18:20+05:00"
+        }
+      ]
+    },
+    {
+      "id": "fe40bb49-267c-42c1-accd-d16290ceaaa3",
+      "number": 90,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №90",
+      "status": "COOKING_STARTED",
+      "sum": 119000.0,
+      "service": 0,
+      "created": "14:10",
+      "ready": "14:22",
+      "deadline": "14:45",
+      "x": 234.3,
+      "y": 280.5,
+      "latitude": 41.338155859993,
+      "longitude": 69.271432757378,
+      "createdAt": "2026-10-01T14:10:39+05:00",
+      "readyAt": "2026-10-01T14:22:39+05:00",
+      "deadlineAt": "2026-10-01T14:45:39+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:10:41+05:00",
+          "sourceRow": 270,
+          "status": "WaitCooking",
+          "sum": 119000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:45:39+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:10:44+05:00",
+          "sourceRow": 271,
+          "status": "CookingStarted",
+          "sum": 119000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:45:39+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:20:46+05:00",
+          "sourceRow": 280,
+          "status": "Waiting",
+          "sum": 119000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:45:39+05:00",
+          "cookingCompletedAt": "2026-10-01T14:20:43+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:31:53+05:00",
+          "sourceRow": 290,
+          "status": "OnWay",
+          "sum": 119000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:45:39+05:00",
+          "cookingCompletedAt": "2026-10-01T14:20:43+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:08:03+05:00",
+          "sourceRow": 314,
+          "status": "Delivered",
+          "sum": 119000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:45:39+05:00",
+          "cookingCompletedAt": "2026-10-01T14:20:43+05:00"
+        }
+      ]
+    },
+    {
+      "id": "fa1ae253-ec1d-42df-b442-d79bcbe67c6e",
+      "number": 91,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №91",
+      "status": "COOKING_STARTED",
+      "sum": 79000.0,
+      "service": 0,
+      "created": "14:20",
+      "ready": "14:32",
+      "deadline": "14:55",
+      "x": 398.0,
+      "y": 312.2,
+      "latitude": 41.335466968105,
+      "longitude": 69.287798926234,
+      "createdAt": "2026-10-01T14:20:34+05:00",
+      "readyAt": "2026-10-01T14:32:34+05:00",
+      "deadlineAt": "2026-10-01T14:55:34+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:20:37+05:00",
+          "sourceRow": 278,
+          "status": "WaitCooking",
+          "sum": 79000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:55:34+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:20:40+05:00",
+          "sourceRow": 279,
+          "status": "CookingStarted",
+          "sum": 79000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:55:34+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:30:41+05:00",
+          "sourceRow": 287,
+          "status": "Waiting",
+          "sum": 79000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:55:34+05:00",
+          "cookingCompletedAt": "2026-10-01T14:30:37+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:58:26+05:00",
+          "sourceRow": 305,
+          "status": "OnWay",
+          "sum": 79000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:55:34+05:00",
+          "cookingCompletedAt": "2026-10-01T14:30:37+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:04:23+05:00",
+          "sourceRow": 311,
+          "status": "Delivered",
+          "sum": 79000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:55:34+05:00",
+          "cookingCompletedAt": "2026-10-01T14:30:37+05:00"
+        }
+      ]
+    },
+    {
+      "id": "496b1bbe-dabc-4631-b4aa-d3eabe144a94",
+      "number": 92,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №92",
+      "status": "COOKING_STARTED",
+      "sum": 104000.0,
+      "service": 0,
+      "created": "14:20",
+      "ready": "14:32",
+      "deadline": "14:55",
+      "x": 179.8,
+      "y": 198.7,
+      "latitude": 41.345104,
+      "longitude": 69.265976,
+      "createdAt": "2026-10-01T14:20:57+05:00",
+      "readyAt": "2026-10-01T14:32:57+05:00",
+      "deadlineAt": "2026-10-01T14:55:57+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:21:00+05:00",
+          "sourceRow": 281,
+          "status": "WaitCooking",
+          "sum": 104000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:55:56+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "0b211e8c-fec9-4404-be87-3a75c49fc784",
+      "number": 93,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №93",
+      "status": "COOKING_STARTED",
+      "sum": 47000.0,
+      "service": 0,
+      "created": "14:23",
+      "ready": "14:35",
+      "deadline": "14:58",
+      "x": 560.1,
+      "y": 395.3,
+      "latitude": 41.328412,
+      "longitude": 69.304006,
+      "createdAt": "2026-10-01T14:23:12+05:00",
+      "readyAt": "2026-10-01T14:35:12+05:00",
+      "deadlineAt": "2026-10-01T14:58:12+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:23:16+05:00",
+          "sourceRow": 283,
+          "status": "WaitCooking",
+          "sum": 47000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:58:12+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T15:17:15+05:00",
+          "sourceRow": 327,
+          "status": "Delivered",
+          "sum": 47000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:58:12+05:00",
+          "cookingCompletedAt": "2026-10-01T14:33:16+05:00"
+        }
+      ]
+    },
+    {
+      "id": "483c99ce-3831-4b22-82e7-10fa1060f17e",
+      "number": 95,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №95",
+      "status": "COOKING_STARTED",
+      "sum": 161000.0,
+      "service": 0,
+      "created": "14:25",
+      "ready": "14:37",
+      "deadline": "15:00",
+      "x": 221.5,
+      "y": 184.2,
+      "latitude": 41.34633,
+      "longitude": 69.270149,
+      "createdAt": "2026-10-01T14:25:13+05:00",
+      "readyAt": "2026-10-01T14:37:13+05:00",
+      "deadlineAt": "2026-10-01T15:00:13+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:25:14+05:00",
+          "sourceRow": 285,
+          "status": "WaitCooking",
+          "sum": 161000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T14:55:13+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "a80041f4-3d0a-42b7-b83e-dba052447867",
+      "number": 98,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №98",
+      "status": "COOKING_STARTED",
+      "sum": 109000.0,
+      "service": 0,
+      "created": "14:32",
+      "ready": "14:44",
+      "deadline": "15:07",
+      "x": 237.8,
+      "y": 276.0,
+      "latitude": 41.338540777779,
+      "longitude": 69.271781779826,
+      "createdAt": "2026-10-01T14:32:12+05:00",
+      "readyAt": "2026-10-01T14:44:12+05:00",
+      "deadlineAt": "2026-10-01T15:07:12+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:32:16+05:00",
+          "sourceRow": 291,
+          "status": "WaitCooking",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:07:12+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:32:19+05:00",
+          "sourceRow": 292,
+          "status": "CookingStarted",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:07:12+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:42:22+05:00",
+          "sourceRow": 296,
+          "status": "Waiting",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:07:12+05:00",
+          "cookingCompletedAt": "2026-10-01T14:42:18+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:12:24+05:00",
+          "sourceRow": 319,
+          "status": "OnWay",
+          "sum": 109000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:07:12+05:00",
+          "cookingCompletedAt": "2026-10-01T14:42:18+05:00"
+        }
+      ]
+    },
+    {
+      "id": "efe38524-46bd-4fdc-a72d-67b2a621a65c",
+      "number": 99,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №99",
+      "status": "COOKING_STARTED",
+      "sum": 167000.0,
+      "service": 0,
+      "created": "14:34",
+      "ready": "14:51",
+      "deadline": "15:09",
+      "x": 348.9,
+      "y": 348.5,
+      "latitude": 41.33238431588965,
+      "longitude": 69.2828940012424,
+      "createdAt": "2026-10-01T14:34:23+05:00",
+      "readyAt": "2026-10-01T14:51:23+05:00",
+      "deadlineAt": "2026-10-01T15:09:23+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:34:24+05:00",
+          "sourceRow": 293,
+          "status": "WaitCooking",
+          "sum": 167000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:14:23+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "4cd06a20-43b2-4d89-82cc-95f969444599",
+      "number": 102,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №102",
+      "status": "COOKING_STARTED",
+      "sum": 143000.0,
+      "service": 0,
+      "created": "14:39",
+      "ready": "14:51",
+      "deadline": "15:14",
+      "x": 211.0,
+      "y": 223.8,
+      "latitude": 41.3429711064976,
+      "longitude": 69.2691024470757,
+      "createdAt": "2026-10-01T14:39:09+05:00",
+      "readyAt": "2026-10-01T14:51:09+05:00",
+      "deadlineAt": "2026-10-01T15:14:09+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:39:13+05:00",
+          "sourceRow": 294,
+          "status": "WaitCooking",
+          "sum": 143000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:14:08+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:39:15+05:00",
+          "sourceRow": 295,
+          "status": "CookingStarted",
+          "sum": 143000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:14:08+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:53:15+05:00",
+          "sourceRow": 302,
+          "status": "Waiting",
+          "sum": 143000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:14:08+05:00",
+          "cookingCompletedAt": "2026-10-01T14:53:12+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:11:43+05:00",
+          "sourceRow": 318,
+          "status": "OnWay",
+          "sum": 143000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:14:08+05:00",
+          "cookingCompletedAt": "2026-10-01T14:53:12+05:00"
+        }
+      ]
+    },
+    {
+      "id": "4e284976-61ef-4e60-b2dd-cfe23623572d",
+      "number": 103,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №103",
+      "status": "COOKING_STARTED",
+      "sum": 59000.0,
+      "service": 0,
+      "created": "14:43",
+      "ready": "14:55",
+      "deadline": "15:18",
+      "x": 538.2,
+      "y": 459.9,
+      "latitude": 41.322922089835,
+      "longitude": 69.301819168031,
+      "createdAt": "2026-10-01T14:43:07+05:00",
+      "readyAt": "2026-10-01T14:55:07+05:00",
+      "deadlineAt": "2026-10-01T15:18:07+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:43:10+05:00",
+          "sourceRow": 297,
+          "status": "WaitCooking",
+          "sum": 59000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:18:07+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:43:12+05:00",
+          "sourceRow": 298,
+          "status": "CookingStarted",
+          "sum": 59000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:18:07+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:53:24+05:00",
+          "sourceRow": 303,
+          "status": "Waiting",
+          "sum": 59000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:18:07+05:00",
+          "cookingCompletedAt": "2026-10-01T14:53:21+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:09:47+05:00",
+          "sourceRow": 315,
+          "status": "OnWay",
+          "sum": 59000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:18:07+05:00",
+          "cookingCompletedAt": "2026-10-01T14:53:21+05:00"
+        }
+      ]
+    },
+    {
+      "id": "eaeb7a2e-6c92-40d0-b077-2f9d84f1975c",
+      "number": 108,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №108",
+      "status": "COOKING_STARTED",
+      "sum": 56000.0,
+      "service": 0,
+      "created": "14:59",
+      "ready": "15:11",
+      "deadline": "15:34",
+      "x": 354.7,
+      "y": 470.6,
+      "latitude": 41.322016413389,
+      "longitude": 69.283467829227,
+      "createdAt": "2026-10-01T14:59:36+05:00",
+      "readyAt": "2026-10-01T15:11:36+05:00",
+      "deadlineAt": "2026-10-01T15:34:36+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T14:59:38+05:00",
+          "sourceRow": 306,
+          "status": "WaitCooking",
+          "sum": 56000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:34:36+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "bf19286a-004d-4a6d-895a-50c31c6e218f",
+      "number": 110,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №110",
+      "status": "COOKING_STARTED",
+      "sum": 247000.0,
+      "service": 0,
+      "created": "15:05",
+      "ready": "15:17",
+      "deadline": "15:40",
+      "x": 360.5,
+      "y": 344.0,
+      "latitude": 41.332764,
+      "longitude": 69.284055,
+      "createdAt": "2026-10-01T15:05:46+05:00",
+      "readyAt": "2026-10-01T15:17:46+05:00",
+      "deadlineAt": "2026-10-01T15:40:46+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T15:05:50+05:00",
+          "sourceRow": 312,
+          "status": "WaitCooking",
+          "sum": 247000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:40:46+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T15:05:52+05:00",
+          "sourceRow": 313,
+          "status": "CookingStarted",
+          "sum": 247000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:40:46+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T15:15:57+05:00",
+          "sourceRow": 322,
+          "status": "Waiting",
+          "sum": 247000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:40:46+05:00",
+          "cookingCompletedAt": "2026-10-01T15:15:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:16:47+05:00",
+          "sourceRow": 325,
+          "status": "Waiting",
+          "sum": 247000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:40:46+05:00",
+          "cookingCompletedAt": "2026-10-01T15:15:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:16:50+05:00",
+          "sourceRow": 326,
+          "status": "OnWay",
+          "sum": 247000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:40:46+05:00",
+          "cookingCompletedAt": "2026-10-01T15:15:52+05:00"
+        }
+      ]
+    },
+    {
+      "id": "24c8d29b-94ef-4613-a2ae-62db96ecf610",
+      "number": 113,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №113",
+      "status": "COOKING_STARTED",
+      "sum": 218000.0,
+      "service": 0,
+      "created": "15:13",
+      "ready": "15:25",
+      "deadline": "15:48",
+      "x": 339.7,
+      "y": 276.3,
+      "latitude": 41.338509999624,
+      "longitude": 69.28197,
+      "createdAt": "2026-10-01T15:13:22+05:00",
+      "readyAt": "2026-10-01T15:25:22+05:00",
+      "deadlineAt": "2026-10-01T15:48:22+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T15:13:27+05:00",
+          "sourceRow": 320,
+          "status": "WaitCooking",
+          "sum": 218000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:48:21+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T15:13:29+05:00",
+          "sourceRow": 321,
+          "status": "CookingStarted",
+          "sum": 218000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:48:21+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    },
+    {
+      "id": "c453f0ca-99f8-4d92-9b33-4b0da635b3ee",
+      "number": 115,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №115",
+      "status": "COOKING_STARTED",
+      "sum": 151000.0,
+      "service": 0,
+      "created": "15:16",
+      "ready": "15:28",
+      "deadline": "15:51",
+      "x": 162.2,
+      "y": 287.1,
+      "latitude": 41.337593683157,
+      "longitude": 69.264224153012,
+      "createdAt": "2026-10-01T15:16:09+05:00",
+      "readyAt": "2026-10-01T15:28:09+05:00",
+      "deadlineAt": "2026-10-01T15:51:09+05:00",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T15:16:12+05:00",
+          "sourceRow": 323,
+          "status": "WaitCooking",
+          "sum": 151000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:51:09+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T15:16:15+05:00",
+          "sourceRow": 324,
+          "status": "CookingStarted",
+          "sum": 151000.0,
+          "cookingCompleteBeforeAt": "2026-10-01T15:51:09+05:00",
+          "cookingCompletedAt": null
+        }
+      ]
+    }
+  ]
+}

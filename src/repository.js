@@ -5,6 +5,8 @@ import { runAlgorithms } from './planning.js';
 import { COURIER_TRANSITIONS, ORDER_TRANSITIONS, problem, validateCourier, validateOrder } from './domain.js';
 import { BRANCH } from './branch.js';
 import { tashkentNow } from './time.js';
+import { DEFAULT_SETTINGS } from './timing.js';
+import { validateSettings } from './settings.js';
 
 const INITIAL_ORDERS = [];
 const INITIAL_COURIERS = [
@@ -67,7 +69,7 @@ export class Repository {
 
   scenario() {
     const row = this.db.prepare('SELECT * FROM scenario WHERE id=?').get('golden');
-    return { id: row.id, name: row.name, version: row.version, settings: JSON.parse(row.settings_json) };
+    return { id: row.id, name: row.name, version: row.version, settings: { ...DEFAULT_SETTINGS, ...JSON.parse(row.settings_json) } };
   }
 
   list(table) {
@@ -158,6 +160,7 @@ export class Repository {
 
   updateSettings(settings) {
     const current = this.scenario().settings;
+    validateSettings(settings);
     this.db.prepare('UPDATE scenario SET settings_json=?,version=version+1 WHERE id=?').run(JSON.stringify({ ...current, ...settings }), 'golden');
     return this.bootstrap();
   }

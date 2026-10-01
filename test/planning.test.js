@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { runAlgorithms } from '../src/planning.js';
+import { BRANCH_POINT } from '../src/branch.js';
 
 const snapshot = {
   version: 1,
@@ -53,4 +54,37 @@ test('planning uses the Tashkent planning moment and handles midnight', () => {
   const result = runAlgorithms(snapshot);
   assert.equal(result.planningAt.hm, '23:50');
   result.results.forEach(algorithm => assert.equal(algorithm.onTime, 1, algorithm.code));
+});
+
+
+test('all algorithms apply exit buffer when deciding whether a solo fits SLA', () => {
+  const changed = structuredClone(snapshot);
+  changed.settings = { allowLate: false, goOutFromBranchMin: 0 };
+  changed.planningAt = { minutes: 1080 };
+  changed.orders = [{ ...snapshot.orders[0], x: BRANCH_POINT[0], y: BRANCH_POINT[1], ready: '18:00', deadline: '18:01' }];
+  const without = runAlgorithms(changed);
+  without.results.forEach(result => assert.equal(result.onTime, 1));
+  changed.settings.goOutFromBranchMin = 2;
+  runAlgorithms(changed).results.forEach(result => assert.equal(result.onTime, 0));
+});
+
+test('return buffer and legacy per-order service do not affect IO Planner ETA', () => {
+  const changed = structuredClone(snapshot);
+  const before = runAlgorithms(changed);
+  changed.settings.returnBufferPct = 50;
+  changed.orders.forEach(order => { order.service = 3600; });
+  const after = runAlgorithms(changed);
+  after.results.forEach((result, i) => {
+    assert.deepEqual(result.routes.map(r => r.ev.stops), before.results[i].routes.map(r => r.ev.stops));
+    result.routes.forEach(r => assert.equal(r.ev.bufferedReturnMin, r.ev.returnLegMin * 1.5));
+  });
+});
+
+test('branch count and value caps constrain every algorithm', () => {
+  const changed = structuredClone(snapshot);
+  changed.settings = { allowLate: false, bucketMaxOrders: 1, bucketMaxFullSum: 100000 };
+  runAlgorithms(changed).results.forEach(result => result.routes.forEach(r => {
+    assert.equal(r.ids.length, 1);
+    assert.ok(r.ev.sum <= 100000);
+  }));
 });

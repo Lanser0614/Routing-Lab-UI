@@ -1,0 +1,4238 @@
+{
+  "version": "test-13:00-14:00-13:30",
+  "orders": [
+    {
+      "id": "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb",
+      "number": 51,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №51",
+      "status": "WAITING",
+      "sum": 234000,
+      "service": 0,
+      "created": "13:01",
+      "ready": "13:12",
+      "deadline": "13:36",
+      "x": 490.6,
+      "y": 503.5,
+      "latitude": 41.3192198,
+      "longitude": 69.2970575,
+      "createdAt": "2026-10-01T13:01:54+05:00",
+      "readyAt": "2026-10-01T13:13:54+05:00",
+      "deadlineAt": "2026-10-01T08:36:54.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:02:00+05:00",
+          "sourceRow": 159,
+          "status": "WaitCooking",
+          "sum": 234000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:02:00+05:00",
+          "sourceRow": 160,
+          "status": "CookingStarted",
+          "sum": 234000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:12:07+05:00",
+          "sourceRow": 174,
+          "status": "Waiting",
+          "sum": 234000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": "2026-10-01T13:12:02+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:30:37+05:00",
+          "sourceRow": 209,
+          "status": "Waiting",
+          "sum": 234000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": "2026-10-01T13:12:02+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:30:43+05:00",
+          "sourceRow": 213,
+          "status": "OnWay",
+          "sum": 234000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": "2026-10-01T13:12:02+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:27:50+05:00",
+          "sourceRow": 286,
+          "status": "Delivered",
+          "sum": 234000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:36:53+05:00",
+          "cookingCompletedAt": "2026-10-01T13:12:02+05:00"
+        }
+      ],
+      "createdMinutes": 781.9,
+      "readyMinutes": 792.0333333333333,
+      "deadlineMinutes": 816.9
+    },
+    {
+      "id": "c9e16be8-a0ac-4066-a756-1f8cf26c5617",
+      "number": 53,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №53",
+      "status": "WAITING",
+      "sum": 175000,
+      "service": 0,
+      "created": "13:06",
+      "ready": "13:25",
+      "deadline": "13:41",
+      "x": 341.1,
+      "y": 424,
+      "latitude": 41.325969251958,
+      "longitude": 69.28211200381,
+      "createdAt": "2026-10-01T13:06:36+05:00",
+      "readyAt": "2026-10-01T13:18:36+05:00",
+      "deadlineAt": "2026-10-01T08:41:36.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:06:38+05:00",
+          "sourceRow": 165,
+          "status": "WaitCooking",
+          "sum": 175000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:06:41+05:00",
+          "sourceRow": 166,
+          "status": "CookingStarted",
+          "sum": 175000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:25:21+05:00",
+          "sourceRow": 198,
+          "status": "Waiting",
+          "sum": 175000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:15+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:02+05:00",
+          "sourceRow": 218,
+          "status": "Waiting",
+          "sum": 175000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:15+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:09+05:00",
+          "sourceRow": 223,
+          "status": "OnWay",
+          "sum": 175000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:15+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:50:15+05:00",
+          "sourceRow": 239,
+          "status": "Delivered",
+          "sum": 175000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:41:35+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:15+05:00"
+        }
+      ],
+      "createdMinutes": 786.6,
+      "readyMinutes": 805.25,
+      "deadlineMinutes": 821.6
+    },
+    {
+      "id": "cc897835-e01b-401e-b5a0-7830f1cb9e4a",
+      "number": 54,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №54",
+      "status": "WAITING",
+      "sum": 144000,
+      "service": 0,
+      "created": "13:07",
+      "ready": "13:25",
+      "deadline": "13:42",
+      "x": 342.5,
+      "y": 424.3,
+      "latitude": 41.325943,
+      "longitude": 69.28225,
+      "createdAt": "2026-10-01T13:07:26+05:00",
+      "readyAt": "2026-10-01T13:19:26+05:00",
+      "deadlineAt": "2026-10-01T08:42:26.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:07:29+05:00",
+          "sourceRow": 167,
+          "status": "WaitCooking",
+          "sum": 144000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:07:31+05:00",
+          "sourceRow": 168,
+          "status": "CookingStarted",
+          "sum": 144000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:25:19+05:00",
+          "sourceRow": 196,
+          "status": "Waiting",
+          "sum": 144000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:03+05:00",
+          "sourceRow": 219,
+          "status": "Waiting",
+          "sum": 144000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:12+05:00",
+          "sourceRow": 224,
+          "status": "OnWay",
+          "sum": 144000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:17+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:54:10+05:00",
+          "sourceRow": 246,
+          "status": "Delivered",
+          "sum": 144000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:26+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:17+05:00"
+        }
+      ],
+      "createdMinutes": 787.4333333333333,
+      "readyMinutes": 805.2833333333333,
+      "deadlineMinutes": 822.4333333333333
+    },
+    {
+      "id": "3efa4723-10a4-45d3-80bd-f5e8446938f9",
+      "number": 55,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №55",
+      "status": "WAITING",
+      "sum": 109000,
+      "service": 0,
+      "created": "13:08",
+      "ready": "13:25",
+      "deadline": "13:43",
+      "x": 487.9,
+      "y": 302.1,
+      "latitude": 41.336322138511,
+      "longitude": 69.296787511557,
+      "createdAt": "2026-10-01T13:08:05+05:00",
+      "readyAt": "2026-10-01T13:20:05+05:00",
+      "deadlineAt": "2026-10-01T08:43:05.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:08:07+05:00",
+          "sourceRow": 169,
+          "status": "WaitCooking",
+          "sum": 109000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:08:10+05:00",
+          "sourceRow": 170,
+          "status": "CookingStarted",
+          "sum": 109000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:25:20+05:00",
+          "sourceRow": 197,
+          "status": "Waiting",
+          "sum": 109000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:19+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:03+05:00",
+          "sourceRow": 220,
+          "status": "Waiting",
+          "sum": 109000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:19+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:14+05:00",
+          "sourceRow": 225,
+          "status": "OnWay",
+          "sum": 109000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:19+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:06:04+05:00",
+          "sourceRow": 262,
+          "status": "Delivered",
+          "sum": 109000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:43:04+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:19+05:00"
+        }
+      ],
+      "createdMinutes": 788.0833333333334,
+      "readyMinutes": 805.3166666666667,
+      "deadlineMinutes": 823.0833333333334
+    },
+    {
+      "id": "566835f9-2122-40d0-8bb3-c6192a869c43",
+      "number": 56,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №56",
+      "status": "COOKING_STARTED",
+      "sum": 84000,
+      "service": 0,
+      "created": "13:12",
+      "ready": "13:24",
+      "deadline": "13:47",
+      "x": 282,
+      "y": 178.7,
+      "latitude": 41.3468,
+      "longitude": 69.2762,
+      "createdAt": "2026-10-01T13:12:58+05:00",
+      "readyAt": "2026-10-01T13:24:58+05:00",
+      "deadlineAt": "2026-10-01T08:47:58.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:13:00+05:00",
+          "sourceRow": 175,
+          "status": "WaitCooking",
+          "sum": 84000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:42:58+05:00",
+          "cookingCompletedAt": null
+        }
+      ],
+      "createdMinutes": 792.9666666666667,
+      "readyMinutes": 804.9666666666667,
+      "deadlineMinutes": 827.9666666666667
+    },
+    {
+      "id": "1e86a52d-e11a-4327-b6c1-213a232289d8",
+      "number": 57,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №57",
+      "status": "COOKING_STARTED",
+      "sum": 58000,
+      "service": 0,
+      "created": "13:13",
+      "ready": "13:25",
+      "deadline": "13:48",
+      "x": 320.8,
+      "y": 210.3,
+      "latitude": 41.34412,
+      "longitude": 69.28008,
+      "createdAt": "2026-10-01T13:13:10+05:00",
+      "readyAt": "2026-10-01T13:25:10+05:00",
+      "deadlineAt": "2026-10-01T08:48:10.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:13:11+05:00",
+          "sourceRow": 176,
+          "status": "WaitCooking",
+          "sum": 58000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:48:09+05:00",
+          "cookingCompletedAt": null
+        }
+      ],
+      "createdMinutes": 793.1666666666666,
+      "readyMinutes": 805.1666666666666,
+      "deadlineMinutes": 828.1666666666666
+    },
+    {
+      "id": "1da4f34e-ae71-4e51-9223-318238a315b1",
+      "number": 59,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №59",
+      "status": "COOKING_STARTED",
+      "sum": 203000,
+      "service": 0,
+      "created": "13:13",
+      "ready": "13:25",
+      "deadline": "13:48",
+      "x": 321.1,
+      "y": 209.2,
+      "latitude": 41.344208,
+      "longitude": 69.28011,
+      "createdAt": "2026-10-01T13:13:57+05:00",
+      "readyAt": "2026-10-01T13:25:57+05:00",
+      "deadlineAt": "2026-10-01T08:48:57.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:13:58+05:00",
+          "sourceRow": 177,
+          "status": "WaitCooking",
+          "sum": 203000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:48:56+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:39:04+05:00",
+          "sourceRow": 221,
+          "status": "Waiting",
+          "sum": 203000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:48:56+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:18+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:16+05:00",
+          "sourceRow": 226,
+          "status": "OnWay",
+          "sum": 203000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:48:56+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:18+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:18:51+05:00",
+          "sourceRow": 277,
+          "status": "Delivered",
+          "sum": 203000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:48:56+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:18+05:00"
+        }
+      ],
+      "createdMinutes": 793.95,
+      "readyMinutes": 805.95,
+      "deadlineMinutes": 828.95
+    },
+    {
+      "id": "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28",
+      "number": 60,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №60",
+      "status": "WAITING",
+      "sum": 124000,
+      "service": 0,
+      "created": "13:14",
+      "ready": "13:25",
+      "deadline": "13:49",
+      "x": 470.6,
+      "y": 213.2,
+      "latitude": 41.343868,
+      "longitude": 69.295065,
+      "createdAt": "2026-10-01T13:14:46+05:00",
+      "readyAt": "2026-10-01T13:26:46+05:00",
+      "deadlineAt": "2026-10-01T08:49:46.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:14:48+05:00",
+          "sourceRow": 178,
+          "status": "WaitCooking",
+          "sum": 124000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:14:51+05:00",
+          "sourceRow": 179,
+          "status": "CookingStarted",
+          "sum": 124000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:25:26+05:00",
+          "sourceRow": 199,
+          "status": "Waiting",
+          "sum": 124000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:24+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:04+05:00",
+          "sourceRow": 222,
+          "status": "Waiting",
+          "sum": 124000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:24+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T13:39:17+05:00",
+          "sourceRow": 227,
+          "status": "OnWay",
+          "sum": 124000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:24+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:10:27+05:00",
+          "sourceRow": 269,
+          "status": "Delivered",
+          "sum": 124000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:49:44+05:00",
+          "cookingCompletedAt": "2026-10-01T13:25:24+05:00"
+        }
+      ],
+      "createdMinutes": 794.7666666666667,
+      "readyMinutes": 805.4,
+      "deadlineMinutes": 829.7666666666667
+    },
+    {
+      "id": "8843bb8f-5a60-46f1-b752-f7724ed25ca1",
+      "number": 61,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №61",
+      "status": "COOKING_STARTED",
+      "sum": 56000,
+      "service": 0,
+      "created": "13:15",
+      "ready": "13:27",
+      "deadline": "13:50",
+      "x": 349.1,
+      "y": 353.5,
+      "latitude": 41.331954,
+      "longitude": 69.282912,
+      "createdAt": "2026-10-01T13:15:00+05:00",
+      "readyAt": "2026-10-01T13:27:00+05:00",
+      "deadlineAt": "2026-10-01T08:50:00.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:15:02+05:00",
+          "sourceRow": 180,
+          "status": "WaitCooking",
+          "sum": 56000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:50:00+05:00",
+          "cookingCompletedAt": null
+        }
+      ],
+      "createdMinutes": 795,
+      "readyMinutes": 807,
+      "deadlineMinutes": 830
+    },
+    {
+      "id": "782fe598-8822-492d-a5ec-1ec8372c8877",
+      "number": 62,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №62",
+      "status": "COOKING_STARTED",
+      "sum": 42000,
+      "service": 0,
+      "created": "13:15",
+      "ready": "13:27",
+      "deadline": "13:50",
+      "x": 321.1,
+      "y": 209.7,
+      "latitude": 41.344166404224,
+      "longitude": 69.280107356608,
+      "createdAt": "2026-10-01T13:15:16+05:00",
+      "readyAt": "2026-10-01T13:27:16+05:00",
+      "deadlineAt": "2026-10-01T08:50:16.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:15:17+05:00",
+          "sourceRow": 181,
+          "status": "WaitCooking",
+          "sum": 42000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:50:15+05:00",
+          "cookingCompletedAt": null
+        }
+      ],
+      "createdMinutes": 795.2666666666667,
+      "readyMinutes": 807.2666666666667,
+      "deadlineMinutes": 830.2666666666667
+    },
+    {
+      "id": "48305bf5-801c-45d5-ab76-4ac867724188",
+      "number": 63,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №63",
+      "status": "COOKING_STARTED",
+      "sum": 170000,
+      "service": 0,
+      "created": "13:18",
+      "ready": "13:30",
+      "deadline": "13:53",
+      "x": 518.6,
+      "y": 338.1,
+      "latitude": 41.333263164697,
+      "longitude": 69.299856126308,
+      "createdAt": "2026-10-01T13:18:16+05:00",
+      "readyAt": "2026-10-01T13:30:16+05:00",
+      "deadlineAt": "2026-10-01T08:53:16.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:18:19+05:00",
+          "sourceRow": 182,
+          "status": "WaitCooking",
+          "sum": 170000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:18:22+05:00",
+          "sourceRow": 183,
+          "status": "CookingStarted",
+          "sum": 170000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:30:12+05:00",
+          "sourceRow": 204,
+          "status": "Waiting",
+          "sum": 170000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:10+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:33+05:00",
+          "sourceRow": 251,
+          "status": "Waiting",
+          "sum": 170000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:10+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:39+05:00",
+          "sourceRow": 254,
+          "status": "OnWay",
+          "sum": 170000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:10+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:11:10+05:00",
+          "sourceRow": 272,
+          "status": "Delivered",
+          "sum": 170000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:53:15+05:00",
+          "cookingCompletedAt": "2026-10-01T13:30:10+05:00"
+        }
+      ],
+      "createdMinutes": 798.2666666666667,
+      "readyMinutes": 810.2666666666667,
+      "deadlineMinutes": 833.2666666666667
+    },
+    {
+      "id": "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3",
+      "number": 65,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №65",
+      "status": "COOKING_STARTED",
+      "sum": 56000,
+      "service": 0,
+      "created": "13:21",
+      "ready": "13:33",
+      "deadline": "13:56",
+      "x": 409.5,
+      "y": 153.3,
+      "latitude": 41.348959278623,
+      "longitude": 69.288947308453,
+      "createdAt": "2026-10-01T13:21:55+05:00",
+      "readyAt": "2026-10-01T13:33:55+05:00",
+      "deadlineAt": "2026-10-01T08:56:55.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:21:58+05:00",
+          "sourceRow": 191,
+          "status": "WaitCooking",
+          "sum": 56000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:56:54+05:00",
+          "cookingCompletedAt": null
+        }
+      ],
+      "createdMinutes": 801.9166666666666,
+      "readyMinutes": 813.9166666666666,
+      "deadlineMinutes": 836.9166666666666
+    },
+    {
+      "id": "1977a86c-2d98-4d7f-9b81-d4a53d3279e0",
+      "number": 66,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №66",
+      "status": "COOKING_STARTED",
+      "sum": 137000,
+      "service": 0,
+      "created": "13:22",
+      "ready": "13:34",
+      "deadline": "13:57",
+      "x": 549.6,
+      "y": 388.8,
+      "latitude": 41.32896,
+      "longitude": 69.302956,
+      "createdAt": "2026-10-01T13:22:05+05:00",
+      "readyAt": "2026-10-01T13:34:05+05:00",
+      "deadlineAt": "2026-10-01T08:57:05.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:22:08+05:00",
+          "sourceRow": 192,
+          "status": "WaitCooking",
+          "sum": 137000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:05+05:00",
+          "cookingCompletedAt": null
+        }
+      ],
+      "createdMinutes": 802.0833333333334,
+      "readyMinutes": 814.0833333333334,
+      "deadlineMinutes": 837.0833333333334
+    },
+    {
+      "id": "96f632f9-4be8-4e3e-aa69-670f17f0d3a5",
+      "number": 67,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №67",
+      "status": "COOKING_STARTED",
+      "sum": 139000,
+      "service": 0,
+      "created": "13:22",
+      "ready": "13:34",
+      "deadline": "13:57",
+      "x": 436.8,
+      "y": 414.8,
+      "latitude": 41.326755892615,
+      "longitude": 69.291678529563,
+      "createdAt": "2026-10-01T13:22:56+05:00",
+      "readyAt": "2026-10-01T13:34:56+05:00",
+      "deadlineAt": "2026-10-01T08:57:56.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:22:59+05:00",
+          "sourceRow": 193,
+          "status": "WaitCooking",
+          "sum": 139000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:23:02+05:00",
+          "sourceRow": 194,
+          "status": "CookingStarted",
+          "sum": 139000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:42:44+05:00",
+          "sourceRow": 229,
+          "status": "Waiting",
+          "sum": 139000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:41+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:35+05:00",
+          "sourceRow": 252,
+          "status": "Waiting",
+          "sum": 139000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:41+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:44+05:00",
+          "sourceRow": 255,
+          "status": "OnWay",
+          "sum": 139000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:41+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:24:35+05:00",
+          "sourceRow": 284,
+          "status": "Delivered",
+          "sum": 139000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:57:55+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:41+05:00"
+        }
+      ],
+      "createdMinutes": 802.9333333333333,
+      "readyMinutes": 814.9333333333333,
+      "deadlineMinutes": 837.9333333333333
+    },
+    {
+      "id": "92784531-0b71-494c-98cd-5bc28c1556e3",
+      "number": 68,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №68",
+      "status": "COOKING_STARTED",
+      "sum": 188000,
+      "service": 0,
+      "created": "13:24",
+      "ready": "13:36",
+      "deadline": "13:59",
+      "x": 340.1,
+      "y": 370.3,
+      "latitude": 41.330535,
+      "longitude": 69.282013,
+      "createdAt": "2026-10-01T13:24:07+05:00",
+      "readyAt": "2026-10-01T13:36:07+05:00",
+      "deadlineAt": "2026-10-01T08:59:07.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:24:10+05:00",
+          "sourceRow": 195,
+          "status": "WaitCooking",
+          "sum": 188000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:59:07+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T14:02:03+05:00",
+          "sourceRow": 258,
+          "status": "OnWay",
+          "sum": 188000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:59:07+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:47+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:02:56+05:00",
+          "sourceRow": 260,
+          "status": "Delivered",
+          "sum": 188000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:59:07+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:47+05:00"
+        }
+      ],
+      "createdMinutes": 804.1166666666667,
+      "readyMinutes": 816.1166666666667,
+      "deadlineMinutes": 839.1166666666667
+    },
+    {
+      "id": "2878bbda-7705-4424-ac45-cd35cf176220",
+      "number": 69,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №69",
+      "status": "COOKING_STARTED",
+      "sum": 116000,
+      "service": 0,
+      "created": "13:26",
+      "ready": "13:38",
+      "deadline": "14:01",
+      "x": 393,
+      "y": 450.8,
+      "latitude": 41.3237,
+      "longitude": 69.2873,
+      "createdAt": "2026-10-01T13:26:36+05:00",
+      "readyAt": "2026-10-01T13:38:36+05:00",
+      "deadlineAt": "2026-10-01T09:01:36.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": true,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:26:38+05:00",
+          "sourceRow": 200,
+          "status": "WaitCooking",
+          "sum": 116000,
+          "cookingCompleteBeforeAt": "2026-10-01T13:56:36+05:00",
+          "cookingCompletedAt": null
+        }
+      ],
+      "createdMinutes": 806.6,
+      "readyMinutes": 818.6,
+      "deadlineMinutes": 841.6
+    },
+    {
+      "id": "2812b854-ed85-4d92-909f-6e284f1b0f27",
+      "number": 70,
+      "branchId": "9f5b02ea-b7c5-450c-8b1e-d66ccd72f9dd",
+      "address": "Тестовый заказ №70",
+      "status": "COOKING_STARTED",
+      "sum": 54000,
+      "service": 0,
+      "created": "13:28",
+      "ready": "13:40",
+      "deadline": "14:03",
+      "x": 409.5,
+      "y": 153.3,
+      "latitude": 41.348959278623,
+      "longitude": 69.288947308453,
+      "createdAt": "2026-10-01T13:28:48+05:00",
+      "readyAt": "2026-10-01T13:40:48+05:00",
+      "deadlineAt": "2026-10-01T09:03:48.000Z",
+      "readySource": "cookingStartTime + assumed 12 min",
+      "deadlineSource": "whenCreated + 35 min",
+      "sumSource": "iiko.sum (fullSum unavailable)",
+      "deliveryTypeConfirmed": false,
+      "events": [
+        {
+          "observedAt": "2026-10-01T13:28:50+05:00",
+          "sourceRow": 202,
+          "status": "WaitCooking",
+          "sum": 54000,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:28:51+05:00",
+          "sourceRow": 203,
+          "status": "CookingStarted",
+          "sum": 54000,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": null
+        },
+        {
+          "observedAt": "2026-10-01T13:42:57+05:00",
+          "sourceRow": 230,
+          "status": "Waiting",
+          "sum": 54000,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:36+05:00",
+          "sourceRow": 253,
+          "status": "Waiting",
+          "sum": 54000,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:45+05:00",
+          "sourceRow": 256,
+          "status": "OnWay",
+          "sum": 54000,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:00:45+05:00",
+          "sourceRow": 257,
+          "status": "Waiting",
+          "sum": 54000,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:51:08+05:00",
+          "sourceRow": 299,
+          "status": "Waiting",
+          "sum": 54000,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T14:51:30+05:00",
+          "sourceRow": 301,
+          "status": "Waiting",
+          "sum": 54000,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        },
+        {
+          "observedAt": "2026-10-01T15:01:03+05:00",
+          "sourceRow": 307,
+          "status": "OnWay",
+          "sum": 54000,
+          "cookingCompleteBeforeAt": "2026-10-01T14:03:48+05:00",
+          "cookingCompletedAt": "2026-10-01T13:42:52+05:00"
+        }
+      ],
+      "createdMinutes": 808.8,
+      "readyMinutes": 820.8,
+      "deadlineMinutes": 843.8
+    }
+  ],
+  "couriers": [
+    {
+      "id": "TEST-C1",
+      "name": "Тестовый курьер 1",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C2",
+      "name": "Тестовый курьер 2",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C3",
+      "name": "Тестовый курьер 3",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C4",
+      "name": "Тестовый курьер 4",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C5",
+      "name": "Тестовый курьер 5",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C6",
+      "name": "Тестовый курьер 6",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C7",
+      "name": "Тестовый курьер 7",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C8",
+      "name": "Тестовый курьер 8",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C9",
+      "name": "Тестовый курьер 9",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C10",
+      "name": "Тестовый курьер 10",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C11",
+      "name": "Тестовый курьер 11",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C12",
+      "name": "Тестовый курьер 12",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C13",
+      "name": "Тестовый курьер 13",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C14",
+      "name": "Тестовый курьер 14",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C15",
+      "name": "Тестовый курьер 15",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C16",
+      "name": "Тестовый курьер 16",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    },
+    {
+      "id": "TEST-C17",
+      "name": "Тестовый курьер 17",
+      "status": "FREE",
+      "mode": "DRIVING",
+      "maxOrders": 8,
+      "maxSum": 1000000,
+      "zones": [
+        "Z1"
+      ],
+      "freeSince": "13:30",
+      "synthetic": true
+    }
+  ],
+  "settings": {
+    "allowLate": true,
+    "alwaysFreeCouriers": true,
+    "goOutFromBranchMin": 2,
+    "giveOrderToClientMin": 2,
+    "bucketMaxFullSum": 1000000,
+    "bucketMaxOrders": 8,
+    "returnBufferPct": 20
+  },
+  "testAt": "2026-10-01T13:30:00+05:00",
+  "planningAt": {
+    "date": "01.10.2026",
+    "hm": "13:30",
+    "minutes": 810,
+    "timezone": "Asia/Tashkent"
+  },
+  "times": [
+    {
+      "at": "2026-10-01T13:05:00.000+05:00",
+      "orders": 1
+    },
+    {
+      "at": "2026-10-01T13:10:00.000+05:00",
+      "orders": 4
+    },
+    {
+      "at": "2026-10-01T13:15:00.000+05:00",
+      "orders": 8
+    },
+    {
+      "at": "2026-10-01T13:20:00.000+05:00",
+      "orders": 11
+    },
+    {
+      "at": "2026-10-01T13:25:00.000+05:00",
+      "orders": 15
+    },
+    {
+      "at": "2026-10-01T13:30:00.000+05:00",
+      "orders": 17
+    },
+    {
+      "at": "2026-10-01T13:35:00.000+05:00",
+      "orders": 18
+    },
+    {
+      "at": "2026-10-01T13:40:00.000+05:00",
+      "orders": 15
+    },
+    {
+      "at": "2026-10-01T13:45:00.000+05:00",
+      "orders": 18
+    },
+    {
+      "at": "2026-10-01T13:50:00.000+05:00",
+      "orders": 18
+    },
+    {
+      "at": "2026-10-01T13:55:00.000+05:00",
+      "orders": 17
+    }
+  ],
+  "ranges": [
+    {
+      "id": "10:00-11:00",
+      "label": "10:00–11:00",
+      "start": "2026-10-01T10:00:00+05:00",
+      "end": "2026-10-01T11:00:00.000+05:00",
+      "orders": 2
+    },
+    {
+      "id": "11:00-12:00",
+      "label": "11:00–12:00",
+      "start": "2026-10-01T11:00:00+05:00",
+      "end": "2026-10-01T12:00:00.000+05:00",
+      "orders": 11
+    },
+    {
+      "id": "12:00-13:00",
+      "label": "12:00–13:00",
+      "start": "2026-10-01T12:00:00+05:00",
+      "end": "2026-10-01T13:00:00.000+05:00",
+      "orders": 22
+    },
+    {
+      "id": "13:00-14:00",
+      "label": "13:00–14:00",
+      "start": "2026-10-01T13:00:00+05:00",
+      "end": "2026-10-01T14:00:00.000+05:00",
+      "orders": 29
+    },
+    {
+      "id": "14:00-15:00",
+      "label": "14:00–15:00",
+      "start": "2026-10-01T14:00:00+05:00",
+      "end": "2026-10-01T15:00:00.000+05:00",
+      "orders": 12
+    },
+    {
+      "id": "15:00-16:00",
+      "label": "15:00–16:00",
+      "start": "2026-10-01T15:00:00+05:00",
+      "end": "2026-10-01T16:00:00.000+05:00",
+      "orders": 3
+    }
+  ],
+  "range": {
+    "id": "13:00-14:00",
+    "label": "13:00–14:00",
+    "start": "2026-10-01T13:00:00+05:00",
+    "end": "2026-10-01T14:00:00.000+05:00",
+    "orders": 29
+  },
+  "extraction": {
+    "rows": 328,
+    "truncatedRows": 288,
+    "uniqueOrders": 84,
+    "usableOrders": 79,
+    "excluded": [
+      {
+        "id": "b08cb7bf-40fc-417b-9de3-06ca5267bf0a",
+        "reason": "CANCELLED"
+      },
+      {
+        "id": "4243f128-0114-4f92-a566-7fb4fe3e8ce3",
+        "reason": "CANCELLED"
+      },
+      {
+        "id": "b2c0ec90-1033-41a4-bf0c-5d0e786e4165",
+        "reason": "CANCELLED"
+      },
+      {
+        "id": "3a0ac543-dd1c-4772-8390-f7803e7315a6",
+        "reason": "PICKUP"
+      },
+      {
+        "id": "34d059e8-e6c5-49f7-8d17-507f39cbcbdf",
+        "reason": "PICKUP"
+      }
+    ]
+  },
+  "assumptions": [
+    "Enough synthetic FREE couriers for every bucket; branch caps apply.",
+    "Initial ECT = cookingStartTime + 12 min; actual readiness is used only after its event is observed.",
+    "Delivery deadline = whenCreated + 35 min; IIKO completeBefore is a kitchen target, not delivery SLA.",
+    "Order value uses IIKO sum; fullSum before discounts is absent.",
+    "Incomplete trailing JSON is ignored; only complete fields are extracted.",
+    "No phone, customer identity, courier identity, apartment or delivery comment is copied.",
+    "Snapshots are independent comparisons, not a simulation of a complete dispatch day.",
+    "Snapshot cohort: only observed, not dispatched orders whose delivery deadline has not passed.",
+    "Positions are fixed to the latest extracted coordinates; address-change replay is not simulated."
+  ],
+  "run": {
+    "results": [
+      {
+        "code": "A1",
+        "routes": [
+          {
+            "c": {
+              "id": "TEST-C1",
+              "name": "Тестовый курьер 1",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "c9e16be8-a0ac-4066-a756-1f8cf26c5617",
+              "cc897835-e01b-401e-b5a0-7830f1cb9e4a",
+              "8843bb8f-5a60-46f1-b752-f7724ed25ca1"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 813.9333333333333,
+              "stops": [
+                {
+                  "id": "c9e16be8-a0ac-4066-a756-1f8cf26c5617",
+                  "eta": 816,
+                  "deadline": 821.6,
+                  "slack": 5.600000000000023
+                },
+                {
+                  "id": "cc897835-e01b-401e-b5a0-7830f1cb9e4a",
+                  "eta": 818.5,
+                  "deadline": 822.4333333333333,
+                  "slack": 3.9333333333332803
+                },
+                {
+                  "id": "8843bb8f-5a60-46f1-b752-f7724ed25ca1",
+                  "eta": 824,
+                  "deadline": 830,
+                  "slack": 6
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 3.9333333333332803,
+              "feasible": true,
+              "violations": [],
+              "sum": 375000,
+              "travel": 8,
+              "finish": 824,
+              "returnLegMin": 1,
+              "bufferedReturnMin": 1.2
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C2",
+              "name": "Тестовый курьер 2",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "3efa4723-10a4-45d3-80bd-f5e8446938f9",
+              "48305bf5-801c-45d5-ab76-4ac867724188",
+              "1977a86c-2d98-4d7f-9b81-d4a53d3279e0"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 814.0833333333334,
+              "closingTime": 810,
+              "latestSafeDeparture": 814.5833333333334,
+              "stops": [
+                {
+                  "id": "3efa4723-10a4-45d3-80bd-f5e8446938f9",
+                  "eta": 822.5833333333334,
+                  "deadline": 823.0833333333334,
+                  "slack": 0.5
+                },
+                {
+                  "id": "48305bf5-801c-45d5-ab76-4ac867724188",
+                  "eta": 827.0833333333334,
+                  "deadline": 833.2666666666667,
+                  "slack": 6.18333333333328
+                },
+                {
+                  "id": "1977a86c-2d98-4d7f-9b81-d4a53d3279e0",
+                  "eta": 832.0833333333334,
+                  "deadline": 837.0833333333334,
+                  "slack": 5
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 0.5,
+              "feasible": true,
+              "violations": [],
+              "sum": 416000,
+              "travel": 12,
+              "finish": 832.0833333333334,
+              "returnLegMin": 9.5,
+              "bufferedReturnMin": 11.4
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C3",
+              "name": "Тестовый курьер 3",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "566835f9-2122-40d0-8bb3-c6192a869c43",
+              "1e86a52d-e11a-4327-b6c1-213a232289d8",
+              "1da4f34e-ae71-4e51-9223-318238a315b1"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 810.45,
+              "stops": [
+                {
+                  "id": "566835f9-2122-40d0-8bb3-c6192a869c43",
+                  "eta": 821.5,
+                  "deadline": 827.9666666666667,
+                  "slack": 6.466666666666697
+                },
+                {
+                  "id": "1e86a52d-e11a-4327-b6c1-213a232289d8",
+                  "eta": 826,
+                  "deadline": 828.1666666666666,
+                  "slack": 2.1666666666666288
+                },
+                {
+                  "id": "1da4f34e-ae71-4e51-9223-318238a315b1",
+                  "eta": 828.5,
+                  "deadline": 828.95,
+                  "slack": 0.4500000000000455
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 0.4500000000000455,
+              "feasible": true,
+              "violations": [],
+              "sum": 345000,
+              "travel": 12.5,
+              "finish": 828.5,
+              "returnLegMin": 7.5,
+              "bufferedReturnMin": 9
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C4",
+              "name": "Тестовый курьер 4",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28",
+              "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 813.9166666666666,
+              "closingTime": 810,
+              "latestSafeDeparture": 819.2666666666667,
+              "stops": [
+                {
+                  "id": "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28",
+                  "eta": 824.4166666666666,
+                  "deadline": 829.7666666666667,
+                  "slack": 5.350000000000023
+                },
+                {
+                  "id": "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3",
+                  "eta": 830.9166666666666,
+                  "deadline": 836.9166666666666,
+                  "slack": 6
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 5.350000000000023,
+              "feasible": true,
+              "violations": [],
+              "sum": 180000,
+              "travel": 13,
+              "finish": 830.9166666666666,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C5",
+              "name": "Тестовый курьер 5",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "782fe598-8822-492d-a5ec-1ec8372c8877",
+              "92784531-0b71-494c-98cd-5bc28c1556e3"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 816.1166666666667,
+              "closingTime": 810,
+              "latestSafeDeparture": 819.6166666666667,
+              "stops": [
+                {
+                  "id": "782fe598-8822-492d-a5ec-1ec8372c8877",
+                  "eta": 825.6166666666667,
+                  "deadline": 830.2666666666667,
+                  "slack": 4.649999999999977
+                },
+                {
+                  "id": "92784531-0b71-494c-98cd-5bc28c1556e3",
+                  "eta": 835.6166666666667,
+                  "deadline": 839.1166666666667,
+                  "slack": 3.5
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 3.5,
+              "feasible": true,
+              "violations": [],
+              "sum": 230000,
+              "travel": 15.5,
+              "finish": 835.6166666666667,
+              "returnLegMin": 1.5,
+              "bufferedReturnMin": 1.7999999999999998
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C6",
+              "name": "Тестовый курьер 6",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "96f632f9-4be8-4e3e-aa69-670f17f0d3a5",
+              "2878bbda-7705-4424-ac45-cd35cf176220"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 818.6,
+              "closingTime": 818.1,
+              "latestSafeDeparture": 830.1,
+              "stops": [
+                {
+                  "id": "96f632f9-4be8-4e3e-aa69-670f17f0d3a5",
+                  "eta": 825.1,
+                  "deadline": 837.9333333333333,
+                  "slack": 12.833333333333258
+                },
+                {
+                  "id": "2878bbda-7705-4424-ac45-cd35cf176220",
+                  "eta": 830.1,
+                  "deadline": 841.6,
+                  "slack": 11.5
+                }
+              ],
+              "status": "pairing",
+              "isLate": false,
+              "minSlack": 11.5,
+              "feasible": true,
+              "violations": [],
+              "sum": 255000,
+              "travel": 7.5,
+              "finish": 830.1,
+              "returnLegMin": 5,
+              "bufferedReturnMin": 6
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C7",
+              "name": "Тестовый курьер 7",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "2812b854-ed85-4d92-909f-6e284f1b0f27"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 820.8,
+              "closingTime": 819.8,
+              "latestSafeDeparture": 831.8,
+              "stops": [
+                {
+                  "id": "2812b854-ed85-4d92-909f-6e284f1b0f27",
+                  "eta": 832.8,
+                  "deadline": 843.8,
+                  "slack": 11
+                }
+              ],
+              "status": "pairing",
+              "isLate": false,
+              "minSlack": 11,
+              "feasible": true,
+              "violations": [],
+              "sum": 54000,
+              "travel": 10,
+              "finish": 832.8,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C8",
+              "name": "Тестовый курьер 8",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb"
+            ],
+            "late": true,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 804.9,
+              "stops": [
+                {
+                  "id": "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb",
+                  "eta": 822,
+                  "deadline": 816.9,
+                  "slack": -5.100000000000023
+                }
+              ],
+              "status": "closed",
+              "isLate": true,
+              "minSlack": -5.100000000000023,
+              "feasible": false,
+              "violations": [
+                "SLA"
+              ],
+              "sum": 234000,
+              "travel": 10,
+              "finish": 822,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          }
+        ],
+        "unassigned": [],
+        "trace": [
+          [
+            "start",
+            "FIFO курьеров: Тестовый курьер 1 → Тестовый курьер 2 → Тестовый курьер 3 → Тестовый курьер 4 → Тестовый курьер 5 → Тестовый курьер 6 → Тестовый курьер 7 → Тестовый курьер 8 → Тестовый курьер 9 → Тестовый курьер 10 → Тестовый курьер 11 → Тестовый курьер 12 → Тестовый курьер 13 → Тестовый курьер 14 → Тестовый курьер 15 → Тестовый курьер 16 → Тестовый курьер 17"
+          ],
+          [
+            "seed",
+            "Seed c9e16be8-a0ac-4066-a756-1f8cf26c5617 для Тестовый курьер 1"
+          ],
+          [
+            "accept",
+            "cc897835-e01b-401e-b5a0-7830f1cb9e4a → Тестовый курьер 1, ETA 13:39"
+          ],
+          [
+            "reject",
+            "92784531-0b71-494c-98cd-5bc28c1556e3 отклонён: c9e16be8-a0ac-4066-a756-1f8cf26c5617 опоздает на 0.5 мин"
+          ],
+          [
+            "reject",
+            "2878bbda-7705-4424-ac45-cd35cf176220 отклонён: c9e16be8-a0ac-4066-a756-1f8cf26c5617 опоздает на 3.0 мин"
+          ],
+          [
+            "accept",
+            "8843bb8f-5a60-46f1-b752-f7724ed25ca1 → Тестовый курьер 1, ETA 13:44"
+          ],
+          [
+            "reject",
+            "92784531-0b71-494c-98cd-5bc28c1556e3 отклонён: c9e16be8-a0ac-4066-a756-1f8cf26c5617 опоздает на 0.5 мин"
+          ],
+          [
+            "reject",
+            "96f632f9-4be8-4e3e-aa69-670f17f0d3a5 отклонён: cc897835-e01b-401e-b5a0-7830f1cb9e4a опоздает на 1.0 мин"
+          ],
+          [
+            "reject",
+            "2878bbda-7705-4424-ac45-cd35cf176220 отклонён: c9e16be8-a0ac-4066-a756-1f8cf26c5617 опоздает на 3.0 мин"
+          ],
+          [
+            "reject",
+            "3efa4723-10a4-45d3-80bd-f5e8446938f9 отклонён: 3efa4723-10a4-45d3-80bd-f5e8446938f9 опоздает на 10.4 мин"
+          ],
+          [
+            "reject",
+            "1e86a52d-e11a-4327-b6c1-213a232289d8 отклонён: 1e86a52d-e11a-4327-b6c1-213a232289d8 опоздает на 5.3 мин"
+          ],
+          [
+            "reject",
+            "1da4f34e-ae71-4e51-9223-318238a315b1 отклонён: 1da4f34e-ae71-4e51-9223-318238a315b1 опоздает на 4.5 мин"
+          ],
+          [
+            "reject",
+            "782fe598-8822-492d-a5ec-1ec8372c8877 отклонён: 782fe598-8822-492d-a5ec-1ec8372c8877 опоздает на 3.2 мин"
+          ],
+          [
+            "reject",
+            "48305bf5-801c-45d5-ab76-4ac867724188 отклонён: 48305bf5-801c-45d5-ab76-4ac867724188 опоздает на 1.5 мин"
+          ],
+          [
+            "reject",
+            "566835f9-2122-40d0-8bb3-c6192a869c43 отклонён: 566835f9-2122-40d0-8bb3-c6192a869c43 опоздает на 7.5 мин"
+          ],
+          [
+            "reject",
+            "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 отклонён: 8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 опоздает на 5.7 мин"
+          ],
+          [
+            "reject",
+            "1977a86c-2d98-4d7f-9b81-d4a53d3279e0 отклонён: cc897835-e01b-401e-b5a0-7830f1cb9e4a опоздает на 0.2 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 19.6 мин"
+          ],
+          [
+            "reject",
+            "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 отклонён: 0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 опоздает на 3.5 мин"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: c9e16be8-a0ac-4066-a756-1f8cf26c5617 опоздает на 5.2 мин"
+          ],
+          [
+            "seed",
+            "Seed 3efa4723-10a4-45d3-80bd-f5e8446938f9 для Тестовый курьер 2"
+          ],
+          [
+            "accept",
+            "48305bf5-801c-45d5-ab76-4ac867724188 → Тестовый курьер 2, ETA 13:43"
+          ],
+          [
+            "accept",
+            "1977a86c-2d98-4d7f-9b81-d4a53d3279e0 → Тестовый курьер 2, ETA 13:52"
+          ],
+          [
+            "reject",
+            "96f632f9-4be8-4e3e-aa69-670f17f0d3a5 отклонён: 3efa4723-10a4-45d3-80bd-f5e8446938f9 опоздает на 0.3 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 23.7 мин"
+          ],
+          [
+            "reject",
+            "2878bbda-7705-4424-ac45-cd35cf176220 отклонён: 3efa4723-10a4-45d3-80bd-f5e8446938f9 опоздает на 4.0 мин"
+          ],
+          [
+            "reject",
+            "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 отклонён: 8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 опоздает на 13.8 мин"
+          ],
+          [
+            "reject",
+            "92784531-0b71-494c-98cd-5bc28c1556e3 отклонён: 3efa4723-10a4-45d3-80bd-f5e8446938f9 опоздает на 1.5 мин"
+          ],
+          [
+            "reject",
+            "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 отклонён: 0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 опоздает на 10.7 мин"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: 3efa4723-10a4-45d3-80bd-f5e8446938f9 опоздает на 6.2 мин"
+          ],
+          [
+            "reject",
+            "1e86a52d-e11a-4327-b6c1-213a232289d8 отклонён: 1e86a52d-e11a-4327-b6c1-213a232289d8 опоздает на 20.4 мин"
+          ],
+          [
+            "reject",
+            "1da4f34e-ae71-4e51-9223-318238a315b1 отклонён: 1da4f34e-ae71-4e51-9223-318238a315b1 опоздает на 19.6 мин"
+          ],
+          [
+            "reject",
+            "782fe598-8822-492d-a5ec-1ec8372c8877 отклонён: 782fe598-8822-492d-a5ec-1ec8372c8877 опоздает на 18.3 мин"
+          ],
+          [
+            "reject",
+            "566835f9-2122-40d0-8bb3-c6192a869c43 отклонён: 566835f9-2122-40d0-8bb3-c6192a869c43 опоздает на 23.1 мин"
+          ],
+          [
+            "seed",
+            "Seed 566835f9-2122-40d0-8bb3-c6192a869c43 для Тестовый курьер 3"
+          ],
+          [
+            "accept",
+            "1e86a52d-e11a-4327-b6c1-213a232289d8 → Тестовый курьер 3, ETA 13:46"
+          ],
+          [
+            "accept",
+            "1da4f34e-ae71-4e51-9223-318238a315b1 → Тестовый курьер 3, ETA 13:49"
+          ],
+          [
+            "reject",
+            "782fe598-8822-492d-a5ec-1ec8372c8877 отклонён: 782fe598-8822-492d-a5ec-1ec8372c8877 опоздает на 0.7 мин"
+          ],
+          [
+            "reject",
+            "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 отклонён: 1e86a52d-e11a-4327-b6c1-213a232289d8 опоздает на 1.8 мин"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: 566835f9-2122-40d0-8bb3-c6192a869c43 опоздает на 4.3 мин"
+          ],
+          [
+            "reject",
+            "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 отклонён: 8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 опоздает на 8.2 мин"
+          ],
+          [
+            "reject",
+            "92784531-0b71-494c-98cd-5bc28c1556e3 отклонён: 1e86a52d-e11a-4327-b6c1-213a232289d8 опоздает на 4.0 мин"
+          ],
+          [
+            "reject",
+            "96f632f9-4be8-4e3e-aa69-670f17f0d3a5 отклонён: 1e86a52d-e11a-4327-b6c1-213a232289d8 опоздает на 2.8 мин"
+          ],
+          [
+            "reject",
+            "2878bbda-7705-4424-ac45-cd35cf176220 отклонён: 566835f9-2122-40d0-8bb3-c6192a869c43 опоздает на 2.1 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 30.6 мин"
+          ],
+          [
+            "seed",
+            "Seed 8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 для Тестовый курьер 4"
+          ],
+          [
+            "accept",
+            "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 → Тестовый курьер 4, ETA 13:51"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: 8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 опоздает на 1.5 мин"
+          ],
+          [
+            "reject",
+            "782fe598-8822-492d-a5ec-1ec8372c8877 отклонён: 782fe598-8822-492d-a5ec-1ec8372c8877 опоздает на 7.6 мин"
+          ],
+          [
+            "reject",
+            "92784531-0b71-494c-98cd-5bc28c1556e3 отклонён: 92784531-0b71-494c-98cd-5bc28c1556e3 опоздает на 7.5 мин"
+          ],
+          [
+            "reject",
+            "96f632f9-4be8-4e3e-aa69-670f17f0d3a5 отклонён: 96f632f9-4be8-4e3e-aa69-670f17f0d3a5 опоздает на 9.0 мин"
+          ],
+          [
+            "reject",
+            "2878bbda-7705-4424-ac45-cd35cf176220 отклонён: 2878bbda-7705-4424-ac45-cd35cf176220 опоздает на 11.0 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 34.0 мин"
+          ],
+          [
+            "seed",
+            "Seed 782fe598-8822-492d-a5ec-1ec8372c8877 для Тестовый курьер 5"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: 782fe598-8822-492d-a5ec-1ec8372c8877 опоздает на 0.0 мин"
+          ],
+          [
+            "accept",
+            "92784531-0b71-494c-98cd-5bc28c1556e3 → Тестовый курьер 5, ETA 13:56"
+          ],
+          [
+            "reject",
+            "2878bbda-7705-4424-ac45-cd35cf176220 отклонён: 2878bbda-7705-4424-ac45-cd35cf176220 опоздает на 3.5 мин"
+          ],
+          [
+            "reject",
+            "96f632f9-4be8-4e3e-aa69-670f17f0d3a5 отклонён: 96f632f9-4be8-4e3e-aa69-670f17f0d3a5 опоздает на 5.2 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 30.7 мин"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: 782fe598-8822-492d-a5ec-1ec8372c8877 опоздает на 0.0 мин"
+          ],
+          [
+            "seed",
+            "Seed 96f632f9-4be8-4e3e-aa69-670f17f0d3a5 для Тестовый курьер 6"
+          ],
+          [
+            "accept",
+            "2878bbda-7705-4424-ac45-cd35cf176220 → Тестовый курьер 6, ETA 13:50"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 20.7 мин"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: 2812b854-ed85-4d92-909f-6e284f1b0f27 опоздает на 5.5 мин"
+          ],
+          [
+            "seed",
+            "Seed 2812b854-ed85-4d92-909f-6e284f1b0f27 для Тестовый курьер 7"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 35.9 мин"
+          ],
+          [
+            "late",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb: late solo у Тестовый курьер 8"
+          ],
+          [
+            "done",
+            "Готово: 16 вовремя, 88.5 мин дороги"
+          ]
+        ],
+        "ms": 1.0502499999999984,
+        "onTime": 16,
+        "late": 1,
+        "travel": 88.5,
+        "maxRoute": 15.5,
+        "minSlack": 0.4500000000000455,
+        "buckets": 8
+      },
+      {
+        "code": "A2",
+        "routes": [
+          {
+            "c": {
+              "id": "TEST-C1",
+              "name": "Тестовый курьер 1",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "8843bb8f-5a60-46f1-b752-f7724ed25ca1",
+              "92784531-0b71-494c-98cd-5bc28c1556e3",
+              "2878bbda-7705-4424-ac45-cd35cf176220",
+              "96f632f9-4be8-4e3e-aa69-670f17f0d3a5"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 818.6,
+              "closingTime": 810,
+              "latestSafeDeparture": 819.9333333333333,
+              "stops": [
+                {
+                  "id": "8843bb8f-5a60-46f1-b752-f7724ed25ca1",
+                  "eta": 821.6,
+                  "deadline": 830,
+                  "slack": 8.399999999999977
+                },
+                {
+                  "id": "92784531-0b71-494c-98cd-5bc28c1556e3",
+                  "eta": 824.6,
+                  "deadline": 839.1166666666667,
+                  "slack": 14.516666666666652
+                },
+                {
+                  "id": "2878bbda-7705-4424-ac45-cd35cf176220",
+                  "eta": 831.6,
+                  "deadline": 841.6,
+                  "slack": 10
+                },
+                {
+                  "id": "96f632f9-4be8-4e3e-aa69-670f17f0d3a5",
+                  "eta": 836.6,
+                  "deadline": 837.9333333333333,
+                  "slack": 1.3333333333332575
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 1.3333333333332575,
+              "feasible": true,
+              "violations": [],
+              "sum": 499000,
+              "travel": 10,
+              "finish": 836.6,
+              "returnLegMin": 4.5,
+              "bufferedReturnMin": 5.3999999999999995
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C2",
+              "name": "Тестовый курьер 2",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "c9e16be8-a0ac-4066-a756-1f8cf26c5617",
+              "cc897835-e01b-401e-b5a0-7830f1cb9e4a",
+              "48305bf5-801c-45d5-ab76-4ac867724188"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 810.2666666666667,
+              "closingTime": 810,
+              "latestSafeDeparture": 812.7666666666667,
+              "stops": [
+                {
+                  "id": "c9e16be8-a0ac-4066-a756-1f8cf26c5617",
+                  "eta": 816.2666666666667,
+                  "deadline": 821.6,
+                  "slack": 5.333333333333371
+                },
+                {
+                  "id": "cc897835-e01b-401e-b5a0-7830f1cb9e4a",
+                  "eta": 818.7666666666667,
+                  "deadline": 822.4333333333333,
+                  "slack": 3.6666666666666288
+                },
+                {
+                  "id": "48305bf5-801c-45d5-ab76-4ac867724188",
+                  "eta": 830.7666666666667,
+                  "deadline": 833.2666666666667,
+                  "slack": 2.5
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 2.5,
+              "feasible": true,
+              "violations": [],
+              "sum": 489000,
+              "travel": 14.5,
+              "finish": 830.7666666666667,
+              "returnLegMin": 7.5,
+              "bufferedReturnMin": 9
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C3",
+              "name": "Тестовый курьер 3",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "3efa4723-10a4-45d3-80bd-f5e8446938f9",
+              "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28",
+              "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 813.9166666666666,
+              "closingTime": 810,
+              "latestSafeDeparture": 814.5833333333334,
+              "stops": [
+                {
+                  "id": "3efa4723-10a4-45d3-80bd-f5e8446938f9",
+                  "eta": 822.4166666666666,
+                  "deadline": 823.0833333333334,
+                  "slack": 0.6666666666667425
+                },
+                {
+                  "id": "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28",
+                  "eta": 828.9166666666666,
+                  "deadline": 829.7666666666667,
+                  "slack": 0.8500000000000227
+                },
+                {
+                  "id": "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3",
+                  "eta": 835.4166666666666,
+                  "deadline": 836.9166666666666,
+                  "slack": 1.5
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 0.6666666666667425,
+              "feasible": true,
+              "violations": [],
+              "sum": 289000,
+              "travel": 15.5,
+              "finish": 835.4166666666666,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C4",
+              "name": "Тестовый курьер 4",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "1e86a52d-e11a-4327-b6c1-213a232289d8",
+              "1da4f34e-ae71-4e51-9223-318238a315b1",
+              "782fe598-8822-492d-a5ec-1ec8372c8877"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 815.7666666666667,
+              "stops": [
+                {
+                  "id": "1e86a52d-e11a-4327-b6c1-213a232289d8",
+                  "eta": 819.5,
+                  "deadline": 828.1666666666666,
+                  "slack": 8.666666666666629
+                },
+                {
+                  "id": "1da4f34e-ae71-4e51-9223-318238a315b1",
+                  "eta": 822,
+                  "deadline": 828.95,
+                  "slack": 6.9500000000000455
+                },
+                {
+                  "id": "782fe598-8822-492d-a5ec-1ec8372c8877",
+                  "eta": 824.5,
+                  "deadline": 830.2666666666667,
+                  "slack": 5.7666666666666515
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 5.7666666666666515,
+              "feasible": true,
+              "violations": [],
+              "sum": 303000,
+              "travel": 8.5,
+              "finish": 824.5,
+              "returnLegMin": 7.5,
+              "bufferedReturnMin": 9
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C5",
+              "name": "Тестовый курьер 5",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "566835f9-2122-40d0-8bb3-c6192a869c43"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 816.4666666666667,
+              "stops": [
+                {
+                  "id": "566835f9-2122-40d0-8bb3-c6192a869c43",
+                  "eta": 821.5,
+                  "deadline": 827.9666666666667,
+                  "slack": 6.466666666666697
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 6.466666666666697,
+              "feasible": true,
+              "violations": [],
+              "sum": 84000,
+              "travel": 9.5,
+              "finish": 821.5,
+              "returnLegMin": 9.5,
+              "bufferedReturnMin": 11.4
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C6",
+              "name": "Тестовый курьер 6",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "1977a86c-2d98-4d7f-9b81-d4a53d3279e0"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 814.0833333333334,
+              "closingTime": 813.5833333333334,
+              "latestSafeDeparture": 825.5833333333334,
+              "stops": [
+                {
+                  "id": "1977a86c-2d98-4d7f-9b81-d4a53d3279e0",
+                  "eta": 825.5833333333334,
+                  "deadline": 837.0833333333334,
+                  "slack": 11.5
+                }
+              ],
+              "status": "pairing",
+              "isLate": false,
+              "minSlack": 11.5,
+              "feasible": true,
+              "violations": [],
+              "sum": 137000,
+              "travel": 9.5,
+              "finish": 825.5833333333334,
+              "returnLegMin": 9.5,
+              "bufferedReturnMin": 11.4
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C7",
+              "name": "Тестовый курьер 7",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "2812b854-ed85-4d92-909f-6e284f1b0f27"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 820.8,
+              "closingTime": 819.8,
+              "latestSafeDeparture": 831.8,
+              "stops": [
+                {
+                  "id": "2812b854-ed85-4d92-909f-6e284f1b0f27",
+                  "eta": 832.8,
+                  "deadline": 843.8,
+                  "slack": 11
+                }
+              ],
+              "status": "pairing",
+              "isLate": false,
+              "minSlack": 11,
+              "feasible": true,
+              "violations": [],
+              "sum": 54000,
+              "travel": 10,
+              "finish": 832.8,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C8",
+              "name": "Тестовый курьер 8",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb"
+            ],
+            "late": true,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 804.9,
+              "stops": [
+                {
+                  "id": "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb",
+                  "eta": 822,
+                  "deadline": 816.9,
+                  "slack": -5.100000000000023
+                }
+              ],
+              "status": "closed",
+              "isLate": true,
+              "minSlack": -5.100000000000023,
+              "feasible": false,
+              "violations": [
+                "SLA"
+              ],
+              "sum": 234000,
+              "travel": 10,
+              "finish": 822,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          }
+        ],
+        "unassigned": [],
+        "trace": [
+          [
+            "start",
+            "Старт каждого маршрута — филиал"
+          ],
+          [
+            "accept",
+            "8843bb8f-5a60-46f1-b752-f7724ed25ca1 → Тестовый курьер 1, ETA 13:38"
+          ],
+          [
+            "accept",
+            "92784531-0b71-494c-98cd-5bc28c1556e3 → Тестовый курьер 1, ETA 13:42"
+          ],
+          [
+            "reject",
+            "c9e16be8-a0ac-4066-a756-1f8cf26c5617 отклонён: c9e16be8-a0ac-4066-a756-1f8cf26c5617 опоздает на 5.0 мин"
+          ],
+          [
+            "reject",
+            "cc897835-e01b-401e-b5a0-7830f1cb9e4a отклонён: cc897835-e01b-401e-b5a0-7830f1cb9e4a опоздает на 4.2 мин"
+          ],
+          [
+            "accept",
+            "2878bbda-7705-4424-ac45-cd35cf176220 → Тестовый курьер 1, ETA 13:52"
+          ],
+          [
+            "reject",
+            "c9e16be8-a0ac-4066-a756-1f8cf26c5617 отклонён: c9e16be8-a0ac-4066-a756-1f8cf26c5617 опоздает на 15.0 мин"
+          ],
+          [
+            "reject",
+            "cc897835-e01b-401e-b5a0-7830f1cb9e4a отклонён: cc897835-e01b-401e-b5a0-7830f1cb9e4a опоздает на 14.2 мин"
+          ],
+          [
+            "accept",
+            "96f632f9-4be8-4e3e-aa69-670f17f0d3a5 → Тестовый курьер 1, ETA 13:57"
+          ],
+          [
+            "reject",
+            "cc897835-e01b-401e-b5a0-7830f1cb9e4a отклонён: cc897835-e01b-401e-b5a0-7830f1cb9e4a опоздает на 20.7 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 26.7 мин"
+          ],
+          [
+            "reject",
+            "c9e16be8-a0ac-4066-a756-1f8cf26c5617 отклонён: c9e16be8-a0ac-4066-a756-1f8cf26c5617 опоздает на 22.0 мин"
+          ],
+          [
+            "reject",
+            "48305bf5-801c-45d5-ab76-4ac867724188 отклонён: 48305bf5-801c-45d5-ab76-4ac867724188 опоздает на 10.8 мин"
+          ],
+          [
+            "reject",
+            "3efa4723-10a4-45d3-80bd-f5e8446938f9 отклонён: 3efa4723-10a4-45d3-80bd-f5e8446938f9 опоздает на 21.5 мин"
+          ],
+          [
+            "reject",
+            "1977a86c-2d98-4d7f-9b81-d4a53d3279e0 отклонён: 1977a86c-2d98-4d7f-9b81-d4a53d3279e0 опоздает на 7.5 мин"
+          ],
+          [
+            "reject",
+            "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 отклонён: 8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 опоздает на 18.8 мин"
+          ],
+          [
+            "reject",
+            "1e86a52d-e11a-4327-b6c1-213a232289d8 отклонён: 1e86a52d-e11a-4327-b6c1-213a232289d8 опоздает на 22.4 мин"
+          ],
+          [
+            "reject",
+            "1da4f34e-ae71-4e51-9223-318238a315b1 отклонён: 1da4f34e-ae71-4e51-9223-318238a315b1 опоздает на 21.6 мин"
+          ],
+          [
+            "reject",
+            "782fe598-8822-492d-a5ec-1ec8372c8877 отклонён: 782fe598-8822-492d-a5ec-1ec8372c8877 опоздает на 20.3 мин"
+          ],
+          [
+            "reject",
+            "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 отклонён: 0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 опоздает на 14.7 мин"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: 96f632f9-4be8-4e3e-aa69-670f17f0d3a5 опоздает на 0.9 мин"
+          ],
+          [
+            "reject",
+            "566835f9-2122-40d0-8bb3-c6192a869c43 отклонён: 566835f9-2122-40d0-8bb3-c6192a869c43 опоздает на 24.6 мин"
+          ],
+          [
+            "accept",
+            "c9e16be8-a0ac-4066-a756-1f8cf26c5617 → Тестовый курьер 2, ETA 13:36"
+          ],
+          [
+            "accept",
+            "cc897835-e01b-401e-b5a0-7830f1cb9e4a → Тестовый курьер 2, ETA 13:39"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 12.1 мин"
+          ],
+          [
+            "reject",
+            "3efa4723-10a4-45d3-80bd-f5e8446938f9 отклонён: 3efa4723-10a4-45d3-80bd-f5e8446938f9 опоздает на 6.9 мин"
+          ],
+          [
+            "accept",
+            "48305bf5-801c-45d5-ab76-4ac867724188 → Тестовый курьер 2, ETA 13:51"
+          ],
+          [
+            "reject",
+            "3efa4723-10a4-45d3-80bd-f5e8446938f9 отклонён: 3efa4723-10a4-45d3-80bd-f5e8446938f9 опоздает на 12.2 мин"
+          ],
+          [
+            "reject",
+            "1977a86c-2d98-4d7f-9b81-d4a53d3279e0 отклонён: cc897835-e01b-401e-b5a0-7830f1cb9e4a опоздает на 0.2 мин"
+          ],
+          [
+            "reject",
+            "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 отклонён: 8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 опоздает на 9.5 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 24.4 мин"
+          ],
+          [
+            "reject",
+            "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 отклонён: 48305bf5-801c-45d5-ab76-4ac867724188 опоздает на 1.1 мин"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: c9e16be8-a0ac-4066-a756-1f8cf26c5617 опоздает на 5.2 мин"
+          ],
+          [
+            "reject",
+            "1e86a52d-e11a-4327-b6c1-213a232289d8 отклонён: 1e86a52d-e11a-4327-b6c1-213a232289d8 опоздает на 16.6 мин"
+          ],
+          [
+            "reject",
+            "1da4f34e-ae71-4e51-9223-318238a315b1 отклонён: 1da4f34e-ae71-4e51-9223-318238a315b1 опоздает на 15.8 мин"
+          ],
+          [
+            "reject",
+            "782fe598-8822-492d-a5ec-1ec8372c8877 отклонён: 782fe598-8822-492d-a5ec-1ec8372c8877 опоздает на 14.5 мин"
+          ],
+          [
+            "reject",
+            "566835f9-2122-40d0-8bb3-c6192a869c43 отклонён: 566835f9-2122-40d0-8bb3-c6192a869c43 опоздает на 19.3 мин"
+          ],
+          [
+            "accept",
+            "3efa4723-10a4-45d3-80bd-f5e8446938f9 → Тестовый курьер 3, ETA 13:39"
+          ],
+          [
+            "accept",
+            "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 → Тестовый курьер 3, ETA 13:45"
+          ],
+          [
+            "accept",
+            "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 → Тестовый курьер 3, ETA 13:55"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: 3efa4723-10a4-45d3-80bd-f5e8446938f9 опоздает на 6.2 мин"
+          ],
+          [
+            "reject",
+            "1da4f34e-ae71-4e51-9223-318238a315b1 отклонён: 1da4f34e-ae71-4e51-9223-318238a315b1 опоздает на 13.5 мин"
+          ],
+          [
+            "reject",
+            "782fe598-8822-492d-a5ec-1ec8372c8877 отклонён: 782fe598-8822-492d-a5ec-1ec8372c8877 опоздает на 12.1 мин"
+          ],
+          [
+            "reject",
+            "1e86a52d-e11a-4327-b6c1-213a232289d8 отклонён: 1e86a52d-e11a-4327-b6c1-213a232289d8 опоздает на 14.8 мин"
+          ],
+          [
+            "reject",
+            "566835f9-2122-40d0-8bb3-c6192a869c43 отклонён: 566835f9-2122-40d0-8bb3-c6192a869c43 опоздает на 15.9 мин"
+          ],
+          [
+            "reject",
+            "1977a86c-2d98-4d7f-9b81-d4a53d3279e0 отклонён: 1977a86c-2d98-4d7f-9b81-d4a53d3279e0 опоздает на 14.0 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 38.5 мин"
+          ],
+          [
+            "accept",
+            "1e86a52d-e11a-4327-b6c1-213a232289d8 → Тестовый курьер 4, ETA 13:40"
+          ],
+          [
+            "accept",
+            "1da4f34e-ae71-4e51-9223-318238a315b1 → Тестовый курьер 4, ETA 13:42"
+          ],
+          [
+            "accept",
+            "782fe598-8822-492d-a5ec-1ec8372c8877 → Тестовый курьер 4, ETA 13:45"
+          ],
+          [
+            "reject",
+            "566835f9-2122-40d0-8bb3-c6192a869c43 отклонён: 566835f9-2122-40d0-8bb3-c6192a869c43 опоздает на 1.0 мин"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: 1e86a52d-e11a-4327-b6c1-213a232289d8 опоздает на 2.1 мин"
+          ],
+          [
+            "reject",
+            "1977a86c-2d98-4d7f-9b81-d4a53d3279e0 отклонён: 1977a86c-2d98-4d7f-9b81-d4a53d3279e0 опоздает на 8.0 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 26.6 мин"
+          ],
+          [
+            "accept",
+            "566835f9-2122-40d0-8bb3-c6192a869c43 → Тестовый курьер 5, ETA 13:42"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: 566835f9-2122-40d0-8bb3-c6192a869c43 опоздает на 4.3 мин"
+          ],
+          [
+            "reject",
+            "1977a86c-2d98-4d7f-9b81-d4a53d3279e0 отклонён: 1977a86c-2d98-4d7f-9b81-d4a53d3279e0 опоздает на 7.5 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 26.1 мин"
+          ],
+          [
+            "accept",
+            "1977a86c-2d98-4d7f-9b81-d4a53d3279e0 → Тестовый курьер 6, ETA 13:46"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 17.2 мин"
+          ],
+          [
+            "reject",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 отклонён: 2812b854-ed85-4d92-909f-6e284f1b0f27 опоздает на 4.0 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 5.1 мин"
+          ],
+          [
+            "accept",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 → Тестовый курьер 7, ETA 13:53"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 35.9 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 5.1 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 5.1 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 5.1 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 5.1 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 5.1 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 5.1 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 5.1 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 5.1 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 5.1 мин"
+          ],
+          [
+            "reject",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb отклонён: 3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb опоздает на 5.1 мин"
+          ],
+          [
+            "late",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb: late solo у Тестовый курьер 8"
+          ],
+          [
+            "done",
+            "Готово: 16 вовремя, 87.5 мин дороги"
+          ]
+        ],
+        "ms": 0.3987910000000028,
+        "onTime": 16,
+        "late": 1,
+        "travel": 87.5,
+        "maxRoute": 15.5,
+        "minSlack": 0.6666666666667425,
+        "buckets": 8
+      },
+      {
+        "code": "A3",
+        "routes": [
+          {
+            "c": {
+              "id": "TEST-C1",
+              "name": "Тестовый курьер 1",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "8843bb8f-5a60-46f1-b752-f7724ed25ca1",
+              "92784531-0b71-494c-98cd-5bc28c1556e3"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 816.1166666666667,
+              "closingTime": 815,
+              "latestSafeDeparture": 827,
+              "stops": [
+                {
+                  "id": "8843bb8f-5a60-46f1-b752-f7724ed25ca1",
+                  "eta": 819.1166666666667,
+                  "deadline": 830,
+                  "slack": 10.883333333333326
+                },
+                {
+                  "id": "92784531-0b71-494c-98cd-5bc28c1556e3",
+                  "eta": 822.1166666666667,
+                  "deadline": 839.1166666666667,
+                  "slack": 17
+                }
+              ],
+              "status": "pairing",
+              "isLate": false,
+              "minSlack": 10.883333333333326,
+              "feasible": true,
+              "violations": [],
+              "sum": 244000,
+              "travel": 2,
+              "finish": 822.1166666666667,
+              "returnLegMin": 1.5,
+              "bufferedReturnMin": 1.7999999999999998
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C2",
+              "name": "Тестовый курьер 2",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "cc897835-e01b-401e-b5a0-7830f1cb9e4a",
+              "c9e16be8-a0ac-4066-a756-1f8cf26c5617"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 813.1,
+              "stops": [
+                {
+                  "id": "cc897835-e01b-401e-b5a0-7830f1cb9e4a",
+                  "eta": 816,
+                  "deadline": 822.4333333333333,
+                  "slack": 6.43333333333328
+                },
+                {
+                  "id": "c9e16be8-a0ac-4066-a756-1f8cf26c5617",
+                  "eta": 818.5,
+                  "deadline": 821.6,
+                  "slack": 3.1000000000000227
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 3.1000000000000227,
+              "feasible": true,
+              "violations": [],
+              "sum": 319000,
+              "travel": 4.5,
+              "finish": 818.5,
+              "returnLegMin": 4,
+              "bufferedReturnMin": 4.8
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C3",
+              "name": "Тестовый курьер 3",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "96f632f9-4be8-4e3e-aa69-670f17f0d3a5",
+              "2878bbda-7705-4424-ac45-cd35cf176220"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 818.6,
+              "closingTime": 818.1,
+              "latestSafeDeparture": 830.1,
+              "stops": [
+                {
+                  "id": "96f632f9-4be8-4e3e-aa69-670f17f0d3a5",
+                  "eta": 825.1,
+                  "deadline": 837.9333333333333,
+                  "slack": 12.833333333333258
+                },
+                {
+                  "id": "2878bbda-7705-4424-ac45-cd35cf176220",
+                  "eta": 830.1,
+                  "deadline": 841.6,
+                  "slack": 11.5
+                }
+              ],
+              "status": "pairing",
+              "isLate": false,
+              "minSlack": 11.5,
+              "feasible": true,
+              "violations": [],
+              "sum": 255000,
+              "travel": 7.5,
+              "finish": 830.1,
+              "returnLegMin": 5,
+              "bufferedReturnMin": 6
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C4",
+              "name": "Тестовый курьер 4",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "3efa4723-10a4-45d3-80bd-f5e8446938f9",
+              "48305bf5-801c-45d5-ab76-4ac867724188",
+              "1977a86c-2d98-4d7f-9b81-d4a53d3279e0"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 814.0833333333334,
+              "closingTime": 810,
+              "latestSafeDeparture": 814.5833333333334,
+              "stops": [
+                {
+                  "id": "3efa4723-10a4-45d3-80bd-f5e8446938f9",
+                  "eta": 822.5833333333334,
+                  "deadline": 823.0833333333334,
+                  "slack": 0.5
+                },
+                {
+                  "id": "48305bf5-801c-45d5-ab76-4ac867724188",
+                  "eta": 827.0833333333334,
+                  "deadline": 833.2666666666667,
+                  "slack": 6.18333333333328
+                },
+                {
+                  "id": "1977a86c-2d98-4d7f-9b81-d4a53d3279e0",
+                  "eta": 832.0833333333334,
+                  "deadline": 837.0833333333334,
+                  "slack": 5
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 0.5,
+              "feasible": true,
+              "violations": [],
+              "sum": 416000,
+              "travel": 12,
+              "finish": 832.0833333333334,
+              "returnLegMin": 9.5,
+              "bufferedReturnMin": 11.4
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C5",
+              "name": "Тестовый курьер 5",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "782fe598-8822-492d-a5ec-1ec8372c8877",
+              "1da4f34e-ae71-4e51-9223-318238a315b1",
+              "1e86a52d-e11a-4327-b6c1-213a232289d8"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 813.6666666666666,
+              "stops": [
+                {
+                  "id": "782fe598-8822-492d-a5ec-1ec8372c8877",
+                  "eta": 819.5,
+                  "deadline": 830.2666666666667,
+                  "slack": 10.766666666666652
+                },
+                {
+                  "id": "1da4f34e-ae71-4e51-9223-318238a315b1",
+                  "eta": 822,
+                  "deadline": 828.95,
+                  "slack": 6.9500000000000455
+                },
+                {
+                  "id": "1e86a52d-e11a-4327-b6c1-213a232289d8",
+                  "eta": 824.5,
+                  "deadline": 828.1666666666666,
+                  "slack": 3.6666666666666288
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 3.6666666666666288,
+              "feasible": true,
+              "violations": [],
+              "sum": 303000,
+              "travel": 8.5,
+              "finish": 824.5,
+              "returnLegMin": 7.5,
+              "bufferedReturnMin": 9
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C6",
+              "name": "Тестовый курьер 6",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28",
+              "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 813.9166666666666,
+              "closingTime": 810,
+              "latestSafeDeparture": 819.2666666666667,
+              "stops": [
+                {
+                  "id": "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28",
+                  "eta": 824.4166666666666,
+                  "deadline": 829.7666666666667,
+                  "slack": 5.350000000000023
+                },
+                {
+                  "id": "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3",
+                  "eta": 830.9166666666666,
+                  "deadline": 836.9166666666666,
+                  "slack": 6
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 5.350000000000023,
+              "feasible": true,
+              "violations": [],
+              "sum": 180000,
+              "travel": 13,
+              "finish": 830.9166666666666,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C7",
+              "name": "Тестовый курьер 7",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "566835f9-2122-40d0-8bb3-c6192a869c43"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 816.4666666666667,
+              "stops": [
+                {
+                  "id": "566835f9-2122-40d0-8bb3-c6192a869c43",
+                  "eta": 821.5,
+                  "deadline": 827.9666666666667,
+                  "slack": 6.466666666666697
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 6.466666666666697,
+              "feasible": true,
+              "violations": [],
+              "sum": 84000,
+              "travel": 9.5,
+              "finish": 821.5,
+              "returnLegMin": 9.5,
+              "bufferedReturnMin": 11.4
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C8",
+              "name": "Тестовый курьер 8",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "2812b854-ed85-4d92-909f-6e284f1b0f27"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 820.8,
+              "closingTime": 819.8,
+              "latestSafeDeparture": 831.8,
+              "stops": [
+                {
+                  "id": "2812b854-ed85-4d92-909f-6e284f1b0f27",
+                  "eta": 832.8,
+                  "deadline": 843.8,
+                  "slack": 11
+                }
+              ],
+              "status": "pairing",
+              "isLate": false,
+              "minSlack": 11,
+              "feasible": true,
+              "violations": [],
+              "sum": 54000,
+              "travel": 10,
+              "finish": 832.8,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C9",
+              "name": "Тестовый курьер 9",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb"
+            ],
+            "late": true,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 804.9,
+              "stops": [
+                {
+                  "id": "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb",
+                  "eta": 822,
+                  "deadline": 816.9,
+                  "slack": -5.100000000000023
+                }
+              ],
+              "status": "closed",
+              "isLate": true,
+              "minSlack": -5.100000000000023,
+              "feasible": false,
+              "violations": [
+                "SLA"
+              ],
+              "sum": 234000,
+              "travel": 10,
+              "finish": 822,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          }
+        ],
+        "unassigned": [],
+        "trace": [
+          [
+            "start",
+            "Cheapest feasible insertion"
+          ],
+          [
+            "accept",
+            "8843bb8f-5a60-46f1-b752-f7724ed25ca1 → Тестовый курьер 1, позиция 0"
+          ],
+          [
+            "accept",
+            "92784531-0b71-494c-98cd-5bc28c1556e3 → Тестовый курьер 1, позиция 1"
+          ],
+          [
+            "accept",
+            "c9e16be8-a0ac-4066-a756-1f8cf26c5617 → Тестовый курьер 2, позиция 0"
+          ],
+          [
+            "accept",
+            "cc897835-e01b-401e-b5a0-7830f1cb9e4a → Тестовый курьер 2, позиция 0"
+          ],
+          [
+            "accept",
+            "96f632f9-4be8-4e3e-aa69-670f17f0d3a5 → Тестовый курьер 3, позиция 0"
+          ],
+          [
+            "accept",
+            "2878bbda-7705-4424-ac45-cd35cf176220 → Тестовый курьер 3, позиция 1"
+          ],
+          [
+            "accept",
+            "3efa4723-10a4-45d3-80bd-f5e8446938f9 → Тестовый курьер 4, позиция 0"
+          ],
+          [
+            "accept",
+            "48305bf5-801c-45d5-ab76-4ac867724188 → Тестовый курьер 4, позиция 1"
+          ],
+          [
+            "accept",
+            "1977a86c-2d98-4d7f-9b81-d4a53d3279e0 → Тестовый курьер 4, позиция 2"
+          ],
+          [
+            "accept",
+            "1e86a52d-e11a-4327-b6c1-213a232289d8 → Тестовый курьер 5, позиция 0"
+          ],
+          [
+            "accept",
+            "1da4f34e-ae71-4e51-9223-318238a315b1 → Тестовый курьер 5, позиция 0"
+          ],
+          [
+            "accept",
+            "782fe598-8822-492d-a5ec-1ec8372c8877 → Тестовый курьер 5, позиция 0"
+          ],
+          [
+            "accept",
+            "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 → Тестовый курьер 6, позиция 0"
+          ],
+          [
+            "accept",
+            "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 → Тестовый курьер 6, позиция 1"
+          ],
+          [
+            "accept",
+            "566835f9-2122-40d0-8bb3-c6192a869c43 → Тестовый курьер 7, позиция 0"
+          ],
+          [
+            "accept",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 → Тестовый курьер 8, позиция 0"
+          ],
+          [
+            "late",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb: late solo у Тестовый курьер 9"
+          ],
+          [
+            "done",
+            "Готово: 16 вовремя, 77.0 мин дороги"
+          ]
+        ],
+        "ms": 4.937459000000004,
+        "onTime": 16,
+        "late": 1,
+        "travel": 77,
+        "maxRoute": 13,
+        "minSlack": 0.5,
+        "buckets": 9
+      },
+      {
+        "code": "A4",
+        "routes": [
+          {
+            "c": {
+              "id": "TEST-C1",
+              "name": "Тестовый курьер 1",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "8843bb8f-5a60-46f1-b752-f7724ed25ca1",
+              "cc897835-e01b-401e-b5a0-7830f1cb9e4a",
+              "c9e16be8-a0ac-4066-a756-1f8cf26c5617"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 810.6,
+              "stops": [
+                {
+                  "id": "8843bb8f-5a60-46f1-b752-f7724ed25ca1",
+                  "eta": 813,
+                  "deadline": 830,
+                  "slack": 17
+                },
+                {
+                  "id": "cc897835-e01b-401e-b5a0-7830f1cb9e4a",
+                  "eta": 818.5,
+                  "deadline": 822.4333333333333,
+                  "slack": 3.9333333333332803
+                },
+                {
+                  "id": "c9e16be8-a0ac-4066-a756-1f8cf26c5617",
+                  "eta": 821,
+                  "deadline": 821.6,
+                  "slack": 0.6000000000000227
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 0.6000000000000227,
+              "feasible": true,
+              "violations": [],
+              "sum": 375000,
+              "travel": 5,
+              "finish": 821,
+              "returnLegMin": 4,
+              "bufferedReturnMin": 4.8
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C2",
+              "name": "Тестовый курьер 2",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "3efa4723-10a4-45d3-80bd-f5e8446938f9",
+              "48305bf5-801c-45d5-ab76-4ac867724188",
+              "1977a86c-2d98-4d7f-9b81-d4a53d3279e0"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 814.0833333333334,
+              "closingTime": 810,
+              "latestSafeDeparture": 814.5833333333334,
+              "stops": [
+                {
+                  "id": "3efa4723-10a4-45d3-80bd-f5e8446938f9",
+                  "eta": 822.5833333333334,
+                  "deadline": 823.0833333333334,
+                  "slack": 0.5
+                },
+                {
+                  "id": "48305bf5-801c-45d5-ab76-4ac867724188",
+                  "eta": 827.0833333333334,
+                  "deadline": 833.2666666666667,
+                  "slack": 6.18333333333328
+                },
+                {
+                  "id": "1977a86c-2d98-4d7f-9b81-d4a53d3279e0",
+                  "eta": 832.0833333333334,
+                  "deadline": 837.0833333333334,
+                  "slack": 5
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 0.5,
+              "feasible": true,
+              "violations": [],
+              "sum": 416000,
+              "travel": 12,
+              "finish": 832.0833333333334,
+              "returnLegMin": 9.5,
+              "bufferedReturnMin": 11.4
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C3",
+              "name": "Тестовый курьер 3",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "1e86a52d-e11a-4327-b6c1-213a232289d8",
+              "566835f9-2122-40d0-8bb3-c6192a869c43",
+              "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 813.9166666666666,
+              "closingTime": 810,
+              "latestSafeDeparture": 813.9666666666667,
+              "stops": [
+                {
+                  "id": "1e86a52d-e11a-4327-b6c1-213a232289d8",
+                  "eta": 823.4166666666666,
+                  "deadline": 828.1666666666666,
+                  "slack": 4.75
+                },
+                {
+                  "id": "566835f9-2122-40d0-8bb3-c6192a869c43",
+                  "eta": 827.9166666666666,
+                  "deadline": 827.9666666666667,
+                  "slack": 0.05000000000006821
+                },
+                {
+                  "id": "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3",
+                  "eta": 836.4166666666666,
+                  "deadline": 836.9166666666666,
+                  "slack": 0.5
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 0.05000000000006821,
+              "feasible": true,
+              "violations": [],
+              "sum": 198000,
+              "travel": 16.5,
+              "finish": 836.4166666666666,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C4",
+              "name": "Тестовый курьер 4",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "1da4f34e-ae71-4e51-9223-318238a315b1",
+              "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 810.7666666666667,
+              "stops": [
+                {
+                  "id": "1da4f34e-ae71-4e51-9223-318238a315b1",
+                  "eta": 819.5,
+                  "deadline": 828.95,
+                  "slack": 9.450000000000045
+                },
+                {
+                  "id": "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28",
+                  "eta": 829,
+                  "deadline": 829.7666666666667,
+                  "slack": 0.7666666666666515
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 0.7666666666666515,
+              "feasible": true,
+              "violations": [],
+              "sum": 327000,
+              "travel": 15,
+              "finish": 829,
+              "returnLegMin": 8.5,
+              "bufferedReturnMin": 10.2
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C5",
+              "name": "Тестовый курьер 5",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "782fe598-8822-492d-a5ec-1ec8372c8877"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 820.7666666666667,
+              "stops": [
+                {
+                  "id": "782fe598-8822-492d-a5ec-1ec8372c8877",
+                  "eta": 819.5,
+                  "deadline": 830.2666666666667,
+                  "slack": 10.766666666666652
+                }
+              ],
+              "status": "closed",
+              "isLate": false,
+              "minSlack": 10.766666666666652,
+              "feasible": true,
+              "violations": [],
+              "sum": 42000,
+              "travel": 7.5,
+              "finish": 819.5,
+              "returnLegMin": 7.5,
+              "bufferedReturnMin": 9
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C6",
+              "name": "Тестовый курьер 6",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "96f632f9-4be8-4e3e-aa69-670f17f0d3a5",
+              "2878bbda-7705-4424-ac45-cd35cf176220"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 818.6,
+              "closingTime": 818.1,
+              "latestSafeDeparture": 830.1,
+              "stops": [
+                {
+                  "id": "96f632f9-4be8-4e3e-aa69-670f17f0d3a5",
+                  "eta": 825.1,
+                  "deadline": 837.9333333333333,
+                  "slack": 12.833333333333258
+                },
+                {
+                  "id": "2878bbda-7705-4424-ac45-cd35cf176220",
+                  "eta": 830.1,
+                  "deadline": 841.6,
+                  "slack": 11.5
+                }
+              ],
+              "status": "pairing",
+              "isLate": false,
+              "minSlack": 11.5,
+              "feasible": true,
+              "violations": [],
+              "sum": 255000,
+              "travel": 7.5,
+              "finish": 830.1,
+              "returnLegMin": 5,
+              "bufferedReturnMin": 6
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C7",
+              "name": "Тестовый курьер 7",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "92784531-0b71-494c-98cd-5bc28c1556e3"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 823.6166666666667,
+              "closingTime": 823.6166666666667,
+              "latestSafeDeparture": 835.6166666666667,
+              "stops": [
+                {
+                  "id": "92784531-0b71-494c-98cd-5bc28c1556e3",
+                  "eta": 827.1166666666667,
+                  "deadline": 839.1166666666667,
+                  "slack": 12
+                }
+              ],
+              "status": "pairing",
+              "isLate": false,
+              "minSlack": 12,
+              "feasible": true,
+              "violations": [],
+              "sum": 188000,
+              "travel": 1.5,
+              "finish": 827.1166666666667,
+              "returnLegMin": 1.5,
+              "bufferedReturnMin": 1.7999999999999998
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C8",
+              "name": "Тестовый курьер 8",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "2812b854-ed85-4d92-909f-6e284f1b0f27"
+            ],
+            "late": false,
+            "ev": {
+              "dep": 820.8,
+              "closingTime": 819.8,
+              "latestSafeDeparture": 831.8,
+              "stops": [
+                {
+                  "id": "2812b854-ed85-4d92-909f-6e284f1b0f27",
+                  "eta": 832.8,
+                  "deadline": 843.8,
+                  "slack": 11
+                }
+              ],
+              "status": "pairing",
+              "isLate": false,
+              "minSlack": 11,
+              "feasible": true,
+              "violations": [],
+              "sum": 54000,
+              "travel": 10,
+              "finish": 832.8,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          },
+          {
+            "c": {
+              "id": "TEST-C9",
+              "name": "Тестовый курьер 9",
+              "status": "FREE",
+              "mode": "DRIVING",
+              "maxOrders": 8,
+              "maxSum": 1000000,
+              "zones": [
+                "Z1"
+              ],
+              "freeSince": "13:30",
+              "synthetic": true
+            },
+            "ids": [
+              "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb"
+            ],
+            "late": true,
+            "ev": {
+              "dep": 810,
+              "closingTime": 810,
+              "latestSafeDeparture": 804.9,
+              "stops": [
+                {
+                  "id": "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb",
+                  "eta": 822,
+                  "deadline": 816.9,
+                  "slack": -5.100000000000023
+                }
+              ],
+              "status": "closed",
+              "isLate": true,
+              "minSlack": -5.100000000000023,
+              "feasible": false,
+              "violations": [
+                "SLA"
+              ],
+              "sum": 234000,
+              "travel": 10,
+              "finish": 822,
+              "returnLegMin": 10,
+              "bufferedReturnMin": 12
+            }
+          }
+        ],
+        "unassigned": [],
+        "trace": [
+          [
+            "start",
+            "Regret-2: второй лучший − лучший"
+          ],
+          [
+            "regret",
+            "Regret c9e16be8-a0ac-4066-a756-1f8cf26c5617 = 0.0"
+          ],
+          [
+            "accept",
+            "c9e16be8-a0ac-4066-a756-1f8cf26c5617 → Тестовый курьер 1, позиция 0"
+          ],
+          [
+            "regret",
+            "Regret 8843bb8f-5a60-46f1-b752-f7724ed25ca1 = 0.5"
+          ],
+          [
+            "accept",
+            "8843bb8f-5a60-46f1-b752-f7724ed25ca1 → Тестовый курьер 1, позиция 0"
+          ],
+          [
+            "regret",
+            "Regret cc897835-e01b-401e-b5a0-7830f1cb9e4a = 0.0"
+          ],
+          [
+            "accept",
+            "cc897835-e01b-401e-b5a0-7830f1cb9e4a → Тестовый курьер 1, позиция 1"
+          ],
+          [
+            "regret",
+            "Regret 3efa4723-10a4-45d3-80bd-f5e8446938f9 = 0.0"
+          ],
+          [
+            "accept",
+            "3efa4723-10a4-45d3-80bd-f5e8446938f9 → Тестовый курьер 2, позиция 0"
+          ],
+          [
+            "regret",
+            "Regret 48305bf5-801c-45d5-ab76-4ac867724188 = 5.0"
+          ],
+          [
+            "accept",
+            "48305bf5-801c-45d5-ab76-4ac867724188 → Тестовый курьер 2, позиция 1"
+          ],
+          [
+            "regret",
+            "Regret 1977a86c-2d98-4d7f-9b81-d4a53d3279e0 = 6.5"
+          ],
+          [
+            "accept",
+            "1977a86c-2d98-4d7f-9b81-d4a53d3279e0 → Тестовый курьер 2, позиция 2"
+          ],
+          [
+            "regret",
+            "Regret 566835f9-2122-40d0-8bb3-c6192a869c43 = 0.0"
+          ],
+          [
+            "accept",
+            "566835f9-2122-40d0-8bb3-c6192a869c43 → Тестовый курьер 3, позиция 0"
+          ],
+          [
+            "regret",
+            "Regret 0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 = 3.5"
+          ],
+          [
+            "accept",
+            "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3 → Тестовый курьер 3, позиция 1"
+          ],
+          [
+            "regret",
+            "Regret 1e86a52d-e11a-4327-b6c1-213a232289d8 = 7.0"
+          ],
+          [
+            "accept",
+            "1e86a52d-e11a-4327-b6c1-213a232289d8 → Тестовый курьер 3, позиция 0"
+          ],
+          [
+            "regret",
+            "Regret 1da4f34e-ae71-4e51-9223-318238a315b1 = 0.0"
+          ],
+          [
+            "accept",
+            "1da4f34e-ae71-4e51-9223-318238a315b1 → Тестовый курьер 4, позиция 0"
+          ],
+          [
+            "regret",
+            "Regret 8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 = 1.0"
+          ],
+          [
+            "accept",
+            "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28 → Тестовый курьер 4, позиция 1"
+          ],
+          [
+            "regret",
+            "Regret 782fe598-8822-492d-a5ec-1ec8372c8877 = 0.0"
+          ],
+          [
+            "accept",
+            "782fe598-8822-492d-a5ec-1ec8372c8877 → Тестовый курьер 5, позиция 0"
+          ],
+          [
+            "regret",
+            "Regret 96f632f9-4be8-4e3e-aa69-670f17f0d3a5 = 0.0"
+          ],
+          [
+            "accept",
+            "96f632f9-4be8-4e3e-aa69-670f17f0d3a5 → Тестовый курьер 6, позиция 0"
+          ],
+          [
+            "regret",
+            "Regret 2878bbda-7705-4424-ac45-cd35cf176220 = 0.5"
+          ],
+          [
+            "accept",
+            "2878bbda-7705-4424-ac45-cd35cf176220 → Тестовый курьер 6, позиция 1"
+          ],
+          [
+            "regret",
+            "Regret 92784531-0b71-494c-98cd-5bc28c1556e3 = 0.0"
+          ],
+          [
+            "accept",
+            "92784531-0b71-494c-98cd-5bc28c1556e3 → Тестовый курьер 7, позиция 0"
+          ],
+          [
+            "regret",
+            "Regret 2812b854-ed85-4d92-909f-6e284f1b0f27 = 0.0"
+          ],
+          [
+            "accept",
+            "2812b854-ed85-4d92-909f-6e284f1b0f27 → Тестовый курьер 8, позиция 0"
+          ],
+          [
+            "late",
+            "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb: late solo у Тестовый курьер 9"
+          ],
+          [
+            "done",
+            "Готово: 16 вовремя, 85.0 мин дороги"
+          ]
+        ],
+        "ms": 3.649499999999996,
+        "onTime": 16,
+        "late": 1,
+        "travel": 85,
+        "maxRoute": 16.5,
+        "minSlack": 0.05000000000006821,
+        "buckets": 9
+      },
+      {
+        "code": "Exact",
+        "skipped": "17 заказов × 17 курьеров превышает лимит Exact",
+        "routes": [],
+        "unassigned": [],
+        "trace": [
+          [
+            "start",
+            "Лимиты: 8 заказов, свободные тестовые курьеры, 3000 мс, 2 000 000 состояний"
+          ],
+          [
+            "limit",
+            "algorithm.limit_exceeded"
+          ]
+        ],
+        "ms": 0.08170900000000358
+      }
+    ],
+    "pos": {
+      "3e60c8e9-9ea3-4fc2-ab12-665f84bd54eb": [
+        490.6,
+        503.5
+      ],
+      "c9e16be8-a0ac-4066-a756-1f8cf26c5617": [
+        341.1,
+        424
+      ],
+      "cc897835-e01b-401e-b5a0-7830f1cb9e4a": [
+        342.5,
+        424.3
+      ],
+      "3efa4723-10a4-45d3-80bd-f5e8446938f9": [
+        487.9,
+        302.1
+      ],
+      "566835f9-2122-40d0-8bb3-c6192a869c43": [
+        282,
+        178.7
+      ],
+      "1e86a52d-e11a-4327-b6c1-213a232289d8": [
+        320.8,
+        210.3
+      ],
+      "1da4f34e-ae71-4e51-9223-318238a315b1": [
+        321.1,
+        209.2
+      ],
+      "8729e7a6-0e1e-4d1f-9995-cb19d01a6f28": [
+        470.6,
+        213.2
+      ],
+      "8843bb8f-5a60-46f1-b752-f7724ed25ca1": [
+        349.1,
+        353.5
+      ],
+      "782fe598-8822-492d-a5ec-1ec8372c8877": [
+        321.1,
+        209.7
+      ],
+      "48305bf5-801c-45d5-ab76-4ac867724188": [
+        518.6,
+        338.1
+      ],
+      "0e7c8e61-8380-4e8c-ae90-8e0ad364eea3": [
+        409.5,
+        153.3
+      ],
+      "1977a86c-2d98-4d7f-9b81-d4a53d3279e0": [
+        549.6,
+        388.8
+      ],
+      "96f632f9-4be8-4e3e-aa69-670f17f0d3a5": [
+        436.8,
+        414.8
+      ],
+      "92784531-0b71-494c-98cd-5bc28c1556e3": [
+        340.1,
+        370.3
+      ],
+      "2878bbda-7705-4424-ac45-cd35cf176220": [
+        393,
+        450.8
+      ],
+      "2812b854-ed85-4d92-909f-6e284f1b0f27": [
+        409.5,
+        153.3
+      ]
+    },
+    "matrix": 324,
+    "eligible": 17,
+    "couriers": 17,
+    "planningAt": {
+      "date": "01.10.2026",
+      "hm": "13:30",
+      "minutes": 810,
+      "timezone": "Asia/Tashkent"
+    },
+    "testCouriers": [
+      {
+        "id": "TEST-C1",
+        "name": "Тестовый курьер 1",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C2",
+        "name": "Тестовый курьер 2",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C3",
+        "name": "Тестовый курьер 3",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C4",
+        "name": "Тестовый курьер 4",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C5",
+        "name": "Тестовый курьер 5",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C6",
+        "name": "Тестовый курьер 6",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C7",
+        "name": "Тестовый курьер 7",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C8",
+        "name": "Тестовый курьер 8",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C9",
+        "name": "Тестовый курьер 9",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C10",
+        "name": "Тестовый курьер 10",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C11",
+        "name": "Тестовый курьер 11",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C12",
+        "name": "Тестовый курьер 12",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C13",
+        "name": "Тестовый курьер 13",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C14",
+        "name": "Тестовый курьер 14",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C15",
+        "name": "Тестовый курьер 15",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C16",
+        "name": "Тестовый курьер 16",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      },
+      {
+        "id": "TEST-C17",
+        "name": "Тестовый курьер 17",
+        "status": "FREE",
+        "mode": "DRIVING",
+        "maxOrders": 8,
+        "maxSum": 1000000,
+        "zones": [
+          "Z1"
+        ],
+        "freeSince": "13:30",
+        "synthetic": true
+      }
+    ],
+    "matrixProvider": "LOCAL_DETERMINISTIC",
+    "timingModel": "IO_PLANNER_V1",
+    "settings": {
+      "allowLate": true,
+      "alwaysFreeCouriers": true,
+      "goOutFromBranchMin": 2,
+      "giveOrderToClientMin": 2,
+      "bucketMaxFullSum": 1000000,
+      "bucketMaxOrders": 8,
+      "returnBufferPct": 20
+    },
+    "version": "test-13:00-14:00-13:30",
+    "number": "TEST 13:00–14:00 · 13:30"
+  }
+}

@@ -1,6 +1,7 @@
 import { performance } from 'node:perf_hooks';
 import { ELIGIBLE_ORDER_STATUSES, ZONES, minutesNear } from './domain.js';
 import { BRANCH_POINT } from './branch.js';
+import { bucketTiming, DEFAULT_SETTINGS, TIMING_MODEL } from './timing.js';
 
 export const ALGORITHMS = ['A1', 'A2', 'A3', 'A4', 'Exact'];
 const DEFAULT_PLANNING_AT_MIN = 18 * 60;
@@ -21,6 +22,7 @@ export function zonesOf(x, y) {
 }
 
 function buildInput(snapshot) {
+  const settings = { ...DEFAULT_SETTINGS, ...snapshot.settings };
   const plan = snapshot.planningAt?.minutes ?? DEFAULT_PLANNING_AT_MIN;
   const time = value => minutesNear(value, plan);
   const positions = { BR: BRANCH_POINT };
@@ -32,15 +34,19 @@ function buildInput(snapshot) {
     const normalized = {
       id: order.id,
       zones: zoneIds,
-      ready: time(order.ready),
-      deadline: time(order.deadline),
-      created: time(order.created),
+      ready: Number.isFinite(order.readyMinutes) ? order.readyMinutes : time(order.ready),
+      deadline: Number.isFinite(order.deadlineMinutes) ? order.deadlineMinutes : time(order.deadline),
+      created: Number.isFinite(order.createdMinutes) ? order.createdMinutes : time(order.created),
       service: Number(order.service || 0) / 60,
       sum: Number(order.sum || 0)
     };
     (zoneIds.length ? orders : outside).push(normalized);
   });
-  const couriers = snapshot.couriers.filter(courier => courier.status === 'FREE' && courier.zones.length)
+  const couriers = settings.alwaysFreeCouriers
+    ? orders.map((_, i) => ({ id: `TEST-C${i + 1}`, name: `Тестовый курьер ${i + 1}`, status: 'FREE',
+      mode: 'DRIVING', maxOrders: settings.bucketMaxOrders, maxSum: settings.bucketMaxFullSum,
+      zones: ZONES.map(zone => zone.id), freeSince: snapshot.planningAt?.hm || '00:00', synthetic: true }))
+    : (snapshot.couriers || []).filter(courier => courier.status === 'FREE' && courier.zones.length)
     .sort((a, b) => time(a.freeSince) - time(b.freeSince) || a.id.localeCompare(b.id));
   const byId = Object.fromEntries(orders.map(order => [order.id, order]));
   const legCache = new Map();
@@ -53,7 +59,7 @@ function buildInput(snapshot) {
     legCache.set(key, value);
     return value;
   };
-  return { orders, outside, couriers, byId, leg, positions, plan, allowLate: snapshot.settings.allowLate !== false };
+  return { orders, outside, couriers, byId, leg, positions, plan, settings, allowLate: settings.allowLate !== false };
 }
 
 const urgency = (a, b) => a.deadline - b.deadline || a.created - b.created || a.id.localeCompare(b.id);
@@ -71,29 +77,24 @@ export function evaluateRoute(courier, orderIds, input) {
   const violations = [];
   if (new Set(orderIds).size !== orderIds.length) return { feasible: false, violations: ['DUPLICATE'] };
   if (orders.some(order => !canServe(courier, order))) violations.push('ZONE');
-  if (orderIds.length > courier.maxOrders) violations.push('MAX_ORDERS');
+  if (orderIds.length > Math.min(courier.maxOrders, input.settings.bucketMaxOrders)) violations.push('MAX_ORDERS');
   const sum = orders.reduce((total, order) => total + order.sum, 0);
-  if (sum > courier.maxSum) violations.push('MAX_FULL_SUM');
+  if (sum > Math.min(courier.maxSum, input.settings.bucketMaxFullSum)) violations.push('MAX_FULL_SUM');
   if (violations.length) return { feasible: false, violations, sum };
-  const departure = Math.max(input.plan, ...orders.map(order => order.ready));
-  let clock = departure;
   let previous = 'BR';
   let travel = 0;
-  let minSlack = Infinity;
-  const stops = [];
-  orders.forEach(order => {
-    const duration = input.leg(previous, order.id);
-    clock += duration;
-    travel += duration;
-    const eta = Math.max(clock, order.ready);
-    const slack = order.deadline - eta;
-    if (slack < 0) violations.push('SLA');
-    minSlack = Math.min(minSlack, slack);
-    stops.push({ id: order.id, eta, deadline: order.deadline, slack });
-    clock = eta + order.service;
+  const routeTimes = orders.map(order => {
+    travel += input.leg(previous, order.id);
     previous = order.id;
+    return travel;
   });
-  return { feasible: violations.length === 0, violations, dep: departure, finish: clock, travel, stops, minSlack, sum };
+  const timing = bucketTiming(orders, routeTimes, sum, input.plan, input.settings);
+  if (timing.isLate) violations.push('SLA');
+  const returnLegMin = orders.length ? input.leg(previous, 'BR') : 0;
+  return { ...timing, feasible: violations.length === 0, violations, sum, travel,
+    finish: timing.stops.at(-1)?.eta ?? timing.dep,
+    returnLegMin, bufferedReturnMin: returnLegMin * (1 + input.settings.returnBufferPct / 100) };
+
 }
 
 function rejectionReason(verdict) {
@@ -183,8 +184,8 @@ function insertionAlgorithm(input, regretMode) {
 function exactAlgorithm(input) {
   const orders = [...input.orders].sort(urgency);
   const couriers = input.couriers;
-  const trace = [['start', 'Лимиты: 8 заказов, 3 курьера, 3000 мс, 2 000 000 состояний']];
-  if (orders.length > 8 || couriers.length > 3) return { skipped: `${orders.length} заказов × ${couriers.length} курьеров превышает лимит 8 × 3`, tr: [...trace, ['limit', 'algorithm.limit_exceeded']] };
+  const trace = [['start', input.settings.alwaysFreeCouriers ? 'Лимиты: 8 заказов, свободные тестовые курьеры, 3000 мс, 2 000 000 состояний' : 'Лимиты: 8 заказов, 3 курьера, 3000 мс, 2 000 000 состояний']];
+  if (orders.length > 8 || (!input.settings.alwaysFreeCouriers && couriers.length > 3)) return { skipped: `${orders.length} заказов × ${couriers.length} курьеров превышает лимит Exact`, tr: [...trace, ['limit', 'algorithm.limit_exceeded']] };
   const started = performance.now();
   let states = 0;
   let pruned = 0;
@@ -203,7 +204,12 @@ function exactAlgorithm(input) {
     const assigned = routes.reduce((total, route) => total + route.length, 0);
     if (best && assigned + orders.length - index < best.assigned) { pruned += 1; return; }
     const order = orders[index];
+    let triedEmpty = false;
     couriers.forEach((courier, courierIndex) => {
+      if (input.settings.alwaysFreeCouriers && !routes[courierIndex].length) {
+        if (triedEmpty) return;
+        triedEmpty = true;
+      }
       if (!canServe(courier, order)) return;
       const original = routes[courierIndex];
       for (let position = 0; position <= original.length; position += 1) {
@@ -285,6 +291,7 @@ export function runAlgorithms(snapshot) {
     eligible: input.orders.length + input.outside.length,
     couriers: input.couriers.length,
     planningAt: snapshot.planningAt || null,
-    matrixProvider: 'LOCAL_DETERMINISTIC'
+    testCouriers: input.settings.alwaysFreeCouriers ? input.couriers : undefined,
+    matrixProvider: 'LOCAL_DETERMINISTIC', timingModel: TIMING_MODEL, settings: input.settings
   };
 }

@@ -38,3 +38,17 @@ test('invalid status transition is rejected', t => {
   repo.upsertOrder('O1', ORDER, true);
   assert.throws(() => repo.setOrderStatus('O1', 'DELIVERED'), error => error.code === 'ORDER_STATUS_TRANSITION_INVALID' && error.status === 409);
 });
+
+
+test('timing settings validate and persist while old run stays immutable', t => {
+  const repo = repository(t);
+  repo.createRun();
+  const old = repo.latestRun();
+  assert.throws(() => repo.updateSettings({ goOutFromBranchMin: -1 }), e => e.status === 422);
+  assert.throws(() => repo.updateSettings({ bucketMaxOrders: 1.5 }), e => e.status === 422);
+  assert.throws(() => repo.updateSettings({ returnBufferPct: null }), e => e.status === 422);
+  repo.updateSettings({ goOutFromBranchMin: 4, returnBufferPct: 30 });
+  assert.equal(repo.bootstrap().settings.goOutFromBranchMin, 4);
+  assert.equal(repo.latestRun().settings.goOutFromBranchMin, old.settings.goOutFromBranchMin);
+  assert.equal(repo.createRun().settings.returnBufferPct, 30);
+});
