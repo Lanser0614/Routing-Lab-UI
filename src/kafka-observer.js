@@ -21,7 +21,7 @@ export function observerConfig(env=process.env) {
     sasl:env.KAFKA_USERNAME ? {mechanism,username:env.KAFKA_USERNAME,password:env.KAFKA_PASSWORD} : undefined};
 }
 
-const orderStatuses={WaitCooking:'COOKING_STARTED',CookingStarted:'COOKING_STARTED',CookingCompleted:'COOKING_COMPLETED',Waiting:'WAITING',OnWay:'ON_WAY',OnWayNow:'ON_WAY',Delivered:'DELIVERED',Closed:'DELIVERED',Cancelled:'CANCELLED',Canceled:'CANCELLED',Delayed:'ON_WAY'};
+const orderStatuses={WaitCooking:'COOKING_STARTED',CookingStarted:'COOKING_STARTED',CookingCompleted:'COOKING_COMPLETED',Waiting:'WAITING',OnWay:'ON_WAY',OnWayNow:'ON_WAY',Delivered:'DELIVERED',Delivere:'DELIVERED',Closed:'DELIVERED',Cancelled:'CANCELLED',Canceled:'CANCELLED',Cancleed:'CANCELLED',Delayed:'ON_WAY'};
 const courierStatuses={free:'FREE',reserved:'RESERVED',onWay:'DELIVERING',arrived:'DELIVERING',returning:'RETURNING',notWorking:'OFFLINE'};
 const modes={CAR:'DRIVING',SCOOTER:'SCOOTER',BICYCLE:'BICYCLING',PEDESTRIAN:'WALKING'};
 function date(value) {const n=Date.parse(value);return Number.isFinite(n)?new Date(n).toISOString():null;}

@@ -38,6 +38,7 @@ export function createApp(repository, { matrixClient=null, observer=null }={}) {
   app.get('/api/v1/test-orders', route(async req => ({ ...await testScenario(req.query.at, {}, req.query.range), branch: BRANCH })));
   app.get('/api/v1/bootstrap', route(() => ({...repository.bootstrap(),observer:observer?.status()||null})));
   app.get('/api/v1/observer',route(()=>observer?.status()||{mode:'manual'}));
+  app.get('/api/v1/buckets',route(()=>repository.buckets()));
   app.post('/api/v1/orders', route(req => repository.upsertOrder(req.body.id, req.body, true)));
   app.patch('/api/v1/orders/:id', route(req => repository.upsertOrder(req.params.id, req.body, false)));
   app.post('/api/v1/orders/:id/status', route(req => repository.setOrderStatus(req.params.id, req.body.status, req.body.reason)));

@@ -31,6 +31,7 @@ export class Repository {
       CREATE TABLE IF NOT EXISTS couriers (id TEXT PRIMARY KEY, data_json TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 1);
       CREATE TABLE IF NOT EXISTS status_events (id INTEGER PRIMARY KEY AUTOINCREMENT, entity_type TEXT NOT NULL, entity_id TEXT NOT NULL, from_status TEXT, to_status TEXT NOT NULL, changed_at TEXT NOT NULL, reason TEXT);
       CREATE TABLE IF NOT EXISTS planning_runs (id INTEGER PRIMARY KEY AUTOINCREMENT, scenario_version INTEGER NOT NULL, input_snapshot TEXT NOT NULL, result_json TEXT NOT NULL, created_at TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS buckets (id INTEGER PRIMARY KEY AUTOINCREMENT, algorithm TEXT NOT NULL, data_json TEXT NOT NULL, status TEXT NOT NULL);
     `);
     this.seed();
     this.migrateBranchData();
@@ -99,7 +100,16 @@ export class Repository {
       const relative = value => planningAt.minutes+(Date.parse(value)-Date.parse(planningAt.iso))/60000;
       return {...o,createdMinutes:relative(o.createdAt),readyMinutes:relative(o.readyAt),deadlineMinutes:relative(o.deadlineAt)};
     });
-    return { scenarioId: scenario.id, version: scenario.version, settings: scenario.settings, planningAt, orders, couriers: this.list('couriers') };
+    const current=new Map(this.list('orders').map(o=>[o.id,o]));
+    const lockedBuckets=this.db.prepare("SELECT id,data_json FROM buckets WHERE status!='completed'").all().map(row=>{
+      const b={...JSON.parse(row.data_json),id:row.id};
+      const statuses=b.route.ids.map(id=>current.get(id)?.status);
+      if(statuses.every(s=>['DELIVERED','CANCELLED'].includes(s))) b.status='completed';
+      else if(statuses.some(s=>s==='ON_WAY')) b.status='dispatched';
+      this.db.prepare('UPDATE buckets SET status=?,data_json=? WHERE id=?').run(b.status,JSON.stringify(b),b.id);
+      return b;
+    }).filter(b=>b.status!=='completed');
+    return { scenarioId: scenario.id, version: scenario.version, settings: scenario.settings, planningAt, orders, couriers: this.list('couriers'),lockedBuckets };
   }
 
   kafkaOrder(id) {const row=this.db.prepare('SELECT data_json FROM orders WHERE id=?').get(id);return row?JSON.parse(row.data_json):null;}
@@ -230,14 +240,34 @@ export class Repository {
   history(type, id) { return this.db.prepare('SELECT * FROM status_events WHERE entity_type=? AND entity_id=? ORDER BY id').all(type, id); }
 
   saveRun(snapshot, forcedId) {
+    snapshot={...snapshot,lockedBuckets:this.snapshot().lockedBuckets};
     const result = runAlgorithms(snapshot);
     const createdAt = new Date().toISOString();
+    this.db.exec('BEGIN');
+    try {
+    for(const algorithm of result.results) for(const route of algorithm.routes) {
+      if(route.locked) {
+        const row=this.db.prepare('SELECT data_json FROM buckets WHERE id=?').get(route.bucketId);
+        if(row) {const bucket=JSON.parse(row.data_json);bucket.route=route;this.db.prepare('UPDATE buckets SET data_json=? WHERE id=?').run(JSON.stringify(bucket),route.bucketId);}
+        continue;
+      }
+      if(route.ev.status!=='closed') continue;
+      const closingTimeAt=snapshot.planningAt?.iso?new Date(Date.parse(snapshot.planningAt.iso)+(route.ev.closingTime-snapshot.planningAt.minutes)*60000).toISOString():null;
+      const bucket={algorithm:algorithm.code,status:'closed',closingTime:route.ev.closingTime,closingTimeAt,route,orders:route.ids.map(id=>snapshot.orders.find(o=>o.id===id)),closedAt:createdAt};
+      if(bucket.orders.some(o=>!o)) throw new Error('Bucket order missing from snapshot');
+      const row=this.db.prepare('INSERT INTO buckets(algorithm,data_json,status) VALUES(?,?,?)').run(algorithm.code,JSON.stringify(bucket),'closed');
+      route.bucketId=Number(row.lastInsertRowid);route.locked=true;
+    }
     if (forcedId) this.db.prepare('INSERT INTO planning_runs(id,scenario_version,input_snapshot,result_json,created_at) VALUES(?,?,?,?,?)').run(forcedId, snapshot.version, JSON.stringify(snapshot), JSON.stringify(result), createdAt);
     else this.db.prepare('INSERT INTO planning_runs(scenario_version,input_snapshot,result_json,created_at) VALUES(?,?,?,?)').run(snapshot.version, JSON.stringify(snapshot), JSON.stringify(result), createdAt);
+    this.db.exec('COMMIT');
+    }catch(error){this.db.exec('ROLLBACK');throw error;}
     return this.latestRun();
   }
 
   createRun() { return this.saveRun(this.snapshot()); }
+
+  buckets() {this.snapshot();return this.db.prepare('SELECT id,data_json,status FROM buckets ORDER BY id').all().map(row=>({...JSON.parse(row.data_json),id:row.id,status:row.status}));}
 
   importOrders(orders) {
     orders.forEach(validateOrder);

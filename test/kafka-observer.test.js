@@ -5,9 +5,26 @@ import os from 'node:os';
 import path from 'node:path';
 import {observerConfig,decodeObservation,KafkaObserver} from '../src/kafka-observer.js';
 import {Repository} from '../src/repository.js';
+import {runAlgorithms} from '../src/planning.js';
 const config=observerConfig({});
 const p={order_id:55,branch_id:config.organizationId,status:'CookingStarted',sum:100000,latitude:41.332,longitude:69.285,cooking_started_at:'2026-10-01T13:00:00+05:00',timestamp:'2026-10-01T13:01:00+05:00',complete_before:'2026-10-01T13:25:19+05:00'};
 const wire=p=>Buffer.from(JSON.stringify({payload:p,timestamp:p.timestamp}));
+test('terminal Kafka statuses remove an existing order from every algorithm on next calculation',t=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'terminal-order-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+  const repo=new Repository(path.join(dir,'live.sqlite'),{observer:true,clock:()=>new Date('2026-10-01T08:10:00Z')});
+  t.after(()=>repo.db.close());
+  const base={...p,created_at:'2026-10-01T13:00:00+05:00'};
+  let offset=0;
+  const ingest=payload=>{offset++;return repo.ingestKafka('orders',decodeObservation('orders',wire({...payload,timestamp:new Date(Date.parse(p.timestamp)+offset*1000).toISOString()}),config,id=>repo.kafkaOrder(id)),{topic:'orders',partition:0,offset:String(offset)});};
+  for(const status of ['Delivered','Delivere','Closed','Cancelled','Canceled','Cancleed']) {
+    ingest({...base,status:'CookingStarted'});
+    assert.equal(runAlgorithms(repo.snapshot()).eligible,1);
+    ingest({...base,status,timestamp:'2026-10-01T13:02:00+05:00'});
+    const run=runAlgorithms(repo.snapshot());
+    assert.equal(run.eligible,0,status);
+    assert.ok(run.results.every(result=>result.routes.every(route=>!route.ids.includes('55'))));
+  }
+});
 test('WaitCooking event starts SLA; subsequent events and restart preserve it; late arrival does not regress status',t=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'wait-cooking-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
   const filename=path.join(dir,'live.sqlite');let repo=new Repository(filename,{observer:true});

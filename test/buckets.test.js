@@ -1,0 +1,32 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {Repository} from '../src/repository.js';
+import {BRANCH_POINT} from '../src/branch.js';
+test('closed buckets persist per algorithm, reserve courier, update readiness and complete without regrouping',t=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'buckets-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+  const filename=path.join(dir,'db.sqlite');let repo=new Repository(filename,{clock:()=>new Date('2026-10-01T13:00:00Z')});
+  const order={id:'O1',address:'Branch',x:BRANCH_POINT[0],y:BRANCH_POINT[1],status:'COOKING_STARTED',sum:100000,created:'17:40',ready:'18:02',deadline:'18:14',service:60};
+  repo.upsertOrder(order.id,order,true);
+  repo.upsertCourier('C1',{name:'Courier',status:'FREE',mode:'SCOOTER',maxOrders:3,maxSum:300000,zones:['Z1']},false);
+  repo.setCourierStatus('C2','OFFLINE');
+  const first=repo.createRun();
+  assert.ok(first.results.every(r=>r.routes.length===1 && r.routes[0].locked));
+  const bucketIds=first.results.map(r=>r.routes[0].bucketId);
+  repo.db.close();repo=new Repository(filename,{clock:()=>new Date('2026-10-01T13:01:00Z')});t.after(()=>repo.db.close());
+  repo.upsertOrder('O2',{...order,id:'O2'},true);
+  repo.upsertOrder('O1',{...order,status:'COOKING_COMPLETED',ready:'18:05'},false);
+  const next=repo.createRun();
+  next.results.forEach((r,i)=>{
+    assert.deepEqual(r.routes[0].ids,['O1']);assert.equal(r.routes[0].bucketId,bucketIds[i]);
+    assert.equal(r.routes[0].ev.dep,1085);assert.equal(r.routes[0].ev.closingTime,first.results[i].routes[0].ev.closingTime);
+    assert.ok(r.unassigned.some(o=>o.id==='O2'));
+  });
+  repo.setOrderStatus('O1','WAITING');repo.setOrderStatus('O1','ASSIGNED');repo.setOrderStatus('O1','ON_WAY');
+  assert.ok(repo.createRun().results.every(r=>r.routes[0].ev.status==='dispatched'));
+  repo.setOrderStatus('O1','DELIVERED');
+  const final=repo.createRun();assert.ok(final.results.every(r=>r.routes.every(route=>!route.ids.includes('O1'))));
+  assert.equal(repo.db.prepare("SELECT COUNT(*) n FROM buckets WHERE status='completed'").get().n,5);
+});

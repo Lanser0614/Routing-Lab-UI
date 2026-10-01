@@ -293,7 +293,31 @@ export function runAlgorithms(snapshot) {
     () => insertionAlgorithm(input, true),
     () => exactAlgorithm(input)
   ];
-  const results = factories.map((factory, index) => { const started = performance.now(); const raw = factory(); return finish(ALGORITHMS[index], raw, input, performance.now() - started); });
+  const results = factories.map((factory, index) => {
+    const locks=(snapshot.lockedBuckets||[]).filter(b=>b.algorithm===ALGORITHMS[index]);
+    if(!locks.length) {const started=performance.now();return finish(ALGORITHMS[index],factory(),input,performance.now()-started);}
+    const reservedOrders=new Set(locks.flatMap(b=>b.route.ids)),reservedCouriers=new Set(locks.map(b=>b.route.c.id));
+    const remaining={...snapshot,lockedBuckets:[],orders:snapshot.orders.filter(o=>!reservedOrders.has(o.id)),couriers:snapshot.couriers.filter(c=>!reservedCouriers.has(c.id))};
+    const remainingInput=buildInput(remaining);
+    if(snapshot.settings.alwaysFreeCouriers) remainingInput.couriers=remainingInput.couriers.map(c=>({...c,id:`${c.id}-new-${locks.length}`}));
+    const remainingFactories=[()=>appendAlgorithm(remainingInput,false),()=>appendAlgorithm(remainingInput,true),()=>insertionAlgorithm(remainingInput,false),()=>insertionAlgorithm(remainingInput,true),()=>exactAlgorithm(remainingInput)];
+    const started=performance.now();
+    const fresh=finish(ALGORITHMS[index],remainingFactories[index](),remainingInput,performance.now()-started);
+    const pinned=locks.map(b=>{
+      const live=new Map(snapshot.orders.map(o=>[o.id,o]));
+      const orders=b.orders.map(o=>({...o,...live.get(o.id),status:'WAITING'}));
+      const frozenClosingTime=b.closingTimeAt && snapshot.planningAt?.iso ? input.plan+(Date.parse(b.closingTimeAt)-Date.parse(snapshot.planningAt.iso))/60000:b.closingTime;
+      const frozenInput=buildInput({...snapshot,orders,settings:{...snapshot.settings,frozenClosingTime}});
+      let ev=b.route.ev;
+      if(b.status!=='dispatched' && b.route.ids.every(id=>frozenInput.byId[id])) {
+        const current=evaluateRoute(b.route.c,b.route.ids,frozenInput);
+        ev={...ev,...current,stops:current.stops||ev.stops};
+      }
+      return {...b.route,bucketId:b.id,locked:true,ev:{...ev,status:b.status},late:ev.isLate};
+    });
+    const routes=[...pinned,...fresh.routes];
+    return {...fresh,routes,buckets:routes.length,onTime:routes.filter(r=>!r.late).reduce((n,r)=>n+r.ids.length,0),late:routes.filter(r=>r.late).length,travel:routes.reduce((n,r)=>n+r.ev.travel,0),maxRoute:Math.max(0,...routes.map(r=>r.ev.travel)),minSlack:routes.filter(r=>!r.late).length?Math.min(...routes.filter(r=>!r.late).map(r=>r.ev.minSlack)):null};
+  });
   return {
     results,
     pos: Object.fromEntries(snapshot.orders.map(order => [order.id, [order.x, order.y]])),

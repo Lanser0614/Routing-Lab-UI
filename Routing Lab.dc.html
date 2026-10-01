@@ -727,7 +727,7 @@ class Component extends DCLogic {
         points: [BR, ...r.ids.map(id=>run.pos[id])].map(p=>p.join(',')).join(' '),
         dash: r.late ? '8 6' : 'none', opacity: stale ? 0.45 : 0.9,
         legend: `Bucket ${b} · ${r.c.name} · ${r.ids.length} заказ.${r.late?' · late':''}`,
-        statusText: `${r.ev.status || 'старый расчёт'}${r.late ? ' · late solo' : ''}`, statusColor: r.late ? '#B42323' : '#1E7A45',
+        statusText: `${r.ev.status || 'старый расчёт'}${r.locked ? ' · состав закреплён' : ''}${r.late ? ' · late' : ''}`, statusColor: r.late ? '#B42323' : '#1E7A45',
         capText: `${r.ids.length} / ${Math.min(r.c.maxOrders,run.settings?.bucketMaxOrders ?? 8)} заказов · ${fmt(r.ev.sum)} / ${fmt(Math.min(r.c.maxSum,run.settings?.bucketMaxFullSum ?? 1000000))} UZS`,
         travelText: `Дорога ${mins(r.ev.travel)} мин · выезд ${hm(r.ev.dep)} · запас ${signed(r.ev.minSlack)} мин`,
         timingText: r.ev.closingTime==null ? 'Старый расчёт — запустите все заново' : `Закрытие ${hm(r.ev.closingTime)} · безопасный выезд до ${hm(r.ev.latestSafeDeparture)} · возврат ${mins(r.ev.bufferedReturnMin)} мин`,

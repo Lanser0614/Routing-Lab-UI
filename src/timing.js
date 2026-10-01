@@ -13,9 +13,9 @@ export function bucketTiming(orders, routeTimes, totalSum, plan, settings) {
   const safeTimes = orders.map((order, i) => order.deadline - routeTimes[i]
     - (multi ? settings.giveOrderToClientMin * i : 0) - settings.goOutFromBranchMin);
   const latestSafeDeparture = Math.min(...safeTimes);
-  const closingTime = totalSum >= settings.bucketMaxFullSum
+  const closingTime = settings.frozenClosingTime ?? (totalSum >= settings.bucketMaxFullSum
     ? Math.min(plan, latestSafeDeparture)
-    : Math.max(latestSafeDeparture - STANDARD_COOK_MIN, plan);
+    : Math.max(latestSafeDeparture - STANDARD_COOK_MIN, plan));
   const dep = Math.max(...orders.map(order => order.ready), closingTime);
   const stops = orders.map((order, i) => {
     const eta = dep + settings.goOutFromBranchMin + routeTimes[i]
