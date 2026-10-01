@@ -40,7 +40,7 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
     <div style="width:1px;height:28px;background:#E2E2DC"></div>
     <div style="display:flex;gap:18px;align-items:center">
       <div style="display:flex;flex-direction:column;line-height:1.3"><span style="font-size:11px;color:#6B6E70">Филиал</span><span style="font-weight:500">Bellissimo Amir Temur</span></div>
-      <div style="display:flex;flex-direction:column;line-height:1.3"><span style="font-size:11px;color:#6B6E70">Время планирования</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:500">{{ planningText }}</span></div>
+      <div style="display:flex;flex-direction:column;line-height:1.3"><span style="font-size:11px;color:#6B6E70">Время планирования</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px">{{ planningText }}</span><div style="display:flex;gap:4px;margin-top:4px"><input type="date" aria-label="Дата планирования" value="{{ planningDateValue }}" onChange="{{ changePlanningDate }}" disabled="{{ planningBusy }}" style="width:125px"><select aria-label="С часа" value="{{ planningFromValue }}" onChange="{{ changePlanningFrom }}" disabled="{{ planningBusy }}"><sc-for list="{{ planningFromOptions }}" as="h"><option value="{{ h.value }}">{{ h.label }}</option></sc-for></select><span>—</span><select aria-label="До часа" value="{{ planningToValue }}" onChange="{{ changePlanningTo }}" disabled="{{ planningBusy }}"><sc-for list="{{ planningToOptions }}" as="h"><option value="{{ h.value }}">{{ h.label }}</option></sc-for></select><button onClick="{{ resetPlanningRange }}" disabled="{{ planningBusy }}">Сбросить</button></div></div>
       <div style="display:flex;flex-direction:column;line-height:1.3"><span style="font-size:11px;color:#6B6E70">Версия сценария</span><span style="font-family:'IBM Plex Mono',monospace;font-weight:500">v{{ version }}</span></div>
     </div>
     <div style="flex:1"></div>
@@ -178,15 +178,13 @@ input:focus,select:focus{outline:2px solid #2F6FDF;outline-offset:-1px}
             <div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-weight:500">Late solo</span><span style="font-size:12px;color:#6B6E70">Просроченный заказ — отдельный bucket с пометкой late</span></div>
             <span style="width:34px;height:20px;border-radius:10px;background:{{ lateTrack }};position:relative"><span style="position:absolute;top:2px;left:{{ lateKnob }};width:16px;height:16px;border-radius:50%;background:#FFFFFF"></span></span>
           </div>
-          <div style="padding:12px;display:flex;flex-direction:column;gap:8px"><button onClick="{{ loadTestOrders }}" style="padding:8px;border:1px solid #DADAD3;border-radius:6px;background:#FFFFFF;cursor:pointer">Тестовые заказы · 01.10.2026</button>
-            <sc-if value="{{ isTestMode }}"><label style="font-size:12px">Заказы за час (по времени создания)<select value="{{ testRange }}" onChange="{{ changeTestRange }}" style="width:100%;margin-top:4px;padding:6px"><sc-for list="{{ testRangeOptions }}" as="t"><option value="{{ t.id }}">{{ t.label }}</option></sc-for></select></label><span style="font-size:12px;color:#55585A">{{ testRangeInfo }}</span><label style="font-size:12px">Момент расчёта внутри часа (GMT+5)<select value="{{ testAt }}" onChange="{{ changeTestAt }}" style="width:100%;margin-top:4px;padding:6px"><sc-for list="{{ testTimeOptions }}" as="t"><option value="{{ t.at }}">{{ t.label }}</option></sc-for></select></label><span style="font-size:12px;color:#6B6E70">Срез: заказы с ещё не истёкшим deadline. Это отдельный тест; обычный сценарий сохранён.</span><button onClick="{{ exitTestOrders }}" style="padding:8px;border:1px solid #DADAD3;border-radius:6px;background:#FFFFFF;cursor:pointer">Вернуться к обычному сценарию</button></sc-if>
-          </div>
           <label style="display:flex;gap:10px;align-items:flex-start;padding:12px;border-bottom:1px solid #EEEEE8"><input type="checkbox" checked="{{ alwaysFreeCouriers }}" onChange="{{ toggleAlwaysFree }}"><span>Тест: курьеры всегда свободны<br><span style="font-size:12px;color:#6B6E70">Для каждого бакета доступен тестовый курьер. Проверяем группировку и SLA по лимитам филиала.</span></span></label>
           <div style="padding:12px;font-size:12px;color:#55585A">Модель времени IO Planner · стандарт приготовления 12 мин. Ready и deadline задаются в заказах; service не участвует в этой модели.</div>
           <label style="display:block;padding:12px;font-size:12px">Источник дороги<select value="{{ matrixProviderSetting }}" onChange="{{ changeMatrixProvider }}" style="width:100%;margin-top:6px;padding:6px"><option value="yandex">Яндекс Matrix API</option><option value="local">Локальный расчёт</option></select></label>
           <div style="padding:0 12px 12px;font-size:12px;color:#55585A">Локальный расчёт использует геометрию карты: без запросов API и пробок. Экономный режим применяется только к Яндексу; локально рассчитывается полная матрица.</div>
           <label style="display:block;padding:12px;font-size:12px">Режим дорожного расчёта<select value="{{ matrixMode }}" onChange="{{ changeMatrixMode }}" style="width:100%;margin-top:6px;padding:6px"><option value="full">Сравнение · полная матрица</option><option value="economy">Экономный · ближайшие соседи</option></select></label>
           <div style="padding:0 12px 12px;font-size:12px;color:#55585A">Экономный режим ограничивает варианты: результат может отличаться от полной матрицы. Для неназначенных заказов поиск расширяется; выбранные маршруты проверяются по свежим данным. Это проверка расчёта, отправка курьера здесь не моделируется.</div>
+          <div style="padding:12px;font-size:12px;color:#55585A">Выберите дату и часы в шапке «Время планирования». Заказы отбираются по времени создания, расчёт выполняется в середине диапазона. «Сбросить» возвращает текущее время и весь список заказов.</div>
           <sc-for list="{{ timingSettings }}" as="s">
             <label style="display:flex;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid #EEEEE8"><span style="flex:1;font-size:12px">{{ s.label }}</span><input type="number" min="{{ s.min }}" step="{{ s.step }}" value="{{ s.value }}" onChange="{{ s.change }}" style="width:100px;padding:6px;border:1px solid #DADAD3;border-radius:5px"></label>
           </sc-for>
@@ -528,12 +526,12 @@ class Component extends DCLogic {
       version:11, run:emptyRun(11), branch:null, mapProvider:'LOADING', now:tashkentNow(),
       drawer:null, draft:null, candidates:[], confirmDelete:false, cdraft:null, showTerminal:false, orderQuery:'', nextId:6, nextCId:4, history:{}, apiError:null, busy:false };
   }
-  componentDidMount() { this.loadBootstrap(); this.clockTimer=setInterval(()=>this.setState({now:tashkentNow()}),30000); }
+  componentDidMount() { this.loadBootstrap(); this.clockTimer=setInterval(()=>this.setState({now:tashkentNow()}),30000); this.observerTimer=setInterval(async()=>{if(!this.state.observer || this.state.busy)return;try {const data=await api('/bootstrap');this.setState({orders:data.orders,couriers:data.couriers,settings:data.settings,version:data.version,run:data.run||emptyRun(data.version),observer:data.observer});}catch(error){this.setState({apiError:error.message});}},5000); }
   componentDidUpdate() { this.ensureMap(); this.syncMap(); }
-  componentWillUnmount() { clearInterval(this.clockTimer); if (this.leafletMap) this.leafletMap.destroy(); }
+  componentWillUnmount() { clearInterval(this.clockTimer); clearInterval(this.observerTimer); if (this.leafletMap) this.leafletMap.destroy(); }
   applyBootstrap(data, extra={}) {
     this.setState({
-      orders:data.orders, couriers:data.couriers, settings:data.settings, version:data.version,
+      orders:data.orders, couriers:data.couriers, settings:data.settings, version:data.version, observer:data.observer||null,
       run:data.run || emptyRun(data.version), branch:data.branch, nextId:data.nextId, nextCId:data.nextCId,
       apiError:null, busy:false, settingsDraft:null, selectedBucket:null, ...extra
     },()=>this.ensureMap());
@@ -577,6 +575,7 @@ class Component extends DCLogic {
     catch(error) { this.setState({apiError:error.message,busy:false}); }
   }
   async mutate(path, options, extra={}) {
+    if(this.state.observer) {this.setState({apiError:'Kafka: режим наблюдения. Входные данные доступны только для чтения.'});return false;}
     if (this.state.testMode) { this.setState({apiError:'В тесте изменяйте параметры расчёта. Заказы из файла доступны для просмотра.'}); return false; }
     this.setState({busy:true,apiError:null});
     try { this.applyBootstrap(await api(path,options),extra); return true; }
@@ -661,6 +660,21 @@ class Component extends DCLogic {
   saveTimingSettings = async () => {
     if (this.state.testMode) { if (this.state.settingsDraft) await this.loadTestOrders(this.state.testAt,this.state.settingsDraft); return; }
     if (this.state.settingsDraft) await this.mutate('/settings',{method:'PATCH',body:JSON.stringify(this.state.settingsDraft)});
+  };
+
+  setPlanningRange = async (patch) => {
+    const settings=this.state.settings;
+    let date=patch.planningDate ?? (settings.planningDate || settings.planningAt?.slice(0,10) || this.state.now.date.split('.').reverse().join('-'));
+    let from=patch.planningHourFrom ?? settings.planningHourFrom;
+    let to=patch.planningHourTo ?? settings.planningHourTo;
+    if(from>=to) { if(patch.planningHourFrom!=null) to=from+1; else from=to-1; }
+    const midpoint=(from+to)*30;
+    const at=`${date}T${String(Math.floor(midpoint/60)).padStart(2,'0')}:${String(midpoint%60).padStart(2,'0')}:00+05:00`;
+    if(await this.mutate('/settings',{method:'PATCH',body:JSON.stringify({planningDate:date,planningHourFrom:from,planningHourTo:to,planningAt:at})})) await this.runAll();
+  };
+
+  resetPlanningRange = async () => {
+    if(await this.mutate('/settings',{method:'PATCH',body:JSON.stringify({planningDate:'',planningAt:'',planningHourFrom:0,planningHourTo:24})})) await this.runAll();
   };
 
   renderVals() {
@@ -792,8 +806,8 @@ class Component extends DCLogic {
       version: st.version, exactLimits: st.settings.alwaysFreeCouriers ? '8 заказов / 3 с' : '8 / 3 / 3 с', lateLabel: st.settings.allowLate ? 'вкл.' : 'выкл.',
       runAll: this.runAll,
       bannerBg: st.apiError ? '#FDF1F1' : stale ? '#FFF6E5' : '#EEF6F0', bannerFg: st.apiError ? '#B42323' : stale ? '#8A5300' : '#1E7A45',
-      bannerTitle: st.apiError ? 'Ошибка backend' : st.busy ? 'Выполняется…' : noRun ? 'Готов к новому сценарию' : stale ? 'Устарел: сценарий изменён' : 'Результат актуален',
-      bannerText: st.apiError ? st.apiError : st.busy ? 'Получение матрицы и расчёт алгоритмов…' : noRun ? 'Тестовые заказы удалены. Создайте свои заказы через UI, затем запустите алгоритмы.' : stale ? `Сценарий v${st.version}, run построен на v${run.version}. Старый run не пересчитывается — нажмите «Запустить все».` : st.testMode ? `Тест из логов 01.10: курьеры всегда FREE. Дорога: ${run.matrixProvider==='YANDEX_DISTANCE_MATRIX' ? (run.matrixStats?.traffic==='enabled' ? 'Яндекс, пробки на момент запроса' : 'Яндекс без пробок') : 'геометрическая оценка'}.` : 'Все пять алгоритмов получили один snapshot и одну Matrix на backend.',
+      bannerTitle: st.apiError ? 'Ошибка backend' : st.observer ? 'Kafka · только наблюдение' : st.busy ? 'Выполняется…' : noRun ? 'Готов к новому сценарию' : stale ? 'Устарел: сценарий изменён' : 'Результат актуален',
+      bannerText: st.apiError ? st.apiError : st.observer ? `Филиал ${st.observer.organizationId} · заказы: ${st.observer.streams.orders?.connected ? "подключены" : "нет связи"} · курьеры: ${st.observer.streams.couriers?.connected ? "подключены" : "нет связи"} · исключено из расчёта: ${st.observer.excludedOrders}. Данные только для чтения, расчёт каждые 15 секунд.` : st.busy ? 'Получение матрицы и расчёт алгоритмов…' : noRun ? 'Тестовые заказы удалены. Создайте свои заказы через UI, затем запустите алгоритмы.' : stale ? `Сценарий v${st.version}, run построен на v${run.version}. Старый run не пересчитывается — нажмите «Запустить все».` : st.testMode ? `Тест из логов 01.10: курьеры всегда FREE. Дорога: ${run.matrixProvider==='YANDEX_DISTANCE_MATRIX' ? (run.matrixStats?.traffic==='enabled' ? 'Яндекс, пробки на момент запроса' : 'Яндекс без пробок') : 'геометрическая оценка'}.` : 'Все пять алгоритмов получили один snapshot и одну Matrix на backend.',
       planningText: (()=>{ const t=(!noRun && run.planningAt) || st.now; return `${t.date} ${t.hm} · Asia/Tashkent (GMT+5)`; })(),
       runInfo: noRun ? 'Запусков пока нет' : `Run #${run.number} · ${run.eligible} заказов × ${run.couriers} курьеров · ${run.matrixProvider==='YANDEX_DISTANCE_MATRIX' ? `Яндекс · ${run.matrixStats?.calculationMode==='economy' ? 'экономный' : 'полный'} · ${run.matrixStats?.requests || 0} HTTP · ${run.matrixStats?.requestedElements || 0} ячеек · кеш ${run.matrixStats?.cacheHits || 0}` : `Matrix ${run.matrix} · геометрия`}`,
       tabs: [['orders','Заказы',st.orders.length],['couriers','Курьеры',st.couriers.length],['zones','Зоны',ZONES.length],['settings','Настройки','']].map(([k,l,c]) => ({label:l,count:c,
@@ -814,8 +828,20 @@ class Component extends DCLogic {
       testTimeOptions:(st.testTimes || []).map(t=>({...t,label:`${t.at.slice(11,16)} · ${t.orders} заказов`})),
       alwaysFreeCouriers: !!st.settings.alwaysFreeCouriers, toggleAlwaysFree: this.toggleAlwaysFree,
       saveTimingSettings: this.saveTimingSettings,
+      planningDateValue:st.settings.planningDate || st.settings.planningAt?.slice(0,10) || st.now.date.split('.').reverse().join('-'),
+      planningFromValue:st.settings.planningHourFrom ?? 0, planningToValue:st.settings.planningHourTo ?? 24,
+      planningFromOptions:Array.from({length:24},(_,h)=>({value:h,label:`${String(h).padStart(2,'0')}:00`})),
+      planningToOptions:Array.from({length:24},(_,i)=>({value:i+1,label:`${String(i+1).padStart(2,'0')}:00`})),
+      planningBusy:st.busy, changePlanningDate:e=>this.setPlanningRange({planningDate:e.target.value}),
+      changePlanningFrom:e=>this.setPlanningRange({planningHourFrom:Number(e.target.value)}),
+      changePlanningTo:e=>this.setPlanningRange({planningHourTo:Number(e.target.value)}),
+      resetPlanningRange:this.resetPlanningRange,
+      fixedPlanningAt:((st.settingsDraft || st.settings).planningAt || '').slice(0,16),
+      changePlanningAt:e=>this.setState(s=>({settingsDraft:{...(s.settingsDraft || s.settings),planningAt:e.target.value ? `${e.target.value.slice(0,16)}:00+05:00` : ''}})),
+      useCurrentPlanningAt:()=>this.setState(s=>({settingsDraft:{...(s.settingsDraft || s.settings),planningAt:''}})),
+      planningModeHint:(st.settingsDraft || st.settings).planningAt ? 'Фиксированный срез: учитываются только уже созданные заказы и известные на этот момент события. Сохраните параметры и запустите расчёт.' : 'Расчёт на текущее время. Пустое поле отключает исторический срез.',
       matrixMode:(st.settingsDraft || st.settings).matrixMode || 'full',
-      matrixProviderSetting:(st.settingsDraft || st.settings).matrixProvider==='local' ? 'local' : 'yandex',
+      matrixProviderSetting:(st.settingsDraft || st.settings).matrixProvider==='yandex' ? 'yandex' : 'local',
       changeMatrixProvider:e=>this.setState(s=>({settingsDraft:{...(s.settingsDraft || s.settings),matrixProvider:e.target.value}})),
       changeMatrixMode:e=>this.setState(s=>({settingsDraft:{...(s.settingsDraft || s.settings),matrixMode:e.target.value}})),
       timingSettings: [

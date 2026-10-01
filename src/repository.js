@@ -2,7 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { runAlgorithms } from './planning.js';
-import { COURIER_TRANSITIONS, ORDER_TRANSITIONS, problem, validateCourier, validateOrder } from './domain.js';
+import { COURIER_TRANSITIONS, ORDER_TRANSITIONS, problem, validateCourier, validateOrder, minutesNear } from './domain.js';
+import { testSnapshot } from './historical-scenario.js';
 import { BRANCH } from './branch.js';
 import { tashkentNow } from './time.js';
 import { DEFAULT_SETTINGS } from './timing.js';
@@ -16,9 +17,11 @@ const INITIAL_COURIERS = [
 ];
 
 export class Repository {
-  constructor(filename, { clock = () => new Date() } = {}) {
+  constructor(filename, { clock = () => new Date(), observer = false } = {}) {
     this.clock = clock;
+    this.observer = observer;
     fs.mkdirSync(path.dirname(filename), { recursive: true });
+    const existed=fs.existsSync(filename);
     this.db = new DatabaseSync(filename);
     this.db.exec('PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL;');
     this.db.exec(`
@@ -31,6 +34,12 @@ export class Repository {
     `);
     this.seed();
     this.migrateBranchData();
+    if (observer && !this.db.prepare('SELECT value FROM meta WHERE key=?').get('observer_initialized')) {
+      if(existed) {this.db.close();throw new Error('Observer requires a new SQLite file or an initialized observer database');}
+      this.db.exec("DELETE FROM orders; DELETE FROM couriers; DELETE FROM planning_runs; DELETE FROM status_events;");
+      this.updateSettings({alwaysFreeCouriers:false,planningAt:'',planningDate:'',matrixProvider:'local'});
+      this.db.prepare('INSERT INTO meta VALUES(?,?)').run('observer_initialized','1');
+    }
   }
 
   seed() {
@@ -78,10 +87,60 @@ export class Repository {
 
   snapshot() {
     const scenario = this.scenario();
-    return { scenarioId: scenario.id, version: scenario.version, settings: scenario.settings, planningAt: this.now(), orders: this.list('orders'), couriers: this.list('couriers') };
+    const at=scenario.settings.planningAt;
+    const planningAt=at ? tashkentNow(new Date(at)) : this.now();
+    let orders=this.ordersForRange(scenario.settings);
+    if(at) {
+      const historical=orders.filter(o=>o.createdAt && Array.isArray(o.events));
+      const active=testSnapshot({orders:historical,settings:scenario.settings},at).orders;
+      orders=[...orders.filter(o=>!historical.includes(o) && minutesNear(o.created,planningAt.minutes)<=planningAt.minutes),...active];
+    }
+    if(this.observer) orders=orders.filter(o=>!o.observationIssue).map(o=>{
+      const relative = value => planningAt.minutes+(Date.parse(value)-Date.parse(planningAt.iso))/60000;
+      return {...o,createdMinutes:relative(o.createdAt),readyMinutes:relative(o.readyAt),deadlineMinutes:relative(o.deadlineAt)};
+    });
+    return { scenarioId: scenario.id, version: scenario.version, settings: scenario.settings, planningAt, orders, couriers: this.list('couriers') };
+  }
+
+  kafkaOrder(id) {const row=this.db.prepare('SELECT data_json FROM orders WHERE id=?').get(id);return row?JSON.parse(row.data_json):null;}
+
+  ingestKafka(kind, entity, record) {
+    const table=kind==='orders'?'orders':'couriers';
+    const key=`kafka:${record.topic}:${record.partition}`;
+    const previousOffset=this.db.prepare('SELECT value FROM meta WHERE key=?').get(key)?.value;
+    if(previousOffset!==undefined && BigInt(record.offset)<=BigInt(previousOffset)) return false;
+    this.db.exec('BEGIN');
+    try {
+      let changed=false;
+      if(entity) {
+        const previous=this.db.prepare(`SELECT data_json FROM ${table} WHERE id=?`).get(entity.id);
+        const old=previous && JSON.parse(previous.data_json);
+        if(kind==='orders' && old && entity.observedAt<old.observedAt && entity.waitCookingAt && (!old.waitCookingAt || entity.waitCookingAt<old.waitCookingAt)) {
+          const createdAt=entity.waitCookingAt,deadlineAt=new Date(Date.parse(createdAt)+35*60000).toISOString();
+          entity={...old,waitCookingAt:createdAt,createdAt,created:tashkentNow(new Date(createdAt)).hm,deadlineAt,deadline:tashkentNow(new Date(deadlineAt)).hm,deadlineBasis:'wait_cooking_event',observationIssue:old.observationIssue==='CREATED_AT_MISSING'?null:old.observationIssue};
+        }
+        if(!old || entity.observedAt>=old.observedAt) {
+          this.db.prepare(`INSERT INTO ${table}(id,data_json) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET data_json=excluded.data_json,version=version+1`).run(entity.id,JSON.stringify(entity));
+          if(old?.status!==entity.status) this.addStatusEvent(kind==='orders'?'order':'courier',entity.id,old?.status,entity.status,'Kafka observer');
+          this.bumpVersion(); changed=true;
+        }
+      }
+      this.db.prepare('INSERT INTO meta VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run(key,String(record.offset));
+      this.db.exec('COMMIT'); return changed;
+    } catch(error) {this.db.exec('ROLLBACK');throw error;}
   }
 
   now() { return tashkentNow(this.clock()); }
+
+  ordersForRange(settings) {
+    const orders=this.list('orders');
+    if(!settings.planningDate) return orders;
+    const start=Date.parse(`${settings.planningDate}T00:00:00+05:00`);
+    return orders.filter(o=>{
+      const created=o.createdAt ? Date.parse(o.createdAt) : start+Number(o.created.slice(0,2))*3600000+Number(o.created.slice(3))*60000;
+      return created>=start+settings.planningHourFrom*3600000 && created<start+settings.planningHourTo*3600000;
+    });
+  }
 
   latestRun() {
     const row = this.db.prepare('SELECT * FROM planning_runs ORDER BY id DESC LIMIT 1').get();
@@ -90,11 +149,12 @@ export class Repository {
 
   bootstrap() {
     const snapshot = this.snapshot();
-    return { ...snapshot, branch: BRANCH, run: this.latestRun(), nextId: this.nextId('orders', 'O'), nextCId: this.nextId('couriers', 'C') };
+    return { ...snapshot, orders:this.ordersForRange(snapshot.settings), branch: BRANCH, run: this.latestRun(), nextId: this.nextId('orders', 'O'), nextCId: this.nextId('couriers', 'C') };
   }
 
   nextId(table, prefix) {
-    const ids = this.db.prepare(`SELECT id FROM ${table}`).all().map(row => Number(row.id.replace(/\D/g, '')) || 0);
+    const pattern = new RegExp(`^${prefix}(\\d+)$`);
+    const ids = this.db.prepare(`SELECT id FROM ${table}`).all().map(row => Number(row.id.match(pattern)?.[1]) || 0);
     return Math.max(0, ...ids) + 1;
   }
 
@@ -160,7 +220,7 @@ export class Repository {
 
   updateSettings(settings) {
     const current = this.scenario().settings;
-    validateSettings(settings);
+    validateSettings({ ...current, ...settings });
     this.db.prepare('UPDATE scenario SET settings_json=?,version=version+1 WHERE id=?').run(JSON.stringify({ ...current, ...settings }), 'golden');
     return this.bootstrap();
   }
@@ -178,4 +238,21 @@ export class Repository {
   }
 
   createRun() { return this.saveRun(this.snapshot()); }
+
+  importOrders(orders) {
+    orders.forEach(validateOrder);
+    this.db.exec('BEGIN');
+    try {
+      const upsert=this.db.prepare('INSERT INTO orders(id,data_json) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET data_json=excluded.data_json,version=orders.version+1');
+      for(const order of orders) {
+        const old=this.db.prepare('SELECT data_json FROM orders WHERE id=?').get(order.id);
+        upsert.run(order.id,JSON.stringify(order));
+        if(!old) this.addStatusEvent('order',order.id,null,order.status,'Импорт из тестового fixture');
+      }
+      const settings={...this.scenario().settings,matrixProvider:'local',matrixMode:'full',alwaysFreeCouriers:true};
+      this.db.prepare('UPDATE scenario SET settings_json=?,version=version+1 WHERE id=?').run(JSON.stringify(settings),'golden');
+      this.db.exec('COMMIT');
+      return this.bootstrap();
+    } catch(error) { this.db.exec('ROLLBACK');throw error; }
+  }
 }

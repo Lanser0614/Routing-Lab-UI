@@ -1,0 +1,16 @@
+*
+!Dockerfile
+!.env.example
+!package.json
+!package-lock.json
+!server.js
+!support.js
+!leaflet-map.js
+!Routing Lab.dc.html
+!src/
+!src/**
+!test/
+!test/fixtures/
+!test/fixtures/**
+!docker/
+!docker/**
