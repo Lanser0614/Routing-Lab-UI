@@ -22,4 +22,7 @@ test('observer API blocks input writes, exposes readiness and allows local calcu
   assert.equal((await fetch(`${base}/health`)).status,200);
   assert.equal((await fetch(`${base}/api/v1/bootstrap`).then(r=>r.json())).observer.mode,'observer');
   assert.equal((await fetch(`${base}/api/v1/runs`,{method:'POST'})).status,200);
+  assert.equal((await fetch(`${base}/api/v1/database/clear`,{method:'POST',headers:{'content-type':'application/json'},body:'{}'})).status,422);
+  const cleared=await fetch(`${base}/api/v1/database/clear`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({confirm:'CLEAR_DATABASE'})}).then(r=>r.json());
+  assert.equal(cleared.orders.length,0);assert.equal(cleared.run,null);assert.equal(cleared.observer.mode,'observer');
 });

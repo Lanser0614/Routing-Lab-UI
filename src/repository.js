@@ -109,7 +109,8 @@ export class Repository {
       this.db.prepare('UPDATE buckets SET status=?,data_json=? WHERE id=?').run(b.status,JSON.stringify(b),b.id);
       return b;
     }).filter(b=>b.status!=='completed');
-    return { scenarioId: scenario.id, version: scenario.version, settings: scenario.settings, planningAt, orders, couriers: this.list('couriers'),lockedBuckets };
+    const generation=Number(this.db.prepare('SELECT value FROM meta WHERE key=?').get('database_generation')?.value||0);
+    return { scenarioId: scenario.id, version: scenario.version, generation, settings: scenario.settings, planningAt, orders, couriers: this.list('couriers'),lockedBuckets };
   }
 
   kafkaOrder(id) {const row=this.db.prepare('SELECT data_json FROM orders WHERE id=?').get(id);return row?JSON.parse(row.data_json):null;}
@@ -240,6 +241,8 @@ export class Repository {
   history(type, id) { return this.db.prepare('SELECT * FROM status_events WHERE entity_type=? AND entity_id=? ORDER BY id').all(type, id); }
 
   saveRun(snapshot, forcedId) {
+    const generation=Number(this.db.prepare('SELECT value FROM meta WHERE key=?').get('database_generation')?.value||0);
+    if((snapshot.generation||0)!==generation) throw problem(409,'DATABASE_CLEARED','База очищена во время расчёта. Запустите расчёт заново.');
     snapshot={...snapshot,lockedBuckets:this.snapshot().lockedBuckets};
     const result = runAlgorithms(snapshot);
     const createdAt = new Date().toISOString();
@@ -266,6 +269,18 @@ export class Repository {
   }
 
   createRun() { return this.saveRun(this.snapshot()); }
+
+  clearDatabase() {
+    this.db.exec('BEGIN');
+    try {
+      this.db.exec('DELETE FROM buckets; DELETE FROM planning_runs; DELETE FROM status_events; DELETE FROM orders; DELETE FROM couriers;');
+      const generation=Number(this.db.prepare('SELECT value FROM meta WHERE key=?').get('database_generation')?.value||0)+1;
+      this.db.prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run('database_generation',String(generation));
+      this.bumpVersion();
+      this.db.exec('COMMIT');
+    } catch(error) {this.db.exec('ROLLBACK');throw error;}
+    return this.bootstrap();
+  }
 
   buckets() {this.snapshot();return this.db.prepare('SELECT id,data_json,status FROM buckets ORDER BY id').all().map(row=>({...JSON.parse(row.data_json),id:row.id,status:row.status}));}
 

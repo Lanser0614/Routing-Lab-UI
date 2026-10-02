@@ -1,0 +1,27 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {Repository} from '../src/repository.js';
+import {observerConfig,decodeObservation} from '../src/kafka-observer.js';
+test('clear preserves settings and Kafka offsets, blocks in-flight old calculation and permits new entity events',t=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'clear-db-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+  const repo=new Repository(path.join(dir,'db.sqlite'),{observer:true});t.after(()=>repo.db.close());
+  const config=observerConfig({});
+  const decode=(kind,p)=>decodeObservation(kind,Buffer.from(JSON.stringify({payload:{...p,branch_id:config.organizationId},timestamp:'2026-10-01T13:00:00+05:00'})),config);
+  const courier=decode('couriers',{courier_id:7,status:'free',vehicle_type:'SCOOTER'});
+  repo.ingestKafka('couriers',courier,{topic:'couriers',partition:0,offset:'10'});
+  repo.updateSettings({matrixProvider:'yandex'});
+  const old=repo.snapshot();repo.saveRun(old);
+  const settings=repo.scenario().settings;
+  repo.clearDatabase();
+  assert.deepEqual(repo.scenario().settings,settings);
+  assert.equal(repo.latestRun(),null);assert.equal(repo.buckets().length,0);assert.equal(repo.list('couriers').length,0);
+  assert.throws(()=>repo.saveRun(old),e=>e.code==='DATABASE_CLEARED');
+  assert.equal(repo.ingestKafka('couriers',courier,{topic:'couriers',partition:0,offset:'10'}),false);
+  assert.equal(repo.ingestKafka('couriers',courier,{topic:'couriers',partition:0,offset:'11'}),true);
+  const order=decode('orders',{order_id:55,status:'WaitCooking',latitude:41.332,longitude:69.285,sum:100000});
+  assert.equal(repo.ingestKafka('orders',order,{topic:'orders',partition:0,offset:'12'}),true);
+  assert.equal(repo.list('orders').length,1);assert.equal(repo.list('couriers').length,1);
+});

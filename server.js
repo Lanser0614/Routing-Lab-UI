@@ -17,7 +17,7 @@ export function createApp(repository, { matrixClient=null, observer=null }={}) {
   app.disable('x-powered-by');
   app.use(express.json({ limit: '1mb' }));
   if(observer) app.use('/api/v1',(req,res,next)=>{
-    if(req.method!=='GET' && req.path!=='/runs') return next(problem(403,'OBSERVER_READ_ONLY','Kafka: режим наблюдения, изменение входных данных отключено'));
+    if(req.method!=='GET' && req.path!=='/runs' && req.path!=='/database/clear') return next(problem(403,'OBSERVER_READ_ONLY','Kafka: режим наблюдения, изменение входных данных отключено'));
     next();
   });
   const route = handler => async (req, res, next) => { try { const value = await handler(req, res); if (value !== undefined && !res.headersSent) res.json(value); } catch (error) { next(error); } };
@@ -42,6 +42,10 @@ export function createApp(repository, { matrixClient=null, observer=null }={}) {
   app.get('/api/v1/bootstrap', route(() => ({...repository.bootstrap(),observer:observer?.status()||null})));
   app.get('/api/v1/observer',route(()=>observer?.status()||{mode:'manual'}));
   app.get('/api/v1/buckets',route(()=>repository.buckets()));
+  app.post('/api/v1/database/clear',route(req=>{
+    if(req.body?.confirm!=='CLEAR_DATABASE') throw problem(422,'CONFIRMATION_REQUIRED','Подтвердите очистку локальной базы');
+    return {...repository.clearDatabase(),observer:observer?.status()||null};
+  }));
   app.post('/api/v1/orders', route(req => repository.upsertOrder(req.body.id, req.body, true)));
   app.patch('/api/v1/orders/:id', route(req => repository.upsertOrder(req.params.id, req.body, false)));
   app.post('/api/v1/orders/:id/status', route(req => repository.setOrderStatus(req.params.id, req.body.status, req.body.reason)));
